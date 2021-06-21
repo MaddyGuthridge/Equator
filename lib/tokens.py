@@ -2,7 +2,7 @@ from fractions import Fraction
 from decimal import Decimal
 import sympy as sym
 
-import operation
+from . import operation
 
 class Token:
     """Token base type

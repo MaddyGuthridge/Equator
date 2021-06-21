@@ -1,5 +1,5 @@
-import parse
-import segment
+from . import parse
+from . import segment
 
 def evaluate(inp: str):
     # Parse input

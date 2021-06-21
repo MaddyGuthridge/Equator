@@ -1,8 +1,8 @@
 from decimal import Decimal
 
-import consts
-import tokens
-import operation
+from . import consts
+from . import tokens
+from . import operation
 
 def isDecimal(word: str):
     try:

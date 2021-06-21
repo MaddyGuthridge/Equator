@@ -1,25 +1,8 @@
 import sys
 
-# Only import if running standalone
-if __name__ == "__main__":
-    from colorama import Fore
+from colorama import Fore
 
-#from pprint import pprint
-import consts
-import evaluate
-import solve
-
-def splitInput(expression):
-    return expression.split(' ', 1)
-
-def runInput(command, expression):
-    if command == "ev":
-        return evaluate.evaluate(expression)
-    if command == "eq":
-        return solve.solve(expression)
-    else:
-        print(Fore.RED + "Unrecognised command")
-        return None
+from lib import main, consts
 
 def printOutput(out):
     for i, e in enumerate(out):
@@ -35,8 +18,8 @@ if __name__ == "__main__":
             while True:
                 try:
                     inp = input(Fore.RESET + "calc > " + Fore.YELLOW)
-                    command, expression = splitInput(inp)
-                    printOutput(runInput(command, expression))
+                    command, expression = main.splitInput(inp)
+                    printOutput(main.runInput(command, expression))
                     
                 except Exception as e:
                     print(Fore.RED)
@@ -50,6 +33,7 @@ if __name__ == "__main__":
         for arg in sys.argv[1:]:
             inp += arg
         # Given command as arguments
-        command, expression = splitInput(inp)
+        command, expression = main.splitInput(inp)
         
-        printOutput(runInput(command, expression))
+        printOutput(main.runInput(command, expression))
+

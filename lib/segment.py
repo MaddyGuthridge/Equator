@@ -1,6 +1,6 @@
-import tokens
-import consts
-import operation
+from . import tokens
+from . import consts
+from . import operation
 
 class Segment:
     def __init__(self, contents: list):

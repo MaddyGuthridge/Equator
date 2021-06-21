@@ -1,7 +1,7 @@
 import sympy as sym
 
-import parse
-import segment
+from . import parse
+from . import segment
 
 def solve(inp: str):
     # Parse input
