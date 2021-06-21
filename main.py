@@ -1,4 +1,5 @@
 import sys
+from colorama import Fore
 
 #from pprint import pprint
 import consts
@@ -11,12 +12,12 @@ def runInput(command, expression):
     if command == "eq":
         return solve.solve(expression)
     else:
-        print("Unrecognised command")
+        print(Fore.RED + "Unrecognised command")
         return None
 
 def printOutput(out):
     for i, e in enumerate(out):
-        print(f"[{i+1}]: {e}")
+        print(f"{Fore.RESET}[{i+1}]:{Fore.YELLOW} {e}")
 
 if __name__ == "__main__":
     # No arguments, enter interpreter mode
@@ -27,14 +28,16 @@ if __name__ == "__main__":
         try:
             while True:
                 try:
-                    inp = input("calc > ")
+                    inp = input(Fore.RESET + "calc > " + Fore.YELLOW)
                     command, expression = inp.split(' ', 1)
                     printOutput(runInput(command, expression))
                     
                 except Exception as e:
+                    print(Fore.RED)
                     print(e)
                     #raise e
         except KeyboardInterrupt:
+            print(Fore.RESET)
             exit()
     else:
         input = ""
