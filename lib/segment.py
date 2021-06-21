@@ -114,7 +114,7 @@ class Segment:
         
         self.contents = out
 
-    def parseOperators(self, operators: list[str]):
+    def parseOperators(self, operators: list):
         
         # Check for starting and ending with operators
         for op in operators:
