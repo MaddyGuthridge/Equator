@@ -1,4 +1,5 @@
-import fractions
+from fractions import Fraction
+from decimal import Decimal
 import sympy as sym
 
 
@@ -35,7 +36,12 @@ class Number(Token):
     Evaluate returns numberified version
     """
     def evaluate(self):
-        return fractions.Fraction(self._contents)
+        fract = Fraction(self._contents)
+        decim = Decimal(self._contents)
+        if len(str(fract)) < 10:
+            return fract
+        else:
+            return decim
     
     def __repr__(self) -> str:
         return self._contents + " (Number)"
