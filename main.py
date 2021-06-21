@@ -1,13 +1,17 @@
 import sys
 
-from pprint import pprint
+#from pprint import pprint
 
 import evaluate
+import solve
 
 def runInput(command, expression):
     if command == "ev":
         return evaluate.evaluate(expression)
+    if command == "eq":
+        return solve.solve(expression)
     else:
+        print("Unrecognised command")
         return None
 
 if __name__ == "__main__":
@@ -20,10 +24,10 @@ if __name__ == "__main__":
             try:
                 inp = input("calc > ")
                 command, expression = inp.split(' ', 1)
-                pprint(runInput(command, expression))
-            except Exception as e:
+                print(runInput(command, expression))
+            except ValueError as e:
                 print(e)
-                #raise e
+                raise e
     else:
         input = ""
         for arg in sys.argv[1:]:
@@ -31,4 +35,4 @@ if __name__ == "__main__":
         # Given command as arguments
         command, expression = input.split(' ', 1)
         
-        pprint(runInput(command, expression))
+        print(runInput(command, expression))

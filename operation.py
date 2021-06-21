@@ -1,16 +1,18 @@
 import sympy as sym
 
 def doOperation(operator: str, a, b):
-    if operator == "^":
+    if operator == '^':
         return a ** b
-    elif operator == "*":
+    elif operator == '*':
         return a * b
-    elif operator == "/":
+    elif operator == '/':
         return a / b
-    elif operator == "+":
+    elif operator == '+':
         return a + b
-    elif operator == "-":
+    elif operator == '-':
         return a - b
+    elif operator == '=':
+        return sym.Eq(a, b)
 
 def doFunction(func: str, a):
     if func == "sqrt":

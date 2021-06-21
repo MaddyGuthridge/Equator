@@ -14,6 +14,7 @@ class Segment:
         self.parseOperators(['^'])
         self.parseOperators(['*', '/'])
         self.parseOperators(['+', '-'])
+        self.parseOperators(['='])
     
     def __str__(self):
         out = "["
