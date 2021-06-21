@@ -13,4 +13,9 @@ def solve(inp: str):
         seg = segment.Segment(p)
         parsed.append(seg.evaluate())
 
-    return [sym.solve(parsed)]
+    res = sym.solve(parsed)
+    
+    if isinstance(res, list):
+        return res
+    else:
+        return [res]
