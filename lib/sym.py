@@ -2,4 +2,4 @@
 try:
     import sympy
 except ImportError:
-    from .... import sympy
+    from ... import sympy
