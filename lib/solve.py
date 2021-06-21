@@ -1,4 +1,4 @@
-import sympy as sym
+from .sym import sympy as sym
 
 from . import parse
 from . import segment

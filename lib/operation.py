@@ -1,7 +1,8 @@
 import math
-import sympy as sym
 from decimal import Decimal
 from fractions import Fraction
+
+from .sym import sympy as sym
 
 def conditionalDecimal(a):
     return Decimal(str(float(a))) if isinstance(a, Fraction) else a
