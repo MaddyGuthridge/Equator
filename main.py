@@ -17,17 +17,20 @@ def runInput(command, expression):
 if __name__ == "__main__":
     # No arguments, enter interpreter mode
     if len(sys.argv) == 1:
-        print("PlaceHolderName")
+        print(f"{consts.NAME} (v{consts.VERSION})")
         print("Interpreter Mode")
         print("Press Ctrl+C to quit")
-        while True:
-            try:
-                inp = input("calc > ")
-                command, expression = inp.split(' ', 1)
-                print(runInput(command, expression))
-            except ValueError as e:
-                print(e)
-                raise e
+        try:
+            while True:
+                try:
+                    inp = input("calc > ")
+                    command, expression = inp.split(' ', 1)
+                    print(runInput(command, expression))
+                except ValueError as e:
+                    print(e)
+                    raise e
+        except KeyboardInterrupt:
+            exit()
     else:
         input = ""
         for arg in sys.argv[1:]:
