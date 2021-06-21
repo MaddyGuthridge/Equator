@@ -2,6 +2,7 @@ from fractions import Fraction
 from decimal import Decimal
 import sympy as sym
 
+import operation
 
 class Token:
     """Token base type
@@ -36,12 +37,7 @@ class Number(Token):
     Evaluate returns numberified version
     """
     def evaluate(self):
-        fract = Fraction(self._contents)
-        decim = Decimal(self._contents)
-        if len(str(fract)) < 10:
-            return fract
-        else:
-            return decim
+        return operation.conditionalFraction(Decimal(self._contents))
     
     def __repr__(self) -> str:
         return self._contents + " (Number)"

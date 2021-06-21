@@ -1,19 +1,39 @@
 import math
 import sympy as sym
+from decimal import Decimal
+from fractions import Fraction
+
+def conditionalDecimal(a):
+    return Decimal(str(float(a))) if isinstance(a, Fraction) else a
+
+def conditionalFraction(a):
+    if isinstance(a, Decimal):
+        fract = Fraction(a)
+        if len(str(fract)) < 10:
+            return fract
+        else:
+            return a
+    else:
+        return a
 
 def doOperation(operator: str, a, b):
+    a = conditionalDecimal(a)
+    b = conditionalDecimal(b)
     if operator == '^':
-        return a ** b
+        res = a ** b
     elif operator == '*':
-        return a * b
+        res = a * b
     elif operator == '/':
-        return a / b
+        res = a / b
     elif operator == '+':
-        return a + b
+        res = a + b
     elif operator == '-':
-        return a - b
+        res = a - b
     elif operator == '=':
-        return sym.Eq(a, b)
+        res = sym.Eq(a, b)
+    else:
+        raise ValueError("Unrecognised operation: " + operator)
+    return conditionalFraction(res)
 
 def doFunction(func: str, a):
     if func == "sqrt":
