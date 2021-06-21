@@ -6,6 +6,9 @@ import consts
 import evaluate
 import solve
 
+def splitInput(expression):
+    return expression.split(' ', 1)
+
 def runInput(command, expression):
     if command == "ev":
         return evaluate.evaluate(expression)
@@ -29,7 +32,7 @@ if __name__ == "__main__":
             while True:
                 try:
                     inp = input(Fore.RESET + "calc > " + Fore.YELLOW)
-                    command, expression = inp.split(' ', 1)
+                    command, expression = splitInput(inp)
                     printOutput(runInput(command, expression))
                     
                 except Exception as e:
@@ -44,6 +47,6 @@ if __name__ == "__main__":
         for arg in sys.argv[1:]:
             input += arg
         # Given command as arguments
-        command, expression = input.split(' ', 1)
+        command, expression = splitInput(inp)
         
         printOutput(runInput(command, expression))
