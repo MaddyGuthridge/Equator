@@ -1,6 +1,7 @@
 from fractions import Fraction
 from decimal import Decimal
-import sympy as sym
+
+from .sym import sympy as sym
 
 from . import operation
 
