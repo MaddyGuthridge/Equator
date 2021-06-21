@@ -1,3 +1,4 @@
+import tokens
 import consts
 import operation
 
@@ -21,6 +22,9 @@ class Segment:
             out += " "
         out = out[:-1] + "]"
         return out
+    
+    def __repr__(self) -> str:
+        return str(self)
     
     def parseBrackets(self):
         # List after parse
@@ -73,13 +77,9 @@ class Segment:
                 continue
             # If it's a segment, this was bracketed
             if isinstance(self.contents[i + 1], Segment)\
-                and isinstance(self.contents[i], str):
-                    if not self.contents[i].isdecimal()\
-                        and self.contents[i] not in consts.OPERATORS:
-                            skip = 1
-                            out.append(Function(self.contents[i], self.contents[i+1]))
-                    else:
-                        out.append(self.contents[i])
+                and isinstance(self.contents[i], tokens.Symbol):
+                    skip = 1
+                    out.append(Function(self.contents[i], self.contents[i+1]))
             else:
                 out.append(self.contents[i])
         
@@ -93,7 +93,7 @@ class Segment:
             return
         
         if self.contents[0] == "-":
-            self.contents = ["0"] + self.contents
+            self.contents = [tokens.Number("0")] + self.contents
         
         out = [self.contents[0]]
         skip = 0
@@ -133,10 +133,12 @@ class Segment:
                 if skip > 0:
                     skip -= 1
                     continue
-                if self.contents[i] in operators and not found:
-                    skip = 2
-                    found = True
-                    out.append(Segment(self.contents[i-1 : i+2]))
+                if isinstance(self.contents[i], tokens.Operator)\
+                    and str(self.contents[i]) in operators and not found:
+                        skip = 2
+                        found = True
+                        # Create a segment of tokens surrounded by the operator
+                        out.append(Segment(self.contents[i-1 : i+2]))
                 else:
                     out.append(self.contents[i-1])
 
@@ -154,30 +156,20 @@ class Segment:
             return 0.0
         
         if len(self.contents) == 1:
-            e = self.contents[0]
-            if isinstance(e, Segment):
-                return e.evaluate()
-            else:
-                return float(e)
+            return self.contents[0].evaluate()
             
         elif len(self.contents) == 3:
             op = self.contents[1]
             a = self.contents[0]
             b = self.contents[2]
-            
-            if isinstance(a, Segment):
-                a = a.evaluate()
-            if isinstance(b, Segment):
-                b = b.evaluate()
-            
-            return operation.doOperation(op, float(a), float(b))
+            return operation.doOperation(op, a.evaluate(), b.evaluate())
 
         else:
             raise ValueError("Evaluation error: couldn't evaluate segment:\n"
                              + str(self))
 
 class Function(Segment):
-    def __init__(self, type: str, on: Segment):
+    def __init__(self, type: tokens.Symbol, on: Segment):
         self._op = type
         self._on = on
 
@@ -186,5 +178,5 @@ class Function(Segment):
 
     def evaluate(self):
         e = self._on.evaluate()
-        return operation.doFunction(self._op, e)
+        return operation.doFunction(str(self._op), e)
 
