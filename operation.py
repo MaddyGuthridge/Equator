@@ -1,4 +1,4 @@
-import math
+import sympy as sym
 
 def doOperation(operator: str, a, b):
     if operator == "^":
@@ -14,16 +14,16 @@ def doOperation(operator: str, a, b):
 
 def doFunction(func: str, a):
     if func == "sqrt":
-        return math.sqrt(a)
+        return sym.sqrt(a)
     elif func == "sin":
-        return math.sin(a)
+        return sym.sin(a)
     elif func == "cos":
-        return math.cos(a)
+        return sym.cos(a)
     elif func == "tan":
-        return math.tan(a)
+        return sym.tan(a)
     elif func == "abs":
-        return abs(a)
+        return sym.Abs(a)
     elif func == "deg":
-        return math.degrees(a)
+        return sym.deg(a)
     elif func == "rad":
-        return math.radians(a)
+        return sym.rad(a)
