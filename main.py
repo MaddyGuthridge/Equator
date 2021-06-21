@@ -14,6 +14,10 @@ def runInput(command, expression):
         print("Unrecognised command")
         return None
 
+def printOutput(out):
+    for i, e in enumerate(out):
+        print(f"[{i+1}]: {e}")
+
 if __name__ == "__main__":
     # No arguments, enter interpreter mode
     if len(sys.argv) == 1:
@@ -25,7 +29,8 @@ if __name__ == "__main__":
                 try:
                     inp = input("calc > ")
                     command, expression = inp.split(' ', 1)
-                    print(runInput(command, expression))
+                    printOutput(runInput(command, expression))
+                    
                 except Exception as e:
                     print(e)
                     #raise e
@@ -38,4 +43,4 @@ if __name__ == "__main__":
         # Given command as arguments
         command, expression = input.split(' ', 1)
         
-        print(runInput(command, expression))
+        printOutput(runInput(command, expression))
