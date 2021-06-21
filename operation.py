@@ -1,3 +1,4 @@
+import math
 import sympy as sym
 
 def doOperation(operator: str, a, b):
@@ -29,3 +30,9 @@ def doFunction(func: str, a):
         return sym.deg(a)
     elif func == "rad":
         return sym.rad(a)
+
+def getConstant(const: str):
+    if const == "pi":
+        return str(math.pi)
+    else:
+        return const

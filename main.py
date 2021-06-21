@@ -26,9 +26,9 @@ if __name__ == "__main__":
                     inp = input("calc > ")
                     command, expression = inp.split(' ', 1)
                     print(runInput(command, expression))
-                except ValueError as e:
+                except Exception as e:
                     print(e)
-                    raise e
+                    #raise e
         except KeyboardInterrupt:
             exit()
     else:

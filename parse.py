@@ -1,6 +1,27 @@
+from decimal import Decimal
 
 import consts
 import tokens
+import operation
+
+def isDecimal(word: str):
+    try:
+        Decimal(word)
+        return True
+    except Exception:
+        return False
+
+def parseToken(word: str, unwrap_symbols=True):
+    if isDecimal(word):
+        return tokens.Number(word)
+    elif word in consts.OPERATORS:
+        return tokens.Operator(word)
+    else:
+        # Unwrap symbols
+        if unwrap_symbols:
+            return parseToken(operation.getConstant(word), unwrap_symbols=False)
+        else:
+            return tokens.Symbol(operation.getConstant(word))
 
 def prepString(input: str) -> list[list[str]]:
     input = input.replace(' ', '')
@@ -28,12 +49,8 @@ def prepString(input: str) -> list[list[str]]:
         # For each word, convert to the required type
         out = []
         for word in words:
-            if word.isdecimal():
-                out.append(tokens.Number(word))
-            elif word in consts.OPERATORS:
-                out.append(tokens.Operator(word))
-            else:
-                out.append(tokens.Symbol(word))
+            out.append(parseToken(word))
+            
         # Only append if it has contents        
         if len(out):
             exprs.append(out)
