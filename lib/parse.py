@@ -23,7 +23,7 @@ def parseToken(word: str, unwrap_symbols=True):
         else:
             return tokens.Symbol(operation.getConstant(word))
 
-def prepString(input: str) -> list[list[str]]:
+def prepString(input: str) -> list:
     input = input.replace(' ', '')
     
     # Split into individual expressions (semicolon separated)
