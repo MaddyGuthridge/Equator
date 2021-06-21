@@ -2,6 +2,13 @@ import parse
 import segment
 
 def evaluate(inp: str):
+    # Parse input
     prep = parse.prepString(inp)
-    seg = segment.Segment(prep)
-    return str(seg.evaluate()).replace("**", "^")
+    
+    # For each expression, create a segment for it
+    solutions = []
+    for p in prep:
+        seg = segment.Segment(p)
+        solutions.append(str(seg.evaluate()).replace("**", "^"))
+
+    return solutions

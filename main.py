@@ -1,5 +1,7 @@
 import sys
 
+from pprint import pprint
+
 import evaluate
 
 def runInput(command, expression):
@@ -18,15 +20,15 @@ if __name__ == "__main__":
             try:
                 inp = input("calc > ")
                 command, expression = inp.split(' ', 1)
-                print(runInput(command, expression))
+                pprint(runInput(command, expression))
             except Exception as e:
                 print(e)
                 #raise e
     else:
+        input = ""
+        for arg in sys.argv[1:]:
+            input += arg
         # Given command as arguments
-        command = sys.argv[1]
-        # Join into expression
-        expression = ""
-        for arg in sys.argv[2:]:
-            expression += arg
-        print(runInput(command, expression))
+        command, expression = input.split(' ', 1)
+        
+        pprint(runInput(command, expression))
