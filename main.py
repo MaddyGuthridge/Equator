@@ -1,5 +1,8 @@
 import sys
-from colorama import Fore
+
+# Only import if running standalone
+if __name__ == "__main__":
+    from colorama import Fore
 
 #from pprint import pprint
 import consts
@@ -43,9 +46,9 @@ if __name__ == "__main__":
             print(Fore.RESET)
             exit()
     else:
-        input = ""
+        inp = ""
         for arg in sys.argv[1:]:
-            input += arg
+            inp += arg
         # Given command as arguments
         command, expression = splitInput(inp)
         
