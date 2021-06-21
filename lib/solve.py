@@ -23,8 +23,11 @@ def solve(inp: str):
     # Change to fractions if possible
     for r in res:
         for key, value in r.items():
-            v = Fraction(str(value))
-            if len(str(v)) < 10:
-                r[key] = str(v)
-
+            try:
+                v = Fraction(str(value))
+                if len(str(v)) < 10:
+                    r[key] = str(v)
+            except:
+                # If we can't convert, just ignore it
+                pass
     return res
