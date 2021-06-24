@@ -10,6 +10,7 @@ def operatorPrecedence(op: str):
     if   op in ['^']: return 3
     elif op in ['*', '/']: return 2
     elif op in ['+', '-']: return 1
+    elif op in ['=']: return 0
 
 def conditionalDecimal(a):
     return Decimal(str(float(a))) if isinstance(a, Fraction) else a
