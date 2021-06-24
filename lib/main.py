@@ -2,21 +2,14 @@ import sys
 
 #from pprint import pprint
 from . import segment
-from . import evaluate
-from . import solve
+from . import smart_equate
 from . import parse
 
 def splitInput(expression):
     return expression.split(' ', 1)
 
-def runInput(command, expression):
-    if command == "ev":
-        return evaluate.evaluate(expression)
-    if command == "eq":
-        return solve.solve(expression)
-    else:
-        print("Unrecognised command")
-        return None
+def runInput(expression):
+    smart_equate.equate(expression)
 
 def formatOutput(output):
     output = parse.prepString(str(output).replace('**', '^'))
