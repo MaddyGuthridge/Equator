@@ -25,6 +25,27 @@ def parseToken(word: str, unwrap_symbols=True):
 
 def prepString(input: str) -> list:
     input = input.replace(' ', '')
+    words = []
+    word = ""
+    for i in input:
+        if i in consts.OPERATORS:
+            if len(word):
+                words.append(word)
+                word = ""
+            words.append(i)
+        else:
+            word += i
+    
+    if len(word):
+        words.append(word)
+    
+    # For each word, convert to the required type
+    out = []
+    for word in words:
+        out.append(parseToken(word))
+    return out
+
+def prepStrings(input: str) -> list:
     
     # Split into individual expressions (semicolon separated)
     exprs_str = input.split(";")
@@ -32,26 +53,9 @@ def prepString(input: str) -> list:
     
     # Parse each expression
     for expr_s in exprs_str:
-        words = []
-        word = ""
-        for i in expr_s:
-            if i in consts.OPERATORS:
-                if len(word):
-                    words.append(word)
-                    word = ""
-                words.append(i)
-            else:
-                word += i
-        
-        if len(word):
-            words.append(word)
-        
-        # For each word, convert to the required type
-        out = []
-        for word in words:
-            out.append(parseToken(word))
+        out = prepString(expr_s)
             
-        # Only append if it has contents        
+        # Only append if it has contents
         if len(out):
             exprs.append(out)
     

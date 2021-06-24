@@ -16,10 +16,13 @@ class Token:
         return self._contents
     
     def __repr__(self) -> str:
-        return self._contents + " (Token)"
+        return self._contents
 
     def evaluate(self):
         return self._contents
+    
+    def getOperatorPrecedence(self):
+        return operation.NO_OPERATION_PRECEDENCE
 
 class Operator(Token):
     """Token representing an operator
@@ -29,9 +32,6 @@ class Operator(Token):
     def __eq__(self, o: object) -> bool:
         if isinstance(o, str):
             return o == self._contents
-    
-    def __repr__(self) -> str:
-        return self._contents + " (Operator)"
 
 class Number(Token):
     """Token representing a number
@@ -39,9 +39,9 @@ class Number(Token):
     """
     def evaluate(self):
         return operation.conditionalFraction(Decimal(self._contents))
-    
-    def __repr__(self) -> str:
-        return self._contents + " (Number)"
+
+    def __str__(self) -> str:
+        return str(operation.conditionalFraction(self.evaluate()))
 
 class Symbol(Token):
     """Token representing a symbol
@@ -51,6 +51,3 @@ class Symbol(Token):
     """
     def evaluate(self):
         return sym.Symbol(self._contents)
-
-    def __repr__(self) -> str:
-        return self._contents + " (Symbol)"

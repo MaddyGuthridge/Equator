@@ -2,12 +2,13 @@ import sympy as sym
 
 from fractions import Fraction
 
+from . import main
 from . import parse
 from . import segment
 
 def solve(inp: str):
     # Parse input
-    prep = parse.prepString(inp)
+    prep = parse.prepStrings(inp)
     
     # For each expression, create a segment for it
     parsed = []
@@ -23,11 +24,5 @@ def solve(inp: str):
     # Change to fractions if possible
     for r in res:
         for key, value in r.items():
-            try:
-                v = Fraction(str(value))
-                if len(str(v)) < 10:
-                    r[key] = str(v)
-            except:
-                # If we can't convert, just ignore it
-                pass
+            r[key] = main.formatOutput(key)
     return res
