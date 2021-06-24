@@ -24,5 +24,5 @@ def solve(inp: str):
     # Change to fractions if possible
     for r in res:
         for key, value in r.items():
-            r[key] = main.formatOutput(key)
+            r[key] = main.formatOutput(value)
     return res

@@ -108,7 +108,8 @@ class Segment:
             return
         
         if self.contents[0] == "-":
-            self.contents = [tokens.Number("0")] + self.contents
+            assert len(self.contents) >= 2
+            self.contents = [NegateFunction(self.contents[1])] + self.contents[2:]
         
         out = [self.contents[0]]
         skip = 0
@@ -118,12 +119,12 @@ class Segment:
                 continue
             if self.contents[i-1] in consts.OPERATORS\
                 and self.contents[i] == "-":
-                    out.append(Segment(["-", self.contents[i+1]]))
+                    out.append(NegateFunction(self.contents[i+1]))
                     skip = 1
             else:
                 out.append(self.contents[i])
         
-        if skip == 0:
+        if skip == 0 and len(self.contents) > 1:
             out.append(self.contents[-1])
         
         self.contents = out
@@ -211,3 +212,13 @@ class Function(Segment):
         e = self._on.evaluate()
         return operation.doFunction(str(self._op), e)
 
+    def getOperatorPrecedence(self):
+        return operation.FUNCTION_OPERATOR_PRECEDENCE
+
+class NegateFunction(Function):
+    def __init__(self, on: Segment):
+        self._op = consts.NEGATE
+        self._on = on
+    
+    def __str__(self):
+        return f"-{self._on}"

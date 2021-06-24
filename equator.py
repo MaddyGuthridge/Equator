@@ -2,7 +2,7 @@ import sys
 
 from colorama import Fore
 
-from lib import main, consts
+from lib import main, consts, smart_equate
 
 def printOutput(out):
     for i, e in enumerate(out):
@@ -16,15 +16,15 @@ if __name__ == "__main__":
         print("Press Ctrl+C to quit")
         try:
             while True:
-                try:
-                    inp = input(Fore.RESET + "calc > " + Fore.YELLOW)
-                    command, expression = main.splitInput(inp)
-                    printOutput(main.runInput(command, expression))
+                #try:
+                inp = input(Fore.RESET + "calc > " + Fore.YELLOW)
+                #command, expression = main.splitInput(inp)
+                printOutput(smart_equate.equate(inp))
                     
-                except Exception as e:
-                    print(Fore.RED)
-                    print(e)
-                    #raise e
+                #except Exception as e:
+                #    print(Fore.RED)
+                #    print(e)
+                #    raise e
         except KeyboardInterrupt:
             print(Fore.RESET)
             exit()
@@ -33,6 +33,6 @@ if __name__ == "__main__":
         for arg in sys.argv[1:]:
             inp += arg
         # Given command as arguments
-        command, expression = main.splitInput(inp)
+        #command, expression = main.splitInput(inp)
         
-        printOutput(main.runInput(command, expression))
+        printOutput(smart_equate.equate(inp))

@@ -13,3 +13,5 @@ OPERATORS = [
     "-",
     "="
     ]
+
+NEGATE = "neg"
