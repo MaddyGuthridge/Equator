@@ -3,6 +3,8 @@ import sympy as sym
 from decimal import Decimal
 from fractions import Fraction
 
+from . import consts
+
 FUNCTION_OPERATOR_PRECEDENCE = 10
 NO_OPERATION_PRECEDENCE = 10
 
@@ -59,6 +61,8 @@ def doFunction(func: str, a):
         return sym.deg(a)
     elif func == "rad":
         return sym.rad(a)
+    elif func == consts.NEGATE:
+        return -a
 
 def getConstant(const: str):
     if const == "pi":
