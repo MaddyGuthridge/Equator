@@ -8,7 +8,7 @@ from . import segment
 
 def solve(inp: str):
     # Parse input
-    prep = parse.prepString(inp)
+    prep = parse.prepStrings(inp)
     
     # For each expression, create a segment for it
     parsed = []

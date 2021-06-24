@@ -4,7 +4,7 @@ from . import segment
 
 def evaluate(inp: str):
     # Parse input
-    prep = parse.prepString(inp)
+    prep = parse.prepStrings(inp)
     
     # For each expression, create a segment for it
     solutions = []
