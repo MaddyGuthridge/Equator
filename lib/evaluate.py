@@ -1,3 +1,4 @@
+from . import main
 from . import parse
 from . import segment
 
@@ -9,6 +10,6 @@ def evaluate(inp: str):
     solutions = []
     for p in prep:
         seg = segment.Segment(p)
-        solutions.append(str(seg.evaluate()).replace("**", "^"))
+        solutions.append(main.formatOutput(seg.evaluate()))
 
     return solutions

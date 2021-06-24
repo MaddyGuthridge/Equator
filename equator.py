@@ -36,4 +36,3 @@ if __name__ == "__main__":
         command, expression = main.splitInput(inp)
         
         printOutput(main.runInput(command, expression))
-
