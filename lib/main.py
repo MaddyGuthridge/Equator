@@ -9,7 +9,7 @@ def splitInput(expression):
     return expression.split(' ', 1)
 
 def runInput(expression):
-    smart_equate.equate(expression)
+    return smart_equate.equate(expression)
 
 def formatOutput(output):
     output = parse.prepString(str(output).replace('**', '^'))
