@@ -17,15 +17,29 @@ class Segment:
         self.parseOperators(['='])
     
     def __str__(self):
-        out = "["
-        for ele in self.contents:
-            out += str(ele)
-            out += " "
-        out = out[:-1] + "]"
-        return out
+        if len(self.contents) == 0:
+            return "0"
+        elif len(self.contents) == 1:
+            return str(self.contents[0])
+        elif len(self.contents) != 3:
+            raise ValueError("stringify: bad contents length")
+
+        left  = self.contents[0]
+        op    = self.contents[1]
+        right = self.contents[2]
+        
+        l_str = str(left)
+        if left.getOperatorPrecedence() <= self.getOperatorPrecedence():
+            l_str = "(" + l_str + ")"
+        
+        r_str = str(right)
+        if right.getOperatorPrecedence() <= self.getOperatorPrecedence():
+            r_str = "(" + r_str + ")"
+    
+        return f"{l_str} {str(op)} {r_str}"
     
     def __repr__(self) -> str:
-        return str(self)
+        return "Segment(" + repr(self.contents) + ")"
     
     def parseBrackets(self):
         # List after parse
@@ -166,8 +180,21 @@ class Segment:
             return operation.doOperation(op, a.evaluate(), b.evaluate())
 
         else:
-            raise ValueError("Evaluation error: couldn't evaluate segment:\n"
-                             + str(self))
+            raise ValueError("Evaluation error: couldn't evaluate segment:\nBad content length\n"
+                             + repr(self))
+
+    def getOperatorPrecedence(self):
+        if len(self.contents) in [0, 1]:
+            return operation.NO_OPERATION_PRECEDENCE
+        elif len(self.contents) == 3:
+            if isinstance(self.contents[1], tokens.Operator):
+                return operation.operatorPrecedence(self.contents[1])
+            else:
+                raise ValueError("Precedence error: failed to get operator for:\n"
+                                 + repr(self))
+        else:
+            raise ValueError("Precedence error: Bad content length for\n"
+                             + repr(self))
 
 class Function(Segment):
     def __init__(self, type: tokens.Symbol, on: Segment):
@@ -176,6 +203,9 @@ class Function(Segment):
 
     def __str__(self):
         return f"{self._op}({str(self._on)})"
+
+    def __repr__(self) -> str:
+        return f"Function({self._op}, {self._on})"
 
     def evaluate(self):
         e = self._on.evaluate()

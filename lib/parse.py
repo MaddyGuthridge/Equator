@@ -24,6 +24,7 @@ def parseToken(word: str, unwrap_symbols=True):
             return tokens.Symbol(operation.getConstant(word))
 
 def prepString(input: str) -> list:
+    input = input.replace(' ', '')
     words = []
     word = ""
     for i in input:
@@ -45,7 +46,6 @@ def prepString(input: str) -> list:
     return out
 
 def prepStrings(input: str) -> list:
-    input = input.replace(' ', '')
     
     # Split into individual expressions (semicolon separated)
     exprs_str = input.split(";")

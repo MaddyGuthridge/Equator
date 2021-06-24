@@ -3,6 +3,14 @@ import sympy as sym
 from decimal import Decimal
 from fractions import Fraction
 
+FUNCTION_OPERATOR_PRECEDENCE = 10
+NO_OPERATION_PRECEDENCE = 10
+
+def operatorPrecedence(op: str):
+    if   op in ['^']: return 3
+    elif op in ['*', '/']: return 2
+    elif op in ['+', '-']: return 1
+
 def conditionalDecimal(a):
     return Decimal(str(float(a))) if isinstance(a, Fraction) else a
 
