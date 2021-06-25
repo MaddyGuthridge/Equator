@@ -25,4 +25,3 @@ def test_equation():
     a = helpers.simplifyEquationResults(equate("x - 1 = 0"))
     assert a == [{'x': '1'}]
     
-test_equation()
