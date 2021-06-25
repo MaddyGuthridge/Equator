@@ -10,9 +10,9 @@ class Segment:
             return
         self.parseBrackets()
         self.parseFunctions()
-        self.parseLeadingNegative()
         self.parseOperators(['^'])
         self.parseOperators(['*', '/'])
+        self.parseLeadingNegative()
         self.parseOperators(['+', '-'])
         self.parseOperators(['='])
     
@@ -111,7 +111,7 @@ class Segment:
             assert len(self.contents) >= 2
             self.contents = [NegateFunction(self.contents[1])] + self.contents[2:]
         
-        out = [self.contents[0]]
+        """out = [self.contents[0]]
         skip = 0
         for i in range(1, len(self.contents) - 1):
             if skip > 0:
@@ -127,7 +127,7 @@ class Segment:
         if skip == 0 and len(self.contents) > 1:
             out.append(self.contents[-1])
         
-        self.contents = out
+        self.contents = out"""
 
     def parseOperators(self, operators: list):
         
@@ -153,8 +153,16 @@ class Segment:
                     and str(self.contents[i]) in operators and not found:
                         skip = 2
                         found = True
-                        # Create a segment of tokens surrounded by the operator
-                        out.append(Segment(self.contents[i-1 : i+2]))
+                        # Check for leading negative
+                        if self.contents[i+1] == '-':
+                            if len(self.contents) == i + 2:
+                                raise ValueError("Parser Error: Expected value after leading negative")
+                            neg = NegateFunction(self.contents[i+2])
+                            skip += 1
+                            out.append(Segment(self.contents[i-1 : i+1] + [neg]))
+                        else:
+                            # Create a segment of tokens surrounded by the operator
+                            out.append(Segment(self.contents[i-1 : i+2]))
                 else:
                     out.append(self.contents[i-1])
 

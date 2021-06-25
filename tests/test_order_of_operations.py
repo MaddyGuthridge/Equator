@@ -17,7 +17,7 @@ def test_operations_power():
 def test_leading_negative():
     assert equate("-1") == ["-1"]
     assert equate("-2^2") == ["-4"]
-    assert equate("4^-1") == ["-1/4"]
+    assert equate("4^-1") == ["1 / 4"]
     assert equate("4 * -1") == ["-4"]
 
 def test_brackets():
