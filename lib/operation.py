@@ -67,5 +67,7 @@ def doFunction(func: str, a):
 def getConstant(const: str):
     if const == "pi":
         return str(math.pi)
+    if const == "I":
+        return sym.sqrt(-1)
     else:
         return const
