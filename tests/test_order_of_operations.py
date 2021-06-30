@@ -21,6 +21,7 @@ def test_leading_negative():
     assert equate("4^-1") == ["1 / 4"]
     assert equate("4 * -1") == ["-4"]
     assert equate("-2^2 *-4^-3") == ["1 / 16"]
+    assert equate("2^-3/2") == ["1 / 16"]
 
 def test_brackets():
     assert equate("(2 + 1) / 3") == ["1"]

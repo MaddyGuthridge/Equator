@@ -15,10 +15,12 @@ if __name__ == "__main__":
         print("Interpreter Mode")
         print("Press Ctrl+C to quit")
         try:
+            counter = 1
             while True:
                 try:
-                    inp = input(Fore.RESET + "calc > " + Fore.YELLOW)
+                    inp = input(Fore.RESET + f"eq {Fore.YELLOW}[{counter}]{Fore.WHITE} > " + Fore.YELLOW)
                     printOutput(smart_equate.equate(inp))
+                    counter += 1
                     
                 except Exception as e:
                     print(Fore.RED, end='')
