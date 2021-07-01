@@ -93,7 +93,7 @@ def reduceSqrt(sq: Fraction):
     """
     # Operate on numerator and denominator seperately
     
-    numerator, denominator = sq.as_integer_ratio()
+    numerator, denominator = sq.numerator, sq.denominator
     
     num_a, num_b = _doReduceSqrt(numerator)
     den_a, den_b = _doReduceSqrt(denominator)
