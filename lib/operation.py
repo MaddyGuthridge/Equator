@@ -58,9 +58,9 @@ def doFunction(func: str, a):
     elif func == "abs":
         return sym.Abs(a)
     elif func == "deg":
-        return sym.deg(a)
+        return a * 180 / consts.CONSTANTS["pi"]
     elif func == "rad":
-        return sym.rad(a)
+        return a / 180 * consts.CONSTANTS["pi"]
     elif func == consts.NEGATE:
         return -a
 
