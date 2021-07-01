@@ -29,6 +29,7 @@ def conditionalFraction(a):
 
 def zeroRound(num):
     """Replaces values close to zero with zero
+    And values close(ish) to infinity with infinity
 
     Args:
         num (Decimal | Any): value to check (will only round 
@@ -41,6 +42,8 @@ def zeroRound(num):
         num = Decimal(float(num))
         if abs(num) < 10**(-consts.MAX_PRECISION):
             num = Decimal(0)
+        elif abs(num) > 10**consts.MAX_PRECISION:
+            num = Decimal("inf")
     except Exception:
         pass
     return num
