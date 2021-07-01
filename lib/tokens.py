@@ -55,6 +55,10 @@ class Number(Token):
     def __str__(self) -> str:
         ev = self.evaluate()
         
+        # Check for zeros
+        if ev == 0:
+            return "0"
+        
         # Check for multiples of pi
         pi_div = str(Fraction(ev / consts.CONSTANTS["pi"]).limit_denominator(consts.FRACTION_DENOM_LIMITER))
         if len(pi_div) < 10:
