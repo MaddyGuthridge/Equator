@@ -3,7 +3,7 @@ import math
 import decimal
 
 NAME = "Equator"
-VERSION = "0.2.1"
+VERSION = "0.3.0"
 
 # Get 15 decimal places of precision - the max given by sympy
 MAX_PRECISION = 14
