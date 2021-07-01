@@ -8,6 +8,7 @@ def test_constant():
     """Ensure constants work
     """
     assert equate("1") == ["1"]
+    assert equate("0") == ["0"]
 
 def test_symbol():
     """Ensure symbols work
