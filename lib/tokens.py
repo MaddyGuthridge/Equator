@@ -4,6 +4,7 @@ from fractions import Fraction
 from decimal import Decimal
 
 from . import operation
+from . import consts
 
 class Token:
     """Token base type
@@ -42,6 +43,16 @@ class Number(Token):
 
     def __str__(self) -> str:
         return str(operation.conditionalFraction(self.evaluate()))
+
+class Constant(Number):
+    """Token representing a constant such as pi. 
+    Stringifies to the name of the constant
+    """
+    def evaluate(self):
+        return consts.CONSTANTS[self._contents]
+    
+    def __str__(self) -> str:
+        return self._contents
 
 class Symbol(Token):
     """Token representing a symbol

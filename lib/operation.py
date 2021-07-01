@@ -65,7 +65,7 @@ def doFunction(func: str, a):
         return -a
 
 def getConstant(const: str):
-    if const == "pi":
-        return str(math.pi)
+    if const in consts.CONSTANTS:
+        return str(consts.CONSTANTS[const])
     else:
         return const

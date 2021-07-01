@@ -1,4 +1,7 @@
 
+import math
+import decimal
+
 NAME = "Equator"
 VERSION = "0.2.1"
 
@@ -15,3 +18,7 @@ OPERATORS = [
     ]
 
 NEGATE = "neg"
+
+CONSTANTS = {
+    "pi": decimal.Decimal(math.pi)
+}
