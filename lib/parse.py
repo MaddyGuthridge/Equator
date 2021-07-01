@@ -17,11 +17,11 @@ def parseToken(word: str, unwrap_symbols=True):
     elif word in consts.OPERATORS:
         return tokens.Operator(word)
     else:
-        # Unwrap symbols
-        if unwrap_symbols:
-            return parseToken(operation.getConstant(word), unwrap_symbols=False)
+        # Parse symbols and constants
+        if word in consts.CONSTANTS:
+            return tokens.Constant(word)
         else:
-            return tokens.Symbol(operation.getConstant(word))
+            return tokens.Symbol(word)
 
 def prepString(input: str) -> list:
     input = input.replace(' ', '')

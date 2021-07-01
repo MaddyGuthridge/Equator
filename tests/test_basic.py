@@ -2,7 +2,7 @@
 """
 from lib.smart_equate import equate
 
-from tests import helpers
+from .helpers import simplifyEq
 
 def test_constant():
     """Ensure constants work
@@ -22,5 +22,5 @@ def test_operation():
 def test_equation():
     """Ensure equations are solved correctly
     """
-    a = helpers.simplifyEquationResults(equate("x - 1 = 0"))
+    a = simplifyEq(equate("x - 1 = 0"))
     assert a == [{'x': '1'}]
