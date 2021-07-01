@@ -38,6 +38,8 @@ def test_degrees():
 
 ################################################################################
 
+# Trig functions
+
 def test_sin():
     assert simplifyExp(equate("sin(pi)")) == ["0"]
     assert simplifyExp(equate("sin(pi/2)")) == ["1"]
@@ -52,6 +54,21 @@ def test_tan():
     assert simplifyExp(equate("tan(pi)")) == ["0"]
     assert simplifyExp(equate("tan(pi/4)")) == ["1"]
     assert simplifyExp(equate("tan(pi/2)")) == ["oo"]
+
+def test_asin():
+    assert simplifyExp(equate("asin(0)")) == ["0"]
+    assert simplifyExp(equate("asin(1)")) == ["1/2*pi"]
+    assert simplifyExp(equate("asin(1/2*sqrt(3))")) == ["1/3*pi"]
+
+def test_acos():
+    assert simplifyExp(equate("acos(-1)")) == ["pi"]
+    assert simplifyExp(equate("acos(0)")) == ["1/2*pi"]
+    assert simplifyExp(equate("acos(1/2)")) == ["1/3*pi"]
+
+def test_atan():
+    assert simplifyExp(equate("atan(0)")) == ["0"]
+    assert simplifyExp(equate("atan(1)")) == ["1/4*pi"]
+    assert simplifyExp(equate("atan(oo)")) == ["1/2*pi"]
 
 ################################################################################
 

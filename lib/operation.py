@@ -76,6 +76,12 @@ def doFunction(func: str, a):
         return zeroRound(sym.cos(a))
     elif func == "tan":
         return zeroRound(sym.tan(a))
+    elif func == "asin":
+        return zeroRound(sym.asin(a))
+    elif func == "acos":
+        return zeroRound(sym.acos(a))
+    elif func == "atan":
+        return zeroRound(sym.atan(a))
     elif func == "abs":
         return sym.Abs(a)
     elif func == "deg":
