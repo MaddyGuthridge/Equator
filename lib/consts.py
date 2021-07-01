@@ -24,5 +24,5 @@ OPERATORS = [
 NEGATE = "neg"
 
 CONSTANTS = {
-    "pi": round(decimal.Decimal(math.pi), MAX_PRECISION) 
+    "pi": decimal.Decimal(math.pi)
 }
