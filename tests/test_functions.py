@@ -51,7 +51,7 @@ def test_cos():
 def test_tan():
     assert simplifyExp(equate("tan(pi)")) == ["0"]
     assert simplifyExp(equate("tan(pi/4)")) == ["1"]
-    assert simplifyExp(equate("tan(pi/2)")) == ["1/2"]
+    assert simplifyExp(equate("tan(pi/2)")) == ["oo"]
 
 ################################################################################
 
