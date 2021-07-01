@@ -19,6 +19,14 @@ class Token:
     def __repr__(self) -> str:
         return self._contents
 
+    def str_decimal(self):
+        """Returns self as a decimal where possible
+
+        Returns:
+            str: contents as a decimal if possible
+        """
+        return self._contents
+
     def evaluate(self):
         return self._contents
     
@@ -39,10 +47,34 @@ class Number(Token):
     Evaluate returns numberified version
     """
     def evaluate(self):
-        return operation.conditionalFraction(Decimal(self._contents))
+        return Decimal(self._contents)
+
+    def str_decimal(self):
+        return str(self.evaluate())
 
     def __str__(self) -> str:
-        return str(operation.conditionalFraction(self.evaluate()))
+        ev = self.evaluate()
+        
+        # Check for multiples of pi
+        pi_div = str(Fraction(ev / consts.CONSTANTS["pi"]).limit_denominator(consts.FRACTION_DENOM_LIMITER))
+        if len(pi_div) < 10:
+            if pi_div == "1":
+                return "pi"
+            return pi_div + "*pi"
+        
+        
+        # Present as fraction if possible
+        fract = str(Fraction(ev).limit_denominator(consts.FRACTION_DENOM_LIMITER))
+        if len(fract) < 10:
+            return fract
+        
+        # Check for square roots
+        sqr = str(Fraction(ev ** 2).limit_denominator(consts.FRACTION_DENOM_LIMITER))
+        if len(sqr) < 10:
+            return "sqrt(" + sqr + ")"
+        
+        return str(ev)
+        
 
 class Constant(Number):
     """Token representing a constant such as pi. 
