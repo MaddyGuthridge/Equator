@@ -27,6 +27,24 @@ def conditionalFraction(a):
     else:
         return a
 
+def zeroRound(num):
+    """Replaces values close to zero with zero
+
+    Args:
+        num (Decimal | Any): value to check (will only round 
+                             if can be converted to decimal)
+
+    Returns:
+        Decimal | Any: value, rounded if necessary
+    """
+    try:
+        num = Decimal(float(num))
+        if abs(num) < 10**(-consts.MAX_PRECISION):
+            num = Decimal(0)
+    except Exception:
+        pass
+    return num
+
 def doOperation(operator: str, a, b):
     a = conditionalDecimal(a)
     b = conditionalDecimal(b)
@@ -50,11 +68,11 @@ def doFunction(func: str, a):
     if func == "sqrt":
         return sym.sqrt(a)
     elif func == "sin":
-        return sym.sin(a)
+        return zeroRound(sym.sin(a))
     elif func == "cos":
-        return sym.cos(a)
+        return zeroRound(sym.cos(a))
     elif func == "tan":
-        return sym.tan(a)
+        return zeroRound(sym.tan(a))
     elif func == "abs":
         return sym.Abs(a)
     elif func == "deg":
