@@ -69,9 +69,11 @@ class Number(Token):
             return fract
         
         # Check for square roots
-        sqr = str(Fraction(ev ** 2).limit_denominator(consts.FRACTION_DENOM_LIMITER))
-        if len(sqr) < 10:
-            return "sqrt(" + sqr + ")"
+        sqr = Fraction(ev ** 2).limit_denominator(consts.FRACTION_DENOM_LIMITER)
+        if len(str(sqr)) < 10:
+            mul, rt = operation.reduceSqrt(sqr)
+            mul = f"{mul}*" if mul != 1 else ""
+            return f"{mul}sqrt({rt})"
         
         return str(ev)
         

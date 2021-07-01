@@ -69,3 +69,33 @@ def getConstant(const: str):
         return str(consts.CONSTANTS[const])
     else:
         return const
+
+def _doReduceSqrt(num: int):
+    # Generate a list of all perfect squares up to num
+    iterator = range(2, int(math.sqrt(num)) + 1)
+    squares = [i**2 for i in iterator]
+    roots = [i for i in iterator]
+    multiple = 1
+    for rt, sq in zip(roots, squares):
+        if num % sq == 0:
+            multiple *= rt
+            num //= sq
+    return multiple, num
+
+def reduceSqrt(sq: Fraction):
+    """Returns a reduced equivalent of a square root
+
+    Args:
+        sq (Decimal): input decimal (squared)
+
+    Returns:
+        tuple: (a [Fraction], b [Fractions]) representing a*sqrt(b)
+    """
+    # Operate on numerator and denominator seperately
+    
+    numerator, denominator = sq.as_integer_ratio()
+    
+    num_a, num_b = _doReduceSqrt(numerator)
+    den_a, den_b = _doReduceSqrt(denominator)
+    
+    return Fraction(num_a, den_a), Fraction(num_b, den_b)
