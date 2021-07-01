@@ -1,6 +1,8 @@
 """Ensure that order of operations are considered correctly
 """
 
+from .helpers import simplifyExp
+
 from lib.smart_equate import equate
 
 def test_operations_add_subtract_multiply_divide():
@@ -18,10 +20,10 @@ def test_operations_power():
 def test_leading_negative():
     assert equate("-1") == ["-1"]
     assert equate("-2^2") == ["-4"]
-    assert equate("4^-1") == ["1 / 4"]
+    assert simplifyExp(equate("4^-1")) == ["1/4"]
     assert equate("4 * -1") == ["-4"]
-    assert equate("-2^2 *-4^-3") == ["1 / 16"]
-    assert equate("2^-3/2") == ["1 / 16"]
+    assert simplifyExp(equate("-2^2 *-4^-3")) == ["1/16"]
+    assert simplifyExp(equate("2^-3/2")) == ["1/16"]
 
 def test_brackets():
     assert equate("(2 + 1) / 3") == ["1"]

@@ -3,9 +3,11 @@
 
 from lib.smart_equate import equate
 
+from .helpers import simplifyExp
+
 def test_basic():
-    assert equate("1/2") == ["1 / 2"]
-    assert equate("0.5") == ["1 / 2"]
+    assert simplifyExp(equate("1/2")) == ["1/2"]
+    assert simplifyExp(equate("0.5")) == ["1/2"]
 
 def test_with_symbols():
     #assert equate("1/2 * x") == ["x / 2"]
