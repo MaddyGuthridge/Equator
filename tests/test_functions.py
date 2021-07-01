@@ -37,3 +37,24 @@ def test_cos():
     assert simplifyExp(equate("cos(pi)")) == ["-1"]
     assert simplifyExp(equate("cos(pi/2)")) == ["0"]
     assert simplifyExp(equate("cos(pi/3)")) == ["1/2"]
+
+def test_exp():
+    assert simplifyExp(equate("exp(0)")) == ["1"]
+    assert simplifyExp(equate("exp(1)")) == ["2.71828182845905"]
+
+def test_log10():
+    assert simplifyExp(equate("log(1)")) == ["0"]
+    assert simplifyExp(equate("log(10)")) == ["1"]
+    assert simplifyExp(equate("log(100)")) == ["2"]
+    assert simplifyExp(equate("log(1/10)")) == ["-1"]
+
+def test_ln():
+    assert simplifyExp(equate("ln(1)")) == ["0"]
+    assert simplifyExp(equate("ln(e)")) == ["1"]
+    assert simplifyExp(equate("ln(exp(5))")) == ["5"]
+
+def test_log_n():
+    assert simplifyExp(equate("log_2(4)")) == ["2"]
+    assert simplifyExp(equate("log_10(1000)")) == ["3"]
+    assert simplifyExp(equate("log_3(3)")) == ["1"]
+    assert simplifyExp(equate("log_0.5(2)")) == ["-1"]

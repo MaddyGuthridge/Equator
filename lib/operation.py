@@ -81,6 +81,15 @@ def doFunction(func: str, a):
         return a / 180 * consts.CONSTANTS["pi"]
     elif func == consts.NEGATE:
         return -a
+    elif func == "exp":
+        return sym.exp(a)
+    elif func == "log":
+        return sym.log(a, 10.0)
+    elif func == "ln":
+        return sym.log(a)
+    elif func.startswith("log_"):
+        base = Decimal(func.replace("log_", ""))
+        return sym.log(a, base)
 
 def getConstant(const: str):
     if const in consts.CONSTANTS:
