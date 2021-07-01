@@ -1,3 +1,4 @@
+import math
 import sympy as sym
 
 from fractions import Fraction
@@ -42,6 +43,51 @@ class Operator(Token):
         if isinstance(o, str):
             return o == self._contents
 
+def asMultipleOf(a: Decimal, b: str):
+    """Returns a in terms of b if doing so makes sense
+
+    Args:
+        a (Decimal): number
+        b (str): constant
+
+    Returns:
+        str | None: a in terms of b or a normally (but None if doing so is unreasonable)
+    """
+    ret = str(Fraction(a / consts.CONSTANTS[b]).limit_denominator(consts.FRACTION_DENOM_LIMITER))
+    if len(ret) < 10:
+        if ret == "1":
+            return b
+        return ret + "*" + b
+    else:
+        return None
+
+def asPowerOf(a: Decimal, b: str):
+    """Returns a as a power of b if doing so makes sense
+
+    Args:
+        a (Decimal): number
+        b (str): constant
+
+    Returns:
+        str | None: a as a power of b or a normally (but None if doing so is unreasonable)
+    """
+    ret = str(Fraction(math.log(a, consts.CONSTANTS[b])).limit_denominator(consts.FRACTION_DENOM_LIMITER))
+    # Add brackets if it's a fraction
+    if "/" in ret:
+        ret = f"({ret})"
+    # Prevent returning this when it's zero since that doesn't read as well as just zero
+    if ret == "0":
+        return None
+    # Return the base if it's just a power of 1
+    if ret == "1":
+        return b
+    # If it's a reasonable length, return it as a power
+    if len(ret) < 10:
+        return b + "^" + ret
+    # otherwise return None
+    else:
+        return None
+
 class Number(Token):
     """Token representing a number
     Evaluate returns numberified version
@@ -60,12 +106,11 @@ class Number(Token):
             return "0"
         
         # Check for multiples of pi
-        pi_div = str(Fraction(ev / consts.CONSTANTS["pi"]).limit_denominator(consts.FRACTION_DENOM_LIMITER))
-        if len(pi_div) < 10:
-            if pi_div == "1":
-                return "pi"
-            return pi_div + "*pi"
-        
+        in_pi = asMultipleOf(ev, "pi")
+        if in_pi is not None: return in_pi
+        # And of e
+        in_e = asPowerOf(ev, "e")
+        if in_e is not None: return in_e
         
         # Present as fraction if possible
         fract = str(Fraction(ev).limit_denominator(consts.FRACTION_DENOM_LIMITER))
@@ -80,7 +125,6 @@ class Number(Token):
             return f"{mul}sqrt({rt})"
         
         return str(ev)
-        
 
 class Constant(Number):
     """Token representing a constant such as pi. 

@@ -40,7 +40,8 @@ def test_cos():
 
 def test_exp():
     assert simplifyExp(equate("exp(0)")) == ["1"]
-    assert simplifyExp(equate("exp(1)")) == ["2.71828182845905"]
+    assert simplifyExp(equate("exp(1)")) == ["e"]
+    assert simplifyExp(equate("exp(5)")) == ["e^5"]
 
 def test_log10():
     assert simplifyExp(equate("log(1)")) == ["0"]
