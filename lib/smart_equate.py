@@ -26,7 +26,6 @@ def equate(input: str):
         elif t != inType:
             raise ValueError("Parse Error: cannot mix expressions and equations")
         
-        
         parsed.append(seg.evaluate())
 
 
@@ -39,9 +38,10 @@ def equate(input: str):
         
         for r in res:
             for key, value in r.items():
+                value = sym.simplify(value)
                 r[key] = main.formatOutput(value)
     elif inType == "ev":
-        res = [main.formatOutput(p) for p in parsed]
+        res = [main.formatOutput(sym.simplify(p)) for p in parsed]
     else:
         raise ValueError("Something went horribly wrong")
     return res
