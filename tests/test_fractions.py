@@ -12,5 +12,3 @@ def test_basic():
 def test_with_symbols():
     #assert equate("1/2 * x") == ["x / 2"]
     pass
-
-
