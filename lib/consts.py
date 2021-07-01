@@ -24,5 +24,8 @@ OPERATORS = [
 NEGATE = "neg"
 
 CONSTANTS = {
-    "pi": decimal.Decimal(math.pi)
+    "pi": decimal.Decimal(math.pi),
+    "e": decimal.Decimal(math.e),
+    "oo": decimal.Decimal("inf"),
+    "inf": decimal.Decimal("inf")
 }
