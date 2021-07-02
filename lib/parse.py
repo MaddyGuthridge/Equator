@@ -59,6 +59,7 @@ def parseToken(word: str, unwrap_symbols=True):
 
 def prepString(input: str) -> list:
     input = input.replace(' ', '')
+    input = input.lower()
     words = []
     word = ""
     for i in input:
