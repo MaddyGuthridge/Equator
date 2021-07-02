@@ -11,18 +11,18 @@ def isDecimal(word: str):
     except Exception:
         return False
 
-def isWordExponent(word: str) -> int:
+def isWordExponent(word: str) -> bool:
     """Returns True if it's the start of an exponent spanning multiple words
     otherwise False
     """
     # If the word is one character long, it can't be using exponent notation
     if len(word) == 1:
-        return None
+        return False
     # If it ends with "e" it might be the first part of an exponent notation number
     if word.endswith("e"):
         if isDecimal(word[:-1]):
-            return word[:-1]
-    return None
+            return True
+    return False
 
 def parseExponentNotation(words: list):
     ret = []
