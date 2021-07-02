@@ -53,7 +53,10 @@ def asMultipleOf(a: Decimal, b: str):
     Returns:
         str | None: a in terms of b or a normally (but None if doing so is unreasonable)
     """
+    # FIXME: present as pi/3 rather than 1/3*pi
     ret = str(Fraction(a / consts.CONSTANTS[b]).limit_denominator(consts.FRACTION_DENOM_LIMITER))
+    if ret == "0":
+        return None
     if len(ret) < 10:
         if ret == "1":
             return b
@@ -114,12 +117,12 @@ class Number(Token):
         
         # Present as fraction if possible
         fract = str(Fraction(ev).limit_denominator(consts.FRACTION_DENOM_LIMITER))
-        if len(fract) < 10:
+        if len(fract) < 10 and fract != "0":
             return fract
         
         # Check for square roots
         sqr = Fraction(ev ** 2).limit_denominator(consts.FRACTION_DENOM_LIMITER)
-        if len(str(sqr)) < 10:
+        if len(str(sqr)) < 10 and sqr != 0:
             mul, rt = operation.reduceSqrt(sqr)
             mul = f"{mul}*" if mul != 1 else ""
             return f"{mul}sqrt({rt})"
