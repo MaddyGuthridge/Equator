@@ -91,6 +91,21 @@ def asPowerOf(a: Decimal, b: str):
     else:
         return None
 
+def stringifyDecimal(d: Decimal):
+    # Note: this would fail for d = 0, but there is a check earlier in a 
+    # parent function
+    a = math.log10(abs(d))
+    if 0 < a < 9:
+        r = d.quantize(Decimal(1)) if d == d.to_integral() else d.normalize()
+        r = str(r)
+    elif -8 <= a < -6:
+        r = str((d*100).normalize())
+        r = r[:2] + '00' + r[2:]
+    else:
+        r = d.normalize()
+        r = str(r)
+    return r
+
 class Number(Token):
     """Token representing a number
     Evaluate returns numberified version
@@ -99,7 +114,7 @@ class Number(Token):
         return Decimal(self._contents)
 
     def str_decimal(self):
-        return str(self.evaluate())
+        return stringifyDecimal(self.evaluate())
 
     def __str__(self) -> str:
         ev = self.evaluate()
@@ -118,6 +133,9 @@ class Number(Token):
         # Present as fraction if possible
         fract = str(Fraction(ev).limit_denominator(consts.FRACTION_DENOM_LIMITER))
         if len(fract) < 10 and fract != "0":
+            # If it's a whole number
+            if '/' not in fract:
+                return stringifyDecimal(ev)
             return fract
         
         # Check for square roots
@@ -127,7 +145,7 @@ class Number(Token):
             mul = f"{mul}*" if mul != 1 else ""
             return f"{mul}sqrt({rt})"
         
-        return str(ev)
+        return stringifyDecimal(ev)
 
 class Constant(Number):
     """Token representing a constant such as pi. 
