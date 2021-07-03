@@ -9,6 +9,10 @@ VERSION = "0.3.1"
 MAX_PRECISION = 14
 FRACTION_DENOM_LIMITER = 1_000_000_000
 
+# The minimum of abs(log_10(d)) for exponent to be presented using
+# exponent notation
+MIN_EXP_LOG = 9
+
 # Operators used to split string
 OPERATORS = [
     "(",

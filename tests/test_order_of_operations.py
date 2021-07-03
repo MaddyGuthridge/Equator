@@ -30,3 +30,7 @@ def test_brackets():
     assert equate("2^(1+1)") == ["4"]
     assert equate("2^(3^2)") == ["512"]
     assert equate("-(2 + 9)") == ["-11"]
+
+def test_exponent_operations():
+    assert equate("1E+1 + 2") == ["12"]
+    assert equate("1.25E1 - 0.5") == ["12"]

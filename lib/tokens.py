@@ -53,7 +53,10 @@ def asMultipleOf(a: Decimal, b: str):
     Returns:
         str | None: a in terms of b or a normally (but None if doing so is unreasonable)
     """
+    # FIXME: present as pi/3 rather than 1/3*pi
     ret = str(Fraction(a / consts.CONSTANTS[b]).limit_denominator(consts.FRACTION_DENOM_LIMITER))
+    if ret == "0":
+        return None
     if len(ret) < 10:
         if ret == "1":
             return b
@@ -88,6 +91,21 @@ def asPowerOf(a: Decimal, b: str):
     else:
         return None
 
+def stringifyDecimal(d: Decimal):
+    # Note: this would fail for d = 0, but there is a check earlier in a 
+    # parent function
+    a = math.log10(abs(d))
+    if 0 < a < 9:
+        r = d.quantize(Decimal(1)) if d == d.to_integral() else d.normalize()
+        r = str(r)
+    elif -8 <= a < -6:
+        r = str((d*100).normalize())
+        r = r[:2] + '00' + r[2:]
+    else:
+        r = d.normalize()
+        r = str(r)
+    return r
+
 class Number(Token):
     """Token representing a number
     Evaluate returns numberified version
@@ -96,7 +114,7 @@ class Number(Token):
         return Decimal(self._contents)
 
     def str_decimal(self):
-        return str(self.evaluate())
+        return stringifyDecimal(self.evaluate())
 
     def __str__(self) -> str:
         ev = self.evaluate()
@@ -114,17 +132,20 @@ class Number(Token):
         
         # Present as fraction if possible
         fract = str(Fraction(ev).limit_denominator(consts.FRACTION_DENOM_LIMITER))
-        if len(fract) < 10:
+        if len(fract) < 10 and fract != "0":
+            # If it's a whole number
+            if '/' not in fract:
+                return stringifyDecimal(ev)
             return fract
         
         # Check for square roots
         sqr = Fraction(ev ** 2).limit_denominator(consts.FRACTION_DENOM_LIMITER)
-        if len(str(sqr)) < 10:
+        if len(str(sqr)) < 10 and sqr != 0:
             mul, rt = operation.reduceSqrt(sqr)
             mul = f"{mul}*" if mul != 1 else ""
             return f"{mul}sqrt({rt})"
         
-        return str(ev)
+        return stringifyDecimal(ev)
 
 class Constant(Number):
     """Token representing a constant such as pi. 
