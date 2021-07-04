@@ -2,7 +2,7 @@ import math
 import sympy as sym
 
 from fractions import Fraction
-from decimal import Decimal
+from decimal import Decimal, Context, localcontext
 
 from . import operation
 from . import consts
@@ -91,20 +91,20 @@ def asPowerOf(a: Decimal, b: str):
     else:
         return None
 
+def strDecimal_Sci(d: Decimal) -> str:
+    return f"{d.normalize():e}"
+
+def strDecimal_Norm(d: Decimal) -> str:
+    return f"{d.normalize():f}"
+
 def stringifyDecimal(d: Decimal):
     # Note: this would fail for d = 0, but there is a check earlier in a 
     # parent function
-    a = math.log10(abs(d))
-    if 0 < a < 9:
-        r = d.quantize(Decimal(1)) if d == d.to_integral() else d.normalize()
-        r = str(r)
-    elif -8 <= a < -6:
-        r = str((d*100).normalize())
-        r = r[:2] + '00' + r[2:]
+    a = abs(math.log10(abs(d)))
+    if a < 9:
+        return strDecimal_Norm(d)
     else:
-        r = d.normalize()
-        r = str(r)
-    return r
+        return strDecimal_Sci(d)
 
 class Number(Token):
     """Token representing a number
