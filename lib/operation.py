@@ -65,7 +65,7 @@ def doOperation(operator: str, a, b):
         res = sym.Eq(a, b)
     else:
         raise ValueError("Unrecognised operation: " + operator)
-    return conditionalFraction(res)
+    return res
 
 def doFunction(func: str, a):
     if func == "sqrt":
