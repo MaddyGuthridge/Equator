@@ -14,4 +14,4 @@ def runInput(expression):
 def formatOutput(output, num_mode:str=None):
     output = parse.prepString(str(output).replace('**', '^'))
     s = segment.Segment(output)
-    return str(s)
+    return s.stringify(num_mode)
