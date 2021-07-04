@@ -114,9 +114,30 @@ class Number(Token):
         return Decimal(self._contents)
 
     def str_decimal(self):
+        """Always stringifies to a decimal 
+        (either standard or scientific notation)
+
+        Returns:
+            str: decimal
+        """
         return stringifyDecimal(self.evaluate())
 
+    def str_scientific(self):
+        """Always stringifies to scientific notation
+        """
+        return strDecimal_Sci(self.evaluate())
+    
+    def str_standard(self):
+        """Always stringifies to standard decimal notation
+        """
+        return strDecimal_Norm(self.evaluate())
+
     def __str__(self) -> str:
+        """Smart stringify: determines the best format and stringifies to that
+
+        Returns:
+            str: evaluation
+        """
         ev = self.evaluate()
         
         # Check for zeros
