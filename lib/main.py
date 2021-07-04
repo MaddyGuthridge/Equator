@@ -11,7 +11,7 @@ def splitInput(expression):
 def runInput(expression):
     return smart_equate.equate(expression)
 
-def formatOutput(output):
+def formatOutput(output, num_mode:str=None):
     output = parse.prepString(str(output).replace('**', '^'))
     s = segment.Segment(output)
     return str(s)

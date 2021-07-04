@@ -20,13 +20,8 @@ class Token:
     def __repr__(self) -> str:
         return self._contents
 
-    def str_decimal(self):
-        """Returns self as a decimal where possible
-
-        Returns:
-            str: contents as a decimal if possible
-        """
-        return self._contents
+    def stringify(self, num_mode=None):
+        return str(self)
 
     def evaluate(self):
         return self._contents
@@ -113,12 +108,12 @@ class Number(Token):
     def evaluate(self):
         return Decimal(self._contents)
 
-    def str_decimal(self):
-        """Always stringifies to a decimal 
+    def str_number(self):
+        """Stringifies to a number 
         (either standard or scientific notation)
 
         Returns:
-            str: decimal
+            str: number
         """
         return stringifyDecimal(self.evaluate())
 
@@ -127,10 +122,22 @@ class Number(Token):
         """
         return strDecimal_Sci(self.evaluate())
     
-    def str_standard(self):
+    def str_decimal(self):
         """Always stringifies to standard decimal notation
         """
         return strDecimal_Norm(self.evaluate())
+
+    def stringify(self, num_mode):
+        if num_mode is None:
+            return str(self)
+        elif num_mode == "dec":
+            return self.str_decimal()
+        elif num_mode == "sci":
+            return self.str_scientific()
+        elif num_mode == "num":
+            return self.str_number()
+        else:
+            raise ValueError("Bad stringify mode")
 
     def __str__(self) -> str:
         """Smart stringify: determines the best format and stringifies to that
