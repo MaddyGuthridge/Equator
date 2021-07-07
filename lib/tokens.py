@@ -2,7 +2,7 @@ import math
 import sympy as sym
 
 from fractions import Fraction
-from decimal import Decimal
+from decimal import Decimal, Context, localcontext
 
 from . import operation
 from . import consts
@@ -20,13 +20,8 @@ class Token:
     def __repr__(self) -> str:
         return self._contents
 
-    def str_decimal(self):
-        """Returns self as a decimal where possible
-
-        Returns:
-            str: contents as a decimal if possible
-        """
-        return self._contents
+    def stringify(self, num_mode=None):
+        return str(self)
 
     def evaluate(self):
         return self._contents
@@ -91,20 +86,20 @@ def asPowerOf(a: Decimal, b: str):
     else:
         return None
 
+def strDecimal_Sci(d: Decimal) -> str:
+    return f"{d.normalize():e}"
+
+def strDecimal_Norm(d: Decimal) -> str:
+    return f"{d.normalize():f}"
+
 def stringifyDecimal(d: Decimal):
     # Note: this would fail for d = 0, but there is a check earlier in a 
     # parent function
-    a = math.log10(abs(d))
-    if 0 < a < 9:
-        r = d.quantize(Decimal(1)) if d == d.to_integral() else d.normalize()
-        r = str(r)
-    elif -8 <= a < -6:
-        r = str((d*100).normalize())
-        r = r[:2] + '00' + r[2:]
+    a = abs(math.log10(abs(d)))
+    if a < 9:
+        return strDecimal_Norm(d)
     else:
-        r = d.normalize()
-        r = str(r)
-    return r
+        return strDecimal_Sci(d)
 
 class Number(Token):
     """Token representing a number
@@ -113,10 +108,43 @@ class Number(Token):
     def evaluate(self):
         return Decimal(self._contents)
 
-    def str_decimal(self):
+    def str_number(self):
+        """Stringifies to a number 
+        (either standard or scientific notation)
+
+        Returns:
+            str: number
+        """
         return stringifyDecimal(self.evaluate())
 
+    def str_scientific(self):
+        """Always stringifies to scientific notation
+        """
+        return strDecimal_Sci(self.evaluate())
+    
+    def str_decimal(self):
+        """Always stringifies to standard decimal notation
+        """
+        return strDecimal_Norm(self.evaluate())
+
+    def stringify(self, num_mode):
+        if num_mode is None:
+            return str(self)
+        elif num_mode == "dec":
+            return self.str_decimal()
+        elif num_mode == "sci":
+            return self.str_scientific()
+        elif num_mode == "num":
+            return self.str_number()
+        else:
+            raise ValueError("Bad stringify mode")
+
     def __str__(self) -> str:
+        """Smart stringify: determines the best format and stringifies to that
+
+        Returns:
+            str: evaluation
+        """
         ev = self.evaluate()
         
         # Check for zeros

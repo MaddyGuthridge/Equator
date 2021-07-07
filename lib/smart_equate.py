@@ -6,8 +6,14 @@ from . import segment
 from . import main
 from . import operation
 
-def equate(input: str):
-    prep = parse.prepStrings(input)
+def equate(inp: str):
+    # Determine output mode
+    if "->" in inp:
+        inp, output_mode = inp.split("->")
+        output_mode = output_mode.replace(" ", "")
+    else:
+        output_mode = None
+    prep = parse.prepStrings(inp)
     
     # For each expression, create a segment for it
     parsed = []
@@ -41,7 +47,7 @@ def equate(input: str):
                 value = sym.simplify(value)
                 r[key] = main.formatOutput(value)
     elif inType == "ev":
-        res = [main.formatOutput(sym.simplify(p)) for p in parsed]
+        res = [main.formatOutput(sym.simplify(p, ), output_mode) for p in parsed]
     else:
         raise ValueError("Something went horribly wrong")
     return res
