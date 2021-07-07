@@ -3,7 +3,7 @@
 
 from .helpers import simplifyExp
 
-from lib.smart_equate import equate
+from ..lib.smart_equate import equate
 
 def test_output_num():
     # Multiply by 10 to ensure that it isn't doing it in scientific notation
