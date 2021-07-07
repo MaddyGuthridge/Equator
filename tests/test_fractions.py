@@ -1,7 +1,7 @@
 """Ensure that results are presented as fractions where possible
 """
 
-from lib.smart_equate import equate
+from ..lib.smart_equate import equate
 
 from .helpers import simplifyExp
 

@@ -3,7 +3,7 @@
 
 from .helpers import simplifyExp
 
-from lib.smart_equate import equate
+from ..lib.smart_equate import equate
 
 def test_basic():
     assert simplifyExp(equate("1E0")) == ["1"]

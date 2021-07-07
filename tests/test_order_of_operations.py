@@ -3,7 +3,7 @@
 
 from .helpers import simplifyExp
 
-from lib.smart_equate import equate
+from ..lib.smart_equate import equate
 
 def test_operations_add_subtract_multiply_divide():
     assert equate("1 + 1 * 2") == ["3"]

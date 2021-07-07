@@ -1,6 +1,6 @@
 """Ensure that the most basic of the basic features work
 """
-from lib.smart_equate import equate
+from ..lib.smart_equate import equate
 
 from .helpers import simplifyEq
 

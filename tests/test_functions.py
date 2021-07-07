@@ -3,7 +3,7 @@
 
 from .helpers import simplifyExp
 
-from lib.smart_equate import equate
+from ..lib.smart_equate import equate
 
 ################################################################################
 
