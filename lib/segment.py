@@ -156,8 +156,14 @@ class Segment(tokens.Token):
                     and str(self._contents[i]) in operators and not found:
                         skip = 2
                         found = True
+                        # Check for negative before lower signs
+                        if isinstance(self._contents[i-1], tokens.Operator) \
+                            and self._contents[i] == '-':
+                                out.append(self._contents[i-1])
+                                out.append(NegateFunction(self._contents[i+1]))
+                                skip += 1
                         # Check for leading negative
-                        if self._contents[i+1] == '-':
+                        elif self._contents[i+1] == '-':
                             if len(self._contents) == i + 2:
                                 raise ValueError("Parser Error: Expected value after leading negative")
                             neg = NegateFunction(self._contents[i+2])

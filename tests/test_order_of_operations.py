@@ -17,14 +17,6 @@ def test_operations_power():
     assert equate("2 * 2^2") == ["8"]
     assert equate("2^3^2") == ["64"]
 
-def test_leading_negative():
-    assert equate("-1") == ["-1"]
-    assert equate("-2^2") == ["-4"]
-    assert simplifyExp(equate("4^-1")) == ["1/4"]
-    assert equate("4 * -1") == ["-4"]
-    assert simplifyExp(equate("-2^2 *-4^-3")) == ["1/16"]
-    assert simplifyExp(equate("2^-3/2")) == ["1/16"]
-
 def test_brackets():
     assert equate("(2 + 1) / 3") == ["1"]
     assert equate("2^(1+1)") == ["4"]
@@ -34,3 +26,6 @@ def test_brackets():
 def test_exponent_operations():
     assert equate("1E+1 + 2") == ["12"]
     assert equate("1.25E1 - 0.5") == ["12"]
+
+def test_equals():
+    pass
