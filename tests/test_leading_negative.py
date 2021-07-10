@@ -1,4 +1,6 @@
 """Test for ensuring that leading negatives are interpreted correctly
+
+Author: Miguel Guthridge (hdsq@outlook.com.au)
 """
 
 from .helpers import simplifyExp, simplifyEq

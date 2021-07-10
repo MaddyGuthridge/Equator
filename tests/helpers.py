@@ -1,6 +1,6 @@
 """Contains helper functions for testing output
 
-Author: Miguel Guthridge
+Author: Miguel Guthridge (hdsq@outlook.com.au)
 """
 
 def removeSpacing(s: str):

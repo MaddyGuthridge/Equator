@@ -1,4 +1,7 @@
 """Ensure that calculations involving smart representation work correctly
+This includes representing in terms of pi, e, and as square roots
+
+Author: Miguel Guthridge (hdsq@outlook.com.au)
 """
 
 from .helpers import simplifyExp

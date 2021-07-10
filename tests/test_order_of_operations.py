@@ -1,4 +1,6 @@
-"""Ensure that order of operations are considered correctly
+"""Ensure that order of operations are interpreted correctly
+
+Author: Miguel Guthridge (hdsq@outlook.com.au)
 """
 
 from .helpers import simplifyExp
