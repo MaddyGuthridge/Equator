@@ -49,7 +49,7 @@ def asMultipleOf(a: Decimal, b: str):
         str | None: a in terms of b or a normally (but None if doing so is unreasonable)
     """
     # FIXME: present as pi/3 rather than 1/3*pi
-    ret = str(Fraction(a / consts.CONSTANTS[b]).limit_denominator(consts.FRACTION_DENOM_LIMITER))
+    ret = str(Fraction(a / consts.NUM_CONSTANTS[b]).limit_denominator(consts.FRACTION_DENOM_LIMITER))
     if ret == "0":
         return None
     if len(ret) < 10:
@@ -69,7 +69,7 @@ def asPowerOf(a: Decimal, b: str):
     Returns:
         str | None: a as a power of b or a normally (but None if doing so is unreasonable)
     """
-    ret = str(Fraction(math.log(a, consts.CONSTANTS[b])).limit_denominator(consts.FRACTION_DENOM_LIMITER))
+    ret = str(Fraction(math.log(a, consts.NUM_CONSTANTS[b])).limit_denominator(consts.FRACTION_DENOM_LIMITER))
     # Add brackets if it's a fraction
     if "/" in ret:
         ret = f"({ret})"
@@ -180,7 +180,7 @@ class Constant(Number):
     Stringifies to the name of the constant
     """
     def evaluate(self):
-        return consts.CONSTANTS[self._contents]
+        return consts.NUM_CONSTANTS[self._contents]
     
     def __str__(self) -> str:
         return self._contents

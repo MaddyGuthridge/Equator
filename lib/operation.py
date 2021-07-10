@@ -1,3 +1,9 @@
+"""Contains functions for doing operations on things.
+Mostly used inside the evaluate functions of segments and the like
+
+Author: Miguel Guthridge (hdsq@outlook.com.au)
+"""
+
 import math
 import sympy as sym
 from decimal import Decimal
@@ -8,7 +14,15 @@ from . import consts
 FUNCTION_OPERATOR_PRECEDENCE = 10
 NO_OPERATION_PRECEDENCE = 10
 
-def operatorPrecedence(op: str):
+def operatorPrecedence(op: str) -> int:
+    """Returns an int representing the precedence of an operation
+
+    Args:
+        op (str): operator
+
+    Returns:
+        int: precedence
+    """
     if   op in ['^']: return 3
     elif op in ['*', '/']: return 2
     elif op in ['+', '-']: return 1
@@ -49,6 +63,21 @@ def zeroRound(num):
     return num
 
 def doOperation(operator: str, a, b):
+    """Function for handling the logic of an operation
+    In the future we may move to a method where operation token types implement
+    their own operate function, to remove nasty things like this
+
+    Args:
+        operator (str): operation to do
+        a (Operatable): left
+        b (Operatable): right
+
+    Raises:
+        ValueError: unrecognised operation (something is horribly wrong)
+
+    Returns:
+        Operatable: result
+    """
     a = conditionalDecimal(a)
     b = conditionalDecimal(b)
     if operator == '^':
@@ -68,6 +97,17 @@ def doOperation(operator: str, a, b):
     return res
 
 def doFunction(func: str, a):
+    """Function for handling logic of evaluating functions.
+    In the future this may be moved into subclasses for each function, in the
+    hope of tidying things up
+
+    Args:
+        func (str): function to do
+        a (Operatable): thing to operate on
+
+    Returns:
+        Operatable: result
+    """
     if func == "sqrt":
         return sym.sqrt(a)
     elif func == "sin":
@@ -85,9 +125,9 @@ def doFunction(func: str, a):
     elif func == "abs":
         return sym.Abs(a)
     elif func == "deg":
-        return a * 180 / consts.CONSTANTS["pi"]
+        return a * 180 / consts.NUM_CONSTANTS["pi"]
     elif func == "rad":
-        return a / 180 * consts.CONSTANTS["pi"]
+        return a / 180 * consts.NUM_CONSTANTS["pi"]
     elif func == consts.NEGATE:
         return -a
     elif func == "exp":
@@ -101,8 +141,17 @@ def doFunction(func: str, a):
         return sym.log(a, base)
 
 def getConstant(const: str):
-    if const in consts.CONSTANTS:
-        return str(consts.CONSTANTS[const])
+    """Returns the representation of a constant as a stringified decimal
+    r the original string if it isn't a constant
+
+    Args:
+        const (str): potential constant to replace
+
+    Returns:
+        str: representation of constant if applicable otherwise original str
+    """
+    if const in consts.NUM_CONSTANTS:
+        return str(consts.NUM_CONSTANTS[const])
     else:
         return const
 

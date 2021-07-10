@@ -1,22 +1,48 @@
+"""Class definitions for segments (collections of tokens in a parsable order)
+These contain:
+    - Definitions for managing order of operations
+    - Definitions for stringifying collections of tokens
+    - Definitions for evaluating segments
+
+Author: Miguel Guthridge (hdsq@outlook.com.au)
+"""
+
 from . import tokens
 from . import consts
 from . import operation
 
 class Segment(tokens.Token):
+    """Hierarchy of tokens in a form that can be simplified and calculated with
+    """
     def __init__(self, contents: list):
         self._contents = contents
         # Don't even bother trying to parse if there's nothing there
         if len(self._contents) == 0:
             return
-        self.parseBrackets()
-        self.parseFunctions()
-        self.parseOperators(['^'])
-        self.parseOperators(['*', '/'])
-        self.parseLeadingNegative()
-        self.parseOperators(['+', '-'])
-        self.parseOperators(['='])
+        self._parseBrackets()
+        self._parseFunctions()
+        self._parseOperators(['^'])
+        self._parseOperators(['*', '/'])
+        self._parseLeadingNegative()
+        self._parseOperators(['+', '-'])
+        self._parseOperators(['='])
     
-    def stringify(self, num_type=None):
+    def stringify(self, num_type:str=None):
+        """Returns a string representing the segment
+        Unlike str(obj), has options to control fancy stringification
+
+        Args:
+            num_type (str, optional): 
+                Option for number stringification mode. Is passed onto 
+                number-type tokens to control how they are represented.
+                Defaults to None.
+
+        Raises:
+            ValueError: Error's with user input
+
+        Returns:
+            str: string representation of this segment
+        """
         if len(self._contents) == 0:
             return "0"
         elif len(self._contents) == 1:
@@ -37,14 +63,63 @@ class Segment(tokens.Token):
             r_str = "(" + r_str + ")"
     
         return f"{l_str} {op.stringify(num_type)} {r_str}"
-    
+        
+    def evaluate(self):
+        """Returns the evaluation of this segment
+
+        Raises:
+            ValueError: Error when evaluating
+
+        Returns:
+            Operatable: The result of the conversion: stringify for proper result
+                        in a meaninful format 
+        """
+        if len(self._contents) == 0:
+            return 0.0
+        
+        if len(self._contents) == 1:
+            return self._contents[0].evaluate()
+            
+        elif len(self._contents) == 3:
+            op = self._contents[1]
+            a = self._contents[0]
+            b = self._contents[2]
+            return operation.doOperation(op, a.evaluate(), b.evaluate())
+
+        else:
+            raise ValueError("Evaluation error: couldn't evaluate segment:\nBad content length\n"
+                             + repr(self))
+
+    def getOperatorPrecedence(self):
+        """Returns the precedence of the top operator of this segment, as per
+        operationPrecedence function in operator.py
+
+        Raises:
+            ValueError: Middle contents isn't an operator
+            ValueError: Contents are bad length - this shouldn't happen
+
+        Returns:
+            int: operator precedence
+        """
+        if len(self._contents) in [0, 1]:
+            return operation.NO_OPERATION_PRECEDENCE
+        elif len(self._contents) == 3:
+            if isinstance(self._contents[1], tokens.Operator):
+                return operation.operatorPrecedence(self._contents[1])
+            else:
+                raise ValueError("Precedence error: failed to get operator for:\n"
+                                 + repr(self))
+        else:
+            raise ValueError("Precedence error: Bad content length for\n"
+                             + repr(self))
+
     def __str__(self):
         return self.stringify()
     
     def __repr__(self) -> str:
         return "Segment(" + repr(self._contents) + ")"
     
-    def parseBrackets(self):
+    def _parseBrackets(self):
         # List after parse
         out = []
         # Items collected in bracket
@@ -84,7 +159,7 @@ class Segment(tokens.Token):
 
         self._contents = out
 
-    def parseFunctions(self):
+    def _parseFunctions(self):
         if len(self._contents) < 2:
             return
         out = []
@@ -105,7 +180,7 @@ class Segment(tokens.Token):
             out.append(self._contents[-1])
         self._contents = out
 
-    def parseLeadingNegative(self):
+    def _parseLeadingNegative(self):
         # Expands '-x' to '(0 - x)'
         if len(self._contents) < 2:
             return
@@ -132,7 +207,7 @@ class Segment(tokens.Token):
         
         self.contents = out"""
 
-    def parseOperators(self, operators: list):
+    def _parseOperators(self, operators: list):
         
         # Check for starting and ending with operators
         for op in operators:
@@ -156,8 +231,14 @@ class Segment(tokens.Token):
                     and str(self._contents[i]) in operators and not found:
                         skip = 2
                         found = True
+                        # Check for negative before lower signs
+                        if isinstance(self._contents[i-1], tokens.Operator) \
+                            and self._contents[i] == '-':
+                                out.append(self._contents[i-1])
+                                out.append(NegateFunction(self._contents[i+1]))
+                                skip += 1
                         # Check for leading negative
-                        if self._contents[i+1] == '-':
+                        elif self._contents[i+1] == '-':
                             if len(self._contents) == i + 2:
                                 raise ValueError("Parser Error: Expected value after leading negative")
                             neg = NegateFunction(self._contents[i+2])
@@ -176,39 +257,10 @@ class Segment(tokens.Token):
                 raise ValueError("Parser error: expected full expression after operator group")
             
             self._contents = out
-        
-    def evaluate(self):
-        
-        if len(self._contents) == 0:
-            return 0.0
-        
-        if len(self._contents) == 1:
-            return self._contents[0].evaluate()
-            
-        elif len(self._contents) == 3:
-            op = self._contents[1]
-            a = self._contents[0]
-            b = self._contents[2]
-            return operation.doOperation(op, a.evaluate(), b.evaluate())
-
-        else:
-            raise ValueError("Evaluation error: couldn't evaluate segment:\nBad content length\n"
-                             + repr(self))
-
-    def getOperatorPrecedence(self):
-        if len(self._contents) in [0, 1]:
-            return operation.NO_OPERATION_PRECEDENCE
-        elif len(self._contents) == 3:
-            if isinstance(self._contents[1], tokens.Operator):
-                return operation.operatorPrecedence(self._contents[1])
-            else:
-                raise ValueError("Precedence error: failed to get operator for:\n"
-                                 + repr(self))
-        else:
-            raise ValueError("Precedence error: Bad content length for\n"
-                             + repr(self))
-
+  
 class Function(Segment):
+    """Segment representing a function operation
+    """
     def __init__(self, type: tokens.Symbol, on: Segment):
         self._op = type
         self._on = on
@@ -219,17 +271,37 @@ class Function(Segment):
     def __repr__(self) -> str:
         return f"Function({self._op}, {self._on})"
 
-    def stringify(self, num_type):
+    def stringify(self, num_type: str):
+        """Returns string version of function, for presenting to the user
+
+        Args:
+            num_type (str): how to represent numbers
+
+        Returns:
+            str: string representation of string and its contents
+        """
         return f"{self._op.stringify()}({self._on.stringify()})"
 
     def evaluate(self):
+        """Returns evaluation of the function
+
+        Returns:
+            Operatable: result of function
+        """
         e = self._on.evaluate()
         return operation.doFunction(str(self._op), e)
 
     def getOperatorPrecedence(self):
+        """Returns operator precedence of function
+
+        Returns:
+            int: precedence
+        """
         return operation.FUNCTION_OPERATOR_PRECEDENCE
 
 class NegateFunction(Function):
+    """Special function for representing leading negatives
+    """
     def __init__(self, on: Segment):
         self._op = consts.NEGATE
         self._on = on
@@ -238,4 +310,12 @@ class NegateFunction(Function):
         return self.stringify(None)
 
     def stringify(self, num_type):
+        """Return string representing contents
+
+        Args:
+            num_type (str): number representation mode
+
+        Returns:
+            str: contents
+        """
         return f"-{self._on.stringify(num_type)}"

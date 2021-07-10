@@ -1,4 +1,6 @@
 """Ensure that the most basic of the basic features work
+
+Author: Miguel Guthridge (hdsq@outlook.com.au)
 """
 from ..lib.smart_equate import equate
 

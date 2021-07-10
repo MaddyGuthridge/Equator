@@ -52,7 +52,7 @@ def parseToken(word: str, unwrap_symbols=True):
         return tokens.Operator(word)
     else:
         # Parse symbols and constants
-        if word in consts.CONSTANTS:
+        if word in consts.NUM_CONSTANTS:
             return tokens.Constant(word)
         else:
             return tokens.Symbol(word)

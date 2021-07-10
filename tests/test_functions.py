@@ -1,4 +1,6 @@
 """Checks to make sure that functions provide the correct output
+
+Author: Miguel Guthridge (hdsq@outlook.com.au)
 """
 
 from .helpers import simplifyExp

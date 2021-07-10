@@ -1,4 +1,6 @@
 """Ensure that output formatters format output correctly
+
+Author: Miguel Guthridge (hdsq@outlook.com.au)
 """
 
 from .helpers import simplifyExp

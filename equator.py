@@ -12,6 +12,7 @@ if __name__ == "__main__":
     # No arguments, enter interpreter mode
     if len(sys.argv) == 1:
         print(f"{consts.NAME} (v{consts.VERSION})")
+        print(f"by {consts.AUTHOR}")
         print("Interpreter Mode")
         print("Press Ctrl+C to quit")
         try:

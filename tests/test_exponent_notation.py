@@ -1,4 +1,6 @@
 """Ensure that eponent notation is calculated correctly
+
+Author: Miguel Guthridge (hdsq@outlook.com.au)
 """
 
 from .helpers import simplifyExp
@@ -34,6 +36,6 @@ def test_decimal_presentation_huge():
     assert equate("1E-32") == ["1e-32"]
 
 def test_decimal_presentation_huge_no_round():
-    # Ensure numbers are presented in scientific notation even if they're 
-    # really long
+    """Ensure numbers are presented in scientific notation even if they're 
+    really long, and can't just be rounded away"""
     assert equate("52^8") == ["5.3459728531456e+13"]
