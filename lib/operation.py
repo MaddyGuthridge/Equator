@@ -125,9 +125,9 @@ def doFunction(func: str, a):
     elif func == "abs":
         return sym.Abs(a)
     elif func == "deg":
-        return a * 180 / consts.CONSTANTS["pi"]
+        return a * 180 / consts.NUM_CONSTANTS["pi"]
     elif func == "rad":
-        return a / 180 * consts.CONSTANTS["pi"]
+        return a / 180 * consts.NUM_CONSTANTS["pi"]
     elif func == consts.NEGATE:
         return -a
     elif func == "exp":
@@ -150,8 +150,8 @@ def getConstant(const: str):
     Returns:
         str: representation of constant if applicable otherwise original str
     """
-    if const in consts.CONSTANTS:
-        return str(consts.CONSTANTS[const])
+    if const in consts.NUM_CONSTANTS:
+        return str(consts.NUM_CONSTANTS[const])
     else:
         return const
 
