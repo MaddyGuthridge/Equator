@@ -3,6 +3,8 @@ These contain:
     - Definitions for managing order of operations
     - Definitions for stringifying collections of tokens
     - Definitions for evaluating segments
+
+Author: Miguel Guthridge (hdsq@outlook.com.au)
 """
 
 from . import tokens
