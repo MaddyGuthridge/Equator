@@ -31,6 +31,16 @@ def c_main(stdscr: 'curses._CursesWindow') -> int:
                 inp = inp[:cursor_pos] + char + inp[cursor_pos:]
                 cursor_pos += 1
 
+            # Left arrow
+            elif char == curses.KEY_LEFT or char == 452:
+                if cursor_pos > 0:
+                    cursor_pos -= 1
+            
+            # Right arrow
+            elif char == curses.KEY_RIGHT or char == 454:
+                if cursor_pos < len(inp):
+                    cursor_pos += 1
+
             # Backspace
             elif char == curses.KEY_BACKSPACE or char in '\x7f\x08':
                 if len(inp) == 0:
