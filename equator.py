@@ -1,38 +1,58 @@
 import sys
+import curses
 
-from colorama import Fore
+from lib import consts, smart_equate
 
-from lib import main, consts, smart_equate
+def c_main(stdscr: 'curses._CursesWindow') -> int:
+    stdscr.addstr(0, 0, f"{consts.NAME} (v{consts.VERSION})")
+    stdscr.addstr(1, 0, f"by {consts.AUTHOR}")
+    stdscr.addstr(2, 0, "Interpreter Mode")
+    stdscr.addstr(3, 0, "Press Ctrl+C to quit")
+    # Input loop
+    while True:
+        prompt = "eq > "
+        inp_row = curses.LINES - 1
+        inp_col = len(prompt)
+        stdscr.addstr(inp_row, 0, prompt)
+        # Get char loop
+        inp = ""
+        cursor_pos = 0
+        while True:
+            stdscr.addstr(inp_row, inp_col, inp)
+            stdscr.clrtoeol()
+            char = stdscr.get_wch(inp_row, inp_col + cursor_pos)
+            
+            # Keyboard interrupt
+            if isinstance(char, str) and char in ['\x03']:
+                return 0
+            
+            # Insert character
+            elif isinstance(char, str) and char.isprintable():
+                inp = inp[:cursor_pos] + char + inp[cursor_pos:]
+                cursor_pos += 1
 
-def printOutput(out):
-    for i, e in enumerate(out):
-        print(f"{Fore.RESET}[{i+1}]:{Fore.YELLOW} {e}")
+            # Backspace
+            elif char == curses.KEY_BACKSPACE or char in '\x7f\x08':
+                if len(inp) == 0:
+                    continue
+                #elif cursor_pos > len(inp):
+                #    inp = inp[:-1]
+                else:
+                    inp = inp[:cursor_pos-1] + inp[cursor_pos:]
+                cursor_pos -= 1
+            
+            elif char == '\n':
+                break
+            else:
+                stdscr.addstr(4, 0, "Ignored: " + repr(char))
+                stdscr.clrtoeol()
+        
+        # Got input
+        stdscr.addstr(4, 0, "Output: " + str(smart_equate.equate(inp)))
+        stdscr.clrtoeol()
+
+def main() -> int:
+    curses.wrapper(c_main)
 
 if __name__ == "__main__":
-    # No arguments, enter interpreter mode
-    if len(sys.argv) == 1:
-        print(f"{consts.NAME} (v{consts.VERSION})")
-        print(f"by {consts.AUTHOR}")
-        print("Interpreter Mode")
-        print("Press Ctrl+C to quit")
-        try:
-            counter = 1
-            while True:
-                try:
-                    inp = input(Fore.RESET + f"eq {Fore.YELLOW}[{counter}]{Fore.WHITE} > " + Fore.YELLOW)
-                    printOutput(smart_equate.equate(inp))
-                    counter += 1
-                    
-                except Exception as e:
-                    print(Fore.RED, end='')
-                    print(e)
-                    #raise e
-        except KeyboardInterrupt:
-            print(Fore.RESET)
-            exit()
-    else:
-        inp = ""
-        for arg in sys.argv[1:]:
-            inp += arg
-        
-        printOutput(smart_equate.equate(inp))
+    exit(main())
