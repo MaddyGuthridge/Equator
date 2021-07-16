@@ -4,7 +4,6 @@ for formatting
 """
 
 from .smart_equate import equate
-from .parse import S
 
 class Expression:
     def __init__(self, inp) -> None:

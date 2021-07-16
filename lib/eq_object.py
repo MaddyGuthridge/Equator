@@ -25,3 +25,8 @@ class EqObject:
             str: original string
         """
         return self.stringify()
+
+    def evaluate(self):
+        """Return evaluation of object
+        """
+        return NotImplemented
