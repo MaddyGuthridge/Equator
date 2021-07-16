@@ -1,6 +1,8 @@
 
 __pycache__/
 .venv/
+.venv_win/
+.venv_linux/
 .pytest_cache/
 
 temp.*
