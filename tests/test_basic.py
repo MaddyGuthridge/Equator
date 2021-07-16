@@ -2,28 +2,27 @@
 
 Author: Miguel Guthridge (hdsq@outlook.com.au)
 """
-from ..lib.smart_equate import equate
 
-from .helpers import simplifyEq
+from .helpers import doOneSolutionExp, doOneSolutionEq
 
 def test_constant():
     """Ensure constants work
     """
-    assert equate("1") == ["1"]
-    assert equate("0") == ["0"]
+    assert doOneSolutionExp("1") == ["1"]
+    assert doOneSolutionExp("0") == ["0"]
 
 def test_symbol():
     """Ensure symbols work
     """
-    assert equate("x") == ["x"]
+    assert doOneSolutionExp("x") == ["x"]
 
 def test_operation():
     """Ensure operations work
     """
-    assert equate("1 + 1") == ["2"]
+    assert doOneSolutionExp("1 + 1") == ["2"]
 
 def test_equation():
     """Ensure equations are solved correctly
     """
-    a = simplifyEq(equate("x - 1 = 0"))
-    assert a == [{'x': '1'}]
+    a = doOneSolutionEq("x - 1 = 0")
+    assert a == ["x=1"]
