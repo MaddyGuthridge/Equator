@@ -1,7 +1,5 @@
 import sympy as sym
 
-from itertools import zip_longest
-
 from decimal import Decimal
 
 from . import consts
