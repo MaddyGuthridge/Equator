@@ -2,12 +2,17 @@ import sys
 import curses
 
 from lib import consts, smart_equate
+from lib.expression import Expression
+from display.output_container import OutputContainer
 
 def c_main(stdscr: 'curses._CursesWindow') -> int:
     stdscr.addstr(0, 0, f"{consts.NAME} (v{consts.VERSION})")
     stdscr.addstr(1, 0, f"by {consts.AUTHOR}")
     stdscr.addstr(2, 0, "Interpreter Mode")
     stdscr.addstr(3, 0, "Press Ctrl+C to quit")
+    
+    output = OutputContainer()
+    
     # Input loop
     while True:
         prompt = "eq > "
@@ -45,8 +50,6 @@ def c_main(stdscr: 'curses._CursesWindow') -> int:
             elif char == curses.KEY_BACKSPACE or char in '\x7f\x08':
                 if len(inp) == 0:
                     continue
-                #elif cursor_pos > len(inp):
-                #    inp = inp[:-1]
                 else:
                     inp = inp[:cursor_pos-1] + inp[cursor_pos:]
                 cursor_pos -= 1
@@ -58,11 +61,14 @@ def c_main(stdscr: 'curses._CursesWindow') -> int:
                 stdscr.clrtoeol()
         
         # Got input
-        stdscr.addstr(4, 0, "Output: " + str(smart_equate.equate(inp)))
-        stdscr.clrtoeol()
+        output.addOutput(Expression(inp))
+        output.redraw(stdscr, 4, 0, curses.LINES - 5, curses.COLS)
 
 def main() -> int:
-    curses.wrapper(c_main)
+    try:
+        return curses.wrapper(c_main)
+    except KeyboardInterrupt:
+        return 0
 
 if __name__ == "__main__":
     exit(main())
