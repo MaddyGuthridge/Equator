@@ -3,6 +3,7 @@ from decimal import Decimal
 from . import consts
 from . import tokens
 from . import operation
+from .eq_object import EqObject
 
 def isDecimal(word: str):
     # Remove spaces
@@ -101,7 +102,7 @@ def prepStrings(input: str) -> list:
     
     return exprs
 
-class TokenList:
+class TokenList(EqObject):
     """List of tokens contained by parsed input
     """
     def __init__(self, inp: str) -> None:
@@ -141,7 +142,7 @@ class TokenList:
             out.append(parseToken(word))
         return out
 
-class ParsedInput:
+class ParsedInput(EqObject):
     """Contains parsed information about an input
      - List of TokenLists
      - List of output formatters

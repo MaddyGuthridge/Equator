@@ -6,25 +6,37 @@ from decimal import Decimal, Context, localcontext
 
 from . import operation
 from . import consts
+from .eq_object import EqObject
 
-class Token:
+class Token(EqObject):
     """Token base type
     All tokens are derived from this
     """
     def __init__(self, value: str) -> None:
-        self._contents = value
+        self._original = value
+    
+    def getContents(self) -> str:
+        """Returns token contents (with spacing removed)
+
+        Returns:
+            str: contents
+        """
+        return self._original.replace(' ', '')
     
     def __str__(self) -> str:
-        return self._contents
+        return self.getContents()
     
     def __repr__(self) -> str:
-        return self._contents
+        return self.getContents()
 
-    def stringify(self, num_mode=None):
+    def stringify(self, num_mode=None) -> str:
         return str(self)
+    
+    def stringifyOriginal(self) -> str:
+        return self._original
 
     def evaluate(self):
-        return self._contents
+        return self.getContents()
     
     def getOperatorPrecedence(self):
         return operation.NO_OPERATION_PRECEDENCE
@@ -36,7 +48,7 @@ class Operator(Token):
 
     def __eq__(self, o: object) -> bool:
         if isinstance(o, str):
-            return o == self._contents
+            return o == self.getContents()
 
 def asMultipleOf(a: Decimal, b: str):
     """Returns a in terms of b if doing so makes sense
@@ -106,7 +118,7 @@ class Number(Token):
     Evaluate returns numberified version
     """
     def evaluate(self):
-        return Decimal(self._contents)
+        return Decimal(self.getContents())
 
     def str_number(self):
         """Stringifies to a number 
@@ -180,16 +192,16 @@ class Constant(Number):
     Stringifies to the name of the constant
     """
     def evaluate(self):
-        return consts.NUM_CONSTANTS[self._contents]
+        return consts.NUM_CONSTANTS[self.getContents()]
     
     def __str__(self) -> str:
-        return self._contents
+        return self.getContents()
 
 class Symbol(Token):
     """Token representing a symbol
-    Evaluate regeisters and returns a SymPy symbol
+    Evaluate registers and returns a SymPy symbol
     
     Note, depending on context, this could be a function
     """
     def evaluate(self):
-        return sym.Symbol(self._contents)
+        return sym.Symbol(self.getContents())
