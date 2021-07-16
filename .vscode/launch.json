@@ -13,6 +13,12 @@
             "console": "integratedTerminal"
         },
         {
+            "name": "Pytest",
+            "type": "python",
+            "request": "launch",
+            "module": "pytest"
+        },
+        {
             "name": "Equator: Run Interpreter (Windows)",
             "type": "python",
             "request": "launch",
