@@ -28,19 +28,6 @@ def operatorPrecedence(op: str) -> int:
     elif op in ['+', '-']: return 1
     elif op in ['=']: return 0
 
-def conditionalDecimal(a):
-    return Decimal(str(float(a))) if isinstance(a, Fraction) else a
-
-def conditionalFraction(a):
-    if isinstance(a, Decimal):
-        fract = Fraction(a)
-        if len(str(fract)) < 10:
-            return fract
-        else:
-            return a
-    else:
-        return a
-
 def zeroRound(num):
     """Replaces values close to zero with zero
     And values close(ish) to infinity with infinity
@@ -78,8 +65,6 @@ def doOperation(operator: str, a, b):
     Returns:
         Operatable: result
     """
-    a = conditionalDecimal(a)
-    b = conditionalDecimal(b)
     if operator == '^':
         res = a ** b
     elif operator == '*':

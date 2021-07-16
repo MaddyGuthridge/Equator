@@ -1,7 +1,7 @@
 import sys
 import curses
 
-from lib import consts, smart_equate
+from lib import consts
 from lib.expression import Expression
 from display.output_container import OutputContainer
 

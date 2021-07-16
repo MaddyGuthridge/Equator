@@ -68,48 +68,6 @@ def parseToken(word: str, unwrap_symbols=True):
                 raise ValueError(f"Found whitespace in word: {word}")
             return tokens.Symbol(word)
 
-def prepString(input: str) -> list:
-    input = input.replace(' ', '')
-    input = input.lower()
-    words = []
-    word = ""
-    for i in input:
-        if i in consts.OPERATORS:
-            if len(word):
-                words.append(word)
-                word = ""
-            words.append(i)
-        else:
-            word += i
-    
-    if len(word):
-        words.append(word)
-    
-    # Parse out exponent notations
-    words = parseExponentNotation(words)
-    
-    # For each word, convert to the required type
-    out = []
-    for word in words:
-        out.append(parseToken(word))
-    return out
-
-def prepStrings(input: str) -> list:
-    
-    # Split into individual expressions (semicolon separated)
-    exprs_str = input.split(";")
-    exprs = []
-    
-    # Parse each expression
-    for expr_s in exprs_str:
-        out = prepString(expr_s)
-            
-        # Only append if it has contents
-        if len(out):
-            exprs.append(out)
-    
-    return exprs
-
 class SubExpression(EqObject):
     """List of tokens contained by parsed input
     """
