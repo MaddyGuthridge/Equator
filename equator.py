@@ -6,6 +6,10 @@ from lib.expression import Expression
 from display.output_container import OutputContainer
 
 def c_main(stdscr: 'curses._CursesWindow') -> int:
+    
+    if curses.can_change_color():
+        curses.use_default_colors()
+    
     stdscr.addstr(0, 0, f"{consts.NAME} (v{consts.VERSION})")
     stdscr.addstr(1, 0, f"by {consts.AUTHOR}")
     stdscr.addstr(2, 0, "Interpreter Mode")
