@@ -28,7 +28,7 @@ def isWordExponent(word: str) -> bool:
     if len(word) == 1:
         return False
     # If it ends with "e" it might be the first part of an exponent notation number
-    if word.endswith("e"):
+    if word[-1] in ["e", "E"]:
         if isDecimal(word[:-1]):
             return True
     return False
@@ -57,13 +57,17 @@ def parseExponentNotation(words: list):
 def parseToken(word: str, unwrap_symbols=True):
     if isDecimal(word):
         return tokens.Number(word)
-    elif word in consts.OPERATORS:
+    elif word.strip(' ') in consts.OPERATORS:
         return tokens.Operator(word)
     else:
         # Parse symbols and constants
-        if word in consts.NUMERIC_CONSTANTS:
+        if word.strip(' ') in consts.NUMERIC_CONSTANTS:
             return tokens.Constant(word)
         else:
+            # Word is a symbol
+            # Ensure there isn't any whitespace in symbol
+            if ' ' in word.strip(' '):
+                raise ValueError(f"Found whitespace in word: {word}")
             return tokens.Symbol(word)
 
 def prepString(input: str) -> list:
@@ -118,6 +122,12 @@ class SubExpression(EqObject):
         self._segment = None
         self._evaluation = None
     
+    def __repr__(self) -> str:
+        if self._segment is None:
+            return repr(self._tokens) + " (Not parsed)"
+        else:
+            return repr(self._segment)
+    
     def stringifyOriginal(self):
         space = self._leading_space * ' '
         
@@ -132,15 +142,21 @@ class SubExpression(EqObject):
         words = []
         word = ""
         
-        # Split by operators
+        # Loop through characters and split by operators
+        
+        post_op = False # Whether we're adding whitespace after an operator
         for i in inp:
+            if post_op and i != ' ':
+                words.append(word)
+                word = ""
+                post_op = False
+            # If we found an operator
             if i in consts.OPERATORS:
-                if len(word):
+                if len(word.strip(' ')):
                     words.append(word)
                     word = ""
-                words.append(i)
-            else:
-                word += i
+                post_op = True
+            word += i
         
         if len(word):
             words.append(word)
@@ -196,6 +212,9 @@ class ParsedInput(EqObject):
         self._sub_exps = exps
         
         self._evaluation = None
+    
+    def __repr__(self) -> str:
+        return repr(self._sub_exps) + " -> " + repr(self._output_formatter)
     
     def evaluate(self) -> tuple:
         """Evaluate the input and return results

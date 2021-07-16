@@ -269,7 +269,7 @@ class Function(Segment):
         return self.stringify(num_mode=None)
 
     def __repr__(self) -> str:
-        return f"Function({self._op}, {self._on})"
+        return f"Function({str(self._op)}, {repr(self._on)})"
 
     def stringify(self, num_mode: OutputFormatter):
         """Returns string version of function, for presenting to the user

@@ -17,6 +17,9 @@ class OutputFormatter(EqObject):
         else:
             self._num_formatting = consts.NUMBER_FORMATTERS.SMART
 
+    def __repr__(self) -> str:
+        return self._inp
+
     def getNumFormatting(self):
         """Return requested formatting method for numbers
 

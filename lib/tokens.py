@@ -118,10 +118,10 @@ class Number(Token):
     """Token representing a number
     Evaluate returns numberified version
     """
-    def evaluate(self):
+    def evaluate(self) -> Decimal:
         return Decimal(self.getContents())
 
-    def str_number(self):
+    def str_number(self) -> str:
         """Stringifies to a number 
         (either standard or scientific notation)
 
@@ -130,24 +130,35 @@ class Number(Token):
         """
         return stringifyDecimal(self.evaluate())
 
-    def str_scientific(self):
+    def str_scientific(self) -> str:
         """Always stringifies to scientific notation
         """
         return strDecimal_Sci(self.evaluate())
     
-    def str_decimal(self):
+    def str_decimal(self) -> str:
         """Always stringifies to standard decimal notation
         """
         return strDecimal_Norm(self.evaluate())
 
-    def stringify(self, str_options: OutputFormatter):
+    def stringify(self, str_options: OutputFormatter) -> str:
+        """Convert number to string respecting formatting options
+
+        Args:
+            str_options (OutputFormatter): Formatting options
+
+        Raises:
+            ValueError: Unsupported formatting option
+
+        Returns:
+            str: str(number)
+        """
         if str_options.getNumFormatting() is NUMBER_FORMATTERS.SMART:
             return str(self)
-        elif str_options is NUMBER_FORMATTERS.DECIMAL:
+        elif str_options.getNumFormatting() is NUMBER_FORMATTERS.DECIMAL:
             return self.str_decimal()
-        elif str_options is NUMBER_FORMATTERS.SCIENTIFIC:
+        elif str_options.getNumFormatting() is NUMBER_FORMATTERS.SCIENTIFIC:
             return self.str_scientific()
-        elif str_options is NUMBER_FORMATTERS.NUMBER:
+        elif str_options.getNumFormatting() is NUMBER_FORMATTERS.NUMBER:
             return self.str_number()
         else:
             raise ValueError("Bad stringify mode")
