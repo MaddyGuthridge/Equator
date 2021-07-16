@@ -5,6 +5,8 @@ from . import tokens
 from . import operation
 
 def isDecimal(word: str):
+    # Remove spaces
+    word = word.replace(' ', '')
     try:
         Decimal(word)
         return True
@@ -103,10 +105,41 @@ class TokenList:
     """List of tokens contained by parsed input
     """
     def __init__(self, inp: str) -> None:
-        self._tokens = prepString(inp)
+        self._leading_space = len(inp) - len(inp.lstrip(' '))
+        self._tokens = self._parseTokens(inp)
     
-    def __str__(self) -> str:
-        pass
+    def stringifyOriginal(self):
+        space = self._leading_space * ' '
+        
+        tokens_s = [t.stringifyOriginal() for t in self._tokens]
+        
+        return space + ''.join(tokens_s)
+
+    def _parseTokens(self, inp):
+        words = []
+        word = ""
+        
+        # Split by operators
+        for i in inp:
+            if i in consts.OPERATORS:
+                if len(word):
+                    words.append(word)
+                    word = ""
+                words.append(i)
+            else:
+                word += i
+        
+        if len(word):
+            words.append(word)
+            
+        # Parse out exponent notations
+        words = parseExponentNotation(words)
+        
+        # For each word, convert to the required type
+        out = []
+        for word in words:
+            out.append(parseToken(word))
+        return out
 
 class ParsedInput:
     """Contains parsed information about an input
