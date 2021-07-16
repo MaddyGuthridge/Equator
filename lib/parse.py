@@ -98,3 +98,20 @@ def prepStrings(input: str) -> list:
             exprs.append(out)
     
     return exprs
+
+class TokenList:
+    """List of tokens contained by parsed input
+    """
+    def __init__(self, inp: str) -> None:
+        self._tokens = prepString(inp)
+    
+    def __str__(self) -> str:
+        pass
+
+class ParsedInput:
+    """Contains parsed information about an input
+     - List of TokenLists
+     - List of output formatters
+    """
+    def __init__(self, inp: str) -> None:
+        pass

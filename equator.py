@@ -10,7 +10,7 @@ def c_main(stdscr: 'curses._CursesWindow') -> int:
     stdscr.addstr(1, 0, f"by {consts.AUTHOR}")
     stdscr.addstr(2, 0, "Interpreter Mode")
     stdscr.addstr(3, 0, "Press Ctrl+C to quit")
-    
+
     output = OutputContainer()
     
     # Input loop
