@@ -1,5 +1,7 @@
 import sympy as sym
 
+from itertools import zip_longest
+
 from decimal import Decimal
 
 from . import consts
@@ -122,6 +124,9 @@ class SubExpression(EqObject):
         
         return space + ''.join(tokens_s)
 
+    def stringify(self, str_opts) -> str:
+        return self.getSegment().stringify(str_opts)
+
     def _parseTokens(self, inp):
         words = []
         word = ""
@@ -179,9 +184,9 @@ class ParsedInput(EqObject):
         # Try getting output formatting options
         if "->" in inp:
             inp, output_mode = inp.split("->", 1)
-            self._output_mode = OutputFormatter(output_mode)
+            self._output_formatter = OutputFormatter(output_mode)
         else:
-            self._output_mode = OutputFormatter(None)
+            self._output_formatter = OutputFormatter(None)
 
         # Split by individual subexpressions
         exps_str = inp.split(';')
@@ -208,9 +213,9 @@ class ParsedInput(EqObject):
         eqs = []
         for e in self._sub_exps:
             if e.isEquation():
-                eqs.append(e)
+                eqs.append(e.evaluate())
             else:
-                evs.append(e)
+                evs.append(e.evaluate())
         
         # Solve the equations
         res = sym.solve(eqs)
@@ -221,22 +226,26 @@ class ParsedInput(EqObject):
         # Substitute equation results into evaluations, then simplify
         # Create one substitution for each set of results
         ev_subs = []
-        for r in res:
-            ev_subs.append([sym.simplify(sym.sympify(e.evaluate()).subs(r))\
-                            for e in evs])
+        if len(res):
+            for r in res:
+                ev_subs.append([sym.simplify(sym.sympify(e.evaluate()).subs(r))\
+                                for e in evs])
+        else:
+            ev_subs = [evs]
         
-        self._evaluation = res, evs
+        
+        self._evaluation = res, ev_subs
         return self._evaluation
     
     def stringifyOriginal(self):
-        return self._leading_space*' ' + ';'.join(self._sub_exps)\
-            + '->' + self._output_mode.stringifyOriginal()
+        ret = self._leading_space*' ' \
+            + ';'.join([exp.stringifyOriginal() for exp in self._sub_exps])
+        if self._output_formatter.givenArgs():
+            ret += "->" + self._output_formatter.stringifyOriginal()
+        return ret
 
-    def stringify(self, formatting: OutputFormatter) -> str:
+    def stringify(self) -> str:
         """Return evaluation as a string
-
-        Args:
-            formatting (OutputFormatter): behaviour for stringifying numbers
 
         Returns:
             str: results
@@ -246,16 +255,18 @@ class ParsedInput(EqObject):
         out = []
         
         # For each answer set
-        for r, e in zip(res, evs):
+        for r, e in zip_longest(res, evs):
             
             # For each equation solution
-            for symbol, value in r:
-                s = Segment(str(symbol) + "=" + str(value))
-                out.append(s.stringify(formatting))
+            if r is not None:
+                for symbol, value in r:
+                    s = SubExpression(str(symbol) + "=" + str(value))
+                    out.append(s.stringify(self._output_formatter))
 
             # For each evaluation
-            for ev in e:
-                s = Segment(str(ev))
-                out.append(s.stringify(formatting))
+            if e is not None:
+                for ev in e:
+                    s = SubExpression(str(ev))
+                    out.append(s.stringify(self._output_formatter))
 
         return '\n'.join(out)

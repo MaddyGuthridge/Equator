@@ -29,12 +29,12 @@ class Segment(EqObject):
         self._parseOperators(['+', '-'])
         self._parseOperators(['='])
     
-    def stringify(self, num_mode: OutputFormatter):
+    def stringify(self, str_opts: OutputFormatter):
         """Returns a string representing the segment
         Unlike str(obj), has options to control fancy stringification
 
         Args:
-            num_mode (OutputFormatter): 
+            str_opts (OutputFormatter): 
                 Formatting options for stringification.
 
         Raises:
@@ -46,7 +46,7 @@ class Segment(EqObject):
         if len(self._contents) == 0:
             return "0"
         elif len(self._contents) == 1:
-            return self._contents[0].stringify(num_mode)
+            return self._contents[0].stringify(str_opts)
         elif len(self._contents) != 3:
             raise ValueError("stringify: bad contents length")
 
@@ -54,15 +54,15 @@ class Segment(EqObject):
         op    = self._contents[1]
         right = self._contents[2]
         
-        l_str = left.stringify(num_mode)
+        l_str = left.stringify(str_opts)
         if left.getOperatorPrecedence() <= self.getOperatorPrecedence():
             l_str = "(" + l_str + ")"
         
-        r_str = right.stringify(num_mode)
+        r_str = right.stringify(str_opts)
         if right.getOperatorPrecedence() <= self.getOperatorPrecedence():
             r_str = "(" + r_str + ")"
     
-        return f"{l_str} {op.stringify(num_mode)} {r_str}"
+        return f"{l_str} {op.stringify(str_opts)} {r_str}"
         
     def evaluate(self):
         """Returns the evaluation of this segment
