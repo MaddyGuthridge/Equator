@@ -1,6 +1,7 @@
 
 import math
 import decimal
+from enum import Enum
 
 NAME = "Equator"
 VERSION = "0.5.1"
@@ -29,9 +30,24 @@ OPERATORS = [
 NEGATE = "neg"
 
 # Numeric constants
-NUM_CONSTANTS = {
+NUMERIC_CONSTANTS = {
     "pi": decimal.Decimal(math.pi),
     "e": decimal.Decimal(math.e),
     "oo": decimal.Decimal("inf"),
     "inf": decimal.Decimal("inf")
+}
+
+class NUMBER_FORMATTERS(Enum):
+    """Formatting options for numbers
+    """
+    SMART = 1
+    NUMBER = 2
+    DECIMAL = 3
+    SCIENTIFIC = 4
+
+# Mappings between format strings and enum values
+NUM_FORMATTER_STRS = {
+    "num": NUMBER_FORMATTERS.NUMBER,
+    "dec": NUMBER_FORMATTERS.DECIMAL,
+    "sci": NUMBER_FORMATTERS.SCIENTIFIC
 }

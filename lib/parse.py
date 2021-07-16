@@ -7,7 +7,7 @@ from . import tokens
 from . import operation
 from .segment import Segment
 from .eq_object import EqObject
-from .output_formatters import OutputFormatter
+from .output_formatter import OutputFormatter
 
 def isDecimal(word: str):
     # Remove spaces
@@ -59,7 +59,7 @@ def parseToken(word: str, unwrap_symbols=True):
         return tokens.Operator(word)
     else:
         # Parse symbols and constants
-        if word in consts.NUM_CONSTANTS:
+        if word in consts.NUMERIC_CONSTANTS:
             return tokens.Constant(word)
         else:
             return tokens.Symbol(word)
@@ -259,4 +259,3 @@ class ParsedInput(EqObject):
                 out.append(s.stringify(formatting))
 
         return '\n'.join(out)
-

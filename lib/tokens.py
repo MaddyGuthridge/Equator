@@ -5,8 +5,9 @@ from fractions import Fraction
 from decimal import Decimal, Context, localcontext
 
 from . import operation
-from . import consts
+from .consts import NUMBER_FORMATTERS, NUMERIC_CONSTANTS, FRACTION_DENOM_LIMITER
 from .eq_object import EqObject
+from .output_formatter import OutputFormatter
 
 class Token(EqObject):
     """Token base type
@@ -29,7 +30,7 @@ class Token(EqObject):
     def __repr__(self) -> str:
         return self.getContents()
 
-    def stringify(self, num_mode=None) -> str:
+    def stringify(self, str_options: OutputFormatter) -> str:
         return str(self)
     
     def stringifyOriginal(self) -> str:
@@ -61,7 +62,7 @@ def asMultipleOf(a: Decimal, b: str):
         str | None: a in terms of b or a normally (but None if doing so is unreasonable)
     """
     # FIXME: present as pi/3 rather than 1/3*pi
-    ret = str(Fraction(a / consts.NUM_CONSTANTS[b]).limit_denominator(consts.FRACTION_DENOM_LIMITER))
+    ret = str(Fraction(a / NUMERIC_CONSTANTS[b]).limit_denominator(FRACTION_DENOM_LIMITER))
     if ret == "0":
         return None
     if len(ret) < 10:
@@ -81,7 +82,7 @@ def asPowerOf(a: Decimal, b: str):
     Returns:
         str | None: a as a power of b or a normally (but None if doing so is unreasonable)
     """
-    ret = str(Fraction(math.log(a, consts.NUM_CONSTANTS[b])).limit_denominator(consts.FRACTION_DENOM_LIMITER))
+    ret = str(Fraction(math.log(a, NUMERIC_CONSTANTS[b])).limit_denominator(FRACTION_DENOM_LIMITER))
     # Add brackets if it's a fraction
     if "/" in ret:
         ret = f"({ret})"
@@ -139,14 +140,14 @@ class Number(Token):
         """
         return strDecimal_Norm(self.evaluate())
 
-    def stringify(self, num_mode):
-        if num_mode is None:
+    def stringify(self, str_options: OutputFormatter):
+        if str_options.getNumFormatting() is NUMBER_FORMATTERS.SMART:
             return str(self)
-        elif num_mode == "dec":
+        elif str_options is NUMBER_FORMATTERS.DECIMAL:
             return self.str_decimal()
-        elif num_mode == "sci":
+        elif str_options is NUMBER_FORMATTERS.SCIENTIFIC:
             return self.str_scientific()
-        elif num_mode == "num":
+        elif str_options is NUMBER_FORMATTERS.NUMBER:
             return self.str_number()
         else:
             raise ValueError("Bad stringify mode")
@@ -171,7 +172,7 @@ class Number(Token):
         if in_e is not None: return in_e
         
         # Present as fraction if possible
-        fract = str(Fraction(ev).limit_denominator(consts.FRACTION_DENOM_LIMITER))
+        fract = str(Fraction(ev).limit_denominator(FRACTION_DENOM_LIMITER))
         if len(fract) < 10 and fract != "0":
             # If it's a whole number
             if '/' not in fract:
@@ -179,7 +180,7 @@ class Number(Token):
             return fract
         
         # Check for square roots
-        sqr = Fraction(ev ** 2).limit_denominator(consts.FRACTION_DENOM_LIMITER)
+        sqr = Fraction(ev ** 2).limit_denominator(FRACTION_DENOM_LIMITER)
         if len(str(sqr)) < 10 and sqr != 0:
             mul, rt = operation.reduceSqrt(sqr)
             mul = f"{mul}*" if mul != 1 else ""
@@ -192,7 +193,7 @@ class Constant(Number):
     Stringifies to the name of the constant
     """
     def evaluate(self):
-        return consts.NUM_CONSTANTS[self.getContents()]
+        return NUMERIC_CONSTANTS[self.getContents()]
     
     def __str__(self) -> str:
         return self.getContents()
