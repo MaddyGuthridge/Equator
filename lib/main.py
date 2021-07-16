@@ -15,3 +15,10 @@ def formatOutput(output, num_mode:str=None):
     output = parse.prepString(str(output).replace('**', '^'))
     s = segment.Segment(output)
     return s.stringify(num_mode)
+
+def equate(inp: str):
+    """Evaluates and returns results
+
+    Args:
+        inp (str): expression to evaluate
+    """

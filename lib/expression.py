@@ -12,5 +12,5 @@ class Expression:
     def getInputStr(self) -> str:
         return self._parsed.stringifyOriginal()
     
-    def getOutput(self) -> list:
+    def getOutputStr(self) -> list:
         return self._parsed.stringify()

@@ -113,6 +113,7 @@ class SubExpression(EqObject):
     """
     def __init__(self, inp: str) -> None:
         self._leading_space = len(inp) - len(inp.lstrip(' '))
+        inp = inp.lstrip(' ')
         self._tokens = self._parseTokens(inp)
         self._segment = None
         self._evaluation = None
@@ -220,21 +221,23 @@ class ParsedInput(EqObject):
         # Solve the equations
         res = sym.solve(eqs)
         
-        if not isinstance(res, list):
+        # Make sure we have a list of sets of solutions all the time
+        # If it's empty
+        if not len(res):
+            res = [dict()]
+        # Otherwise if there's only one set of answers
+        elif not isinstance(res, list):
             res = [res]
         
         # Substitute equation results into evaluations, then simplify
         # Create one substitution for each set of results
         ev_subs = []
-        if len(res):
-            for r in res:
-                ev_subs.append([sym.simplify(sym.sympify(e.evaluate()).subs(r))\
-                                for e in evs])
-        else:
-            ev_subs = [evs]
+        for r in res:
+            ev_subs.append([sym.simplify(sym.sympify(e).subs(r))\
+                            for e in evs])
         
-        
-        self._evaluation = res, ev_subs
+        ret = [(r, e) for r, e in zip(res, ev_subs)]
+        self._evaluation = ret
         return self._evaluation
     
     def stringifyOriginal(self):
@@ -244,29 +247,55 @@ class ParsedInput(EqObject):
             ret += "->" + self._output_formatter.stringifyOriginal()
         return ret
 
+    def result_set(self) -> list:
+        """Returns results of an evaluation in a format that can be parsed
+        programmatically
+
+        Returns:
+            list: list of result sets (each set contains a list of solutions,
+                  and a list of expression evaluations in a tuple)
+        """
+        evaluation = self.evaluate()
+        
+        out = []
+        # Loop through each set of solutions
+        for eqs, evs in evaluation:
+            
+            # Format equations
+            new_eqs = []
+            for key, value in eqs.items():
+                s = SubExpression(str(key) + "=" + str(value))
+                new_eqs.append(s.stringify(self._output_formatter))
+            
+            # Format evaluations
+            new_evs = []
+            for e in evs:
+                s = SubExpression(str(e))
+                new_evs.append(s.stringify(self._output_formatter))
+            
+            # Add them both to the formatted set
+            out.append((new_eqs, new_evs))
+
+        return out
+
     def stringify(self) -> str:
         """Return evaluation as a string
 
         Returns:
             str: results
         """
-        res, evs = self.evaluate()
+        evaluation = self.result_set()
         
         out = []
         
-        # For each answer set
-        for r, e in zip_longest(res, evs):
-            
-            # For each equation solution
-            if r is not None:
-                for symbol, value in r:
-                    s = SubExpression(str(symbol) + "=" + str(value))
-                    out.append(s.stringify(self._output_formatter))
-
-            # For each evaluation
-            if e is not None:
-                for ev in e:
-                    s = SubExpression(str(ev))
-                    out.append(s.stringify(self._output_formatter))
+        do_prepend = len(evaluation) > 1
+        
+        for i, (eqs, evs) in enumerate(evaluation):
+            if do_prepend:
+                out += [f'[{i+1}]:']
+            for e in eqs:
+                out += ['\t' + e] if do_prepend else [e]
+            for e in evs:
+                out += ['\t' + e] if do_prepend else [e]
 
         return '\n'.join(out)
