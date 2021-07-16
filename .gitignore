@@ -5,4 +5,7 @@ __pycache__/
 .venv_linux/
 .pytest_cache/
 
+.coverage
+.coverage_html/
+
 temp.*
