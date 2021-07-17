@@ -104,7 +104,10 @@ class SubExpression(EqObject):
                 # Word is a symbol
                 # Ensure there isn't any whitespace in symbol
                 if ' ' in word.strip(' '):
-                    raise ValueError(f"Found whitespace in word: {word}")
+                    pass
+                    # TODO: Make this raise an error as soon as errors don't
+                    # bring down the entire system
+                    #raise ValueError(f"Found whitespace in word: {word}")
                 return tokens.Symbol(word)
 
     def _parseExponentNotation(self, words: 'list[tokens.Token]')\
