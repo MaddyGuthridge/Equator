@@ -4,7 +4,7 @@ import decimal
 from enum import Enum
 
 NAME = "Equator"
-VERSION = "0.5.1"
+VERSION = "0.6.0"
 AUTHOR = "Miguel Guthridge"
 
 # Get 15 decimal places of precision - the max given by sympy
