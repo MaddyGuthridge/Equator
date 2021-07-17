@@ -4,6 +4,7 @@ Author: Miguel Guthridge (hdsq@outlook.com.au)
 """
 
 from ..lib.main import equate
+from ..lib.expression import Expression
 
 def removeSpacing(s: str) -> str:
     """Remove spaces from a string"""
