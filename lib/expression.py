@@ -1,9 +1,9 @@
 """Contains class definition for containing an expression and its output, in a
-format so that it is easily printable with inner details accessible to allow 
-for formatting
+format so that it is easily printable with inner details accessible through
+simple function calls to allow for formatting in external code.
 """
 
-from .parse import ParsedInput
+from .parsedinput import ParsedInput
 
 class Expression:
     def __init__(self, inp) -> None:
