@@ -266,21 +266,21 @@ class Function(Segment):
         self._on = on
 
     def __str__(self):
-        return self.stringify(num_mode=None)
+        return self.stringify(str_opts=None)
 
     def __repr__(self) -> str:
         return f"Function({str(self._op)}, {repr(self._on)})"
 
-    def stringify(self, num_mode: OutputFormatter):
+    def stringify(self, str_opts: OutputFormatter):
         """Returns string version of function, for presenting to the user
 
         Args:
-            num_mode (OutputFormatter): formatting options for string
+            str_opts (OutputFormatter): formatting options for string
 
         Returns:
             str: string representation of string and its contents
         """
-        return f"{self._op.stringify()}({self._on.stringify(num_mode)})"
+        return f"{self._op.stringify(str_opts)}({self._on.stringify(str_opts)})"
 
     def evaluate(self):
         """Returns evaluation of the function
