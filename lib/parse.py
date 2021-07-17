@@ -239,13 +239,15 @@ class ParsedInput(EqObject):
             # Format equations
             new_eqs = []
             for key, value in eqs.items():
-                s = SubExpression(str(key) + "=" + str(value))
+                s = SubExpression(
+                    str(key) + "=" + str(value).replace("**", "^")
+                )
                 new_eqs.append(s.stringify(self._output_formatter))
             
             # Format evaluations
             new_evs = []
             for e in evs:
-                s = SubExpression(str(e))
+                s = SubExpression(str(e).replace("**", "^"))
                 new_evs.append(s.stringify(self._output_formatter))
             
             # Add them both to the formatted set
