@@ -251,6 +251,10 @@ class ParsedInput(EqObject):
             # Add them both to the formatted set
             out.append((new_eqs, new_evs))
 
+        # Check for no results
+        if len(out[0][0]) == len(out[0][1]) == 0 and len(out) == 1:
+            return []
+
         return out
 
     def stringify(self) -> str:
