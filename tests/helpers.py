@@ -26,6 +26,17 @@ def simplifyResults(results: 'list[tuple[list[str], list[str]]]')\
         out.append((eqs, evs))
     return out
 
+def simpleEquate(inp: str):
+    """Run an equate and return results with spaces removed
+
+    Args:
+        inp (str): input
+
+    Returns:
+        list[list[str]]: results
+    """
+    return simplifyResults(equate(inp))
+
 def oneSolutionExp(results: 'list[tuple[list[str], list[str]]]') -> 'list[str]':
     """Return expressions only and assert there is one solution
 

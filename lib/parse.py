@@ -222,13 +222,13 @@ class ParsedInput(EqObject):
             ret += "->" + self._output_formatter.stringifyOriginal()
         return ret
 
-    def result_set(self) -> list:
+    def result_set(self) -> 'list[list[str]]':
         """Returns results of an evaluation in a format that can be parsed
         programmatically
 
         Returns:
-            list: list of result sets (each set contains a list of solutions,
-                  and a list of expression evaluations in a tuple)
+            list[list[str]]: list of result sets (each set contains a list of 
+                solutions, and a list of expression evaluations in a tuple)
         """
         evaluation = self.evaluate()
         
