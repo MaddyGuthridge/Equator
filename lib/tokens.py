@@ -204,7 +204,7 @@ class Constant(Number):
     Stringifies to the name of the constant
     """
     def evaluate(self):
-        return NUMERIC_CONSTANTS[self.getContents()]
+        return NUMERIC_CONSTANTS[self.getContents().lower()]
     
     def __str__(self) -> str:
         return self.getContents()

@@ -59,7 +59,7 @@ def parseToken(word: str, unwrap_symbols=True):
         return tokens.Operator(word)
     else:
         # Parse symbols and constants
-        if word.strip(' ') in consts.NUMERIC_CONSTANTS:
+        if word.strip(' ').lower() in consts.NUMERIC_CONSTANTS:
             return tokens.Constant(word)
         else:
             # Word is a symbol
