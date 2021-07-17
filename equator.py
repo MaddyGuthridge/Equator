@@ -4,11 +4,12 @@ import curses
 from lib import consts
 from lib.expression import Expression
 from display.output_container import OutputContainer
+from display import display_exp, colours
 
 def c_main(stdscr: 'curses._CursesWindow') -> int:
     
-    if curses.can_change_color():
-        curses.use_default_colors()
+    # Set up colour pairs
+    colours.init_colour(stdscr)
     
     stdscr.addstr(0, 0, f"{consts.NAME} (v{consts.VERSION})")
     stdscr.addstr(1, 0, f"by {consts.AUTHOR}")
@@ -27,8 +28,9 @@ def c_main(stdscr: 'curses._CursesWindow') -> int:
         inp = ""
         cursor_pos = 0
         while True:
-            stdscr.addstr(inp_row, inp_col, inp)
-            stdscr.clrtoeol()
+            # Display input as we type
+            display_exp.displayInput(inp_row, inp_col, stdscr, Expression(inp))
+            
             char = stdscr.get_wch(inp_row, inp_col + cursor_pos)
             
             # Keyboard interrupt
