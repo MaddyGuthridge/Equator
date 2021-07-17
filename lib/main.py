@@ -1,8 +1,5 @@
-import sys
-
-#from pprint import pprint
-from . import segment
-from . import parse
+"""Contains front-facing equate function for quick result calculation
+"""
 from .expression import Expression
 
 def equate(inp: str) -> 'list[list[str]]':
