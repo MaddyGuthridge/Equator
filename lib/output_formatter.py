@@ -29,7 +29,13 @@ class OutputFormatter(EqObject):
         return self._num_formatting
 
     def stringifyOriginal(self) -> str:
-        return self._inp
+        if self.givenArgs():
+            return "->" + self._inp
+        else:
+            return ""
+
+    def stringify(self, num_behaviour) -> str:
+        return self._inp.strip(' ')
 
     def givenArgs(self) -> bool:
         return self._inp is not None

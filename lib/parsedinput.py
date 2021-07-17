@@ -5,6 +5,8 @@ another.
 
 import sympy as sym
 
+from . import tokens
+
 from .eq_object import EqObject
 from .output_formatter import OutputFormatter
 from .subexpression import SubExpression
@@ -15,9 +17,6 @@ class ParsedInput(EqObject):
      - List of output formatters
     """
     def __init__(self, inp: str) -> None:
-        self._leading_space = len(inp) - len(inp.lstrip(' '))
-        inp = inp.lstrip(' ')
-        
         # Try getting output formatting options
         if "->" in inp:
             inp, output_mode = inp.split("->", 1)
@@ -85,11 +84,12 @@ class ParsedInput(EqObject):
         Returns:
             str: recreation of original input
         """
-        ret = self._leading_space*' ' \
-            + ';'.join([exp.stringifyOriginal() for exp in self._sub_exps])
-        if self._output_formatter.givenArgs():
-            ret += "->" + self._output_formatter.stringifyOriginal()
-        return ret
+        return ';'.join([exp.stringifyOriginal() for exp in self._sub_exps])\
+            + self._output_formatter.stringifyOriginal()
+
+    def getTokens(self) -> 'tuple[list[list[tokens.Token]], str]':
+        return [e.getTokens() for e in self._sub_exps],\
+            self._output_formatter.stringifyOriginal()
 
     def result_set(self) -> 'list[list[str]]':
         """Returns results of an evaluation in a format that can be parsed

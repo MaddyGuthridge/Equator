@@ -16,8 +16,6 @@ class SubExpression(EqObject):
     SubExpressions.
     """
     def __init__(self, inp: str) -> None:
-        self._leading_space = len(inp) - len(inp.lstrip(' '))
-        inp = inp.lstrip(' ')
         self._tokens = self._parseTokens(inp)
         self._segment = None
         self._evaluation = None
@@ -28,12 +26,16 @@ class SubExpression(EqObject):
         else:
             return repr(self._segment)
     
+    def getTokens(self) -> 'list[tokens.Token]':
+        """Returns tokens used by this subexpression
+
+        Returns:
+            list[tokens.Token]: tokens
+        """
+        return self._tokens
+    
     def stringifyOriginal(self) -> str:
-        space = self._leading_space * ' '
-        
-        tokens_s = [t.stringifyOriginal() for t in self._tokens]
-        
-        return space + ''.join(tokens_s)
+        return ''.join([t.stringifyOriginal() for t in self._tokens])
 
     def stringify(self, str_opts) -> str:
         return self.getSegment().stringify(str_opts)

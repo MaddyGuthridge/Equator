@@ -3,6 +3,8 @@ format so that it is easily printable with inner details accessible through
 simple function calls to allow for formatting in external code.
 """
 
+from . import tokens
+
 from .parsedinput import ParsedInput
 
 class Expression:
@@ -15,6 +17,9 @@ class Expression:
     def getInputStr(self) -> str:
         return self._parsed.stringifyOriginal()
     
+    def getInputTokens(self) -> 'tuple[list[list[tokens.Token]], str]':
+        return self._parsed.getTokens()
+
     def getOutputStr(self) -> str:
         return self._parsed.stringify()
 
