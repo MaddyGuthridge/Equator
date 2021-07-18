@@ -2,12 +2,42 @@
 import curses
 from lib.expression import Expression
 
+from .display_exp import displayExpression, displayInputExpression
+from . import colours
+
 class OutputContainer:
     def __init__(self) -> None:
         self._contents = []
     
+    def __len__(self) -> int:
+        return len(self._contents)
+    
     def addOutput(self, expr: Expression):
         self._contents.insert(0, expr)
+    
+    def _drawLine(self, stdscr: 'curses._CursesWindow', 
+                  row_start: int, col_start: int, row_min: int, col_max: int,
+                  margin: str, exp, is_input:bool) -> int:
+        # Check within bounds
+        if row_start < row_min:
+            raise StopIteration("Row min")
+        
+        # Draw margin
+        stdscr.addstr(row_start, col_start, margin, curses.color_pair(colours.PROMPT))
+        
+        col_start += len(margin)
+        
+        if exp is not None:
+            if is_input:
+                displayInputExpression(row_start, col_start, stdscr, exp)
+            else:
+                displayExpression(row_start, col_start, stdscr, exp)
+        else:
+            stdscr.clrtoeol()
+        
+        # Return number of rows drawn on
+        # Currently, expressions can't span multiple lines
+        return 1
     
     def redraw(self, stdscr: 'curses._CursesWindow', 
                row_start: int, col_start: int, rows: int, cols: int):
@@ -22,20 +52,52 @@ class OutputContainer:
         """
         curr_row = row_start + rows - 1
         
-        # Print content in order of history
-        for content in self._contents:
-            # Prevent printing back past start row
-            if curr_row < row_start:
-                break
-            
-            # Get output rows in order of printing
-            print_order = [content.getInputStr()] + content.getOutputStr().split('\n')
-            print_order.reverse()
-            
-            for p in print_order:
-                # Prevent printing back past start row
-                if curr_row < row_start:
-                    break
-                stdscr.addstr(curr_row, col_start, str(p))
-                stdscr.clrtoeol()
-                curr_row -= 1
+        # Space to leave for numbers in margin
+        mar_just = len(str(len(self._contents)))
+        margin = mar_just + 4
+        
+        # When exception is raised we've run out of values
+        try:
+            # Print content in order of history
+            for ci, content in enumerate(self._contents):
+                ci = len(self._contents) - ci
+                
+                # Generate margin text for output
+                out_mar = ' ' * (margin) + '|' + ' '
+                
+                # Add line break between expressions
+                curr_row -= self._drawLine(stdscr, curr_row, col_start, 
+                                                row_start, cols, out_mar, 
+                                                None, False)
+                
+                # Get output tokens
+                out_tokens = content.getOutputTokens()
+                
+                # Whether to do solution margins
+                long_mar = False
+                if len(out_tokens) > 1:
+                    long_mar = True
+                    margin_s = out_mar
+                    out_mar += ' '*4
+                
+                # For each solution
+                for i, s in enumerate(reversed(out_tokens)):
+                    i = len(out_tokens) - i
+                    # Print evaluations then equations
+                    for es in reversed(s):
+                        for e in reversed(es):
+                            curr_row -= self._drawLine(stdscr, curr_row, col_start, 
+                                                    row_start, cols,
+                                                    out_mar, [e], False)
+                    # If we're doing big margins, generate a solution number
+                    if long_mar:
+                        sl_margin = margin_s + f" {{{i}}}:"
+                        curr_row -= self._drawLine(stdscr, curr_row, col_start, 
+                                                row_start, cols, sl_margin, 
+                                                None, False)
+                # Finally, display the input
+                inp_mar = f" [{str(ci).rjust(mar_just)}] > "
+                curr_row -= self._drawLine(stdscr, curr_row, col_start, row_start, cols, inp_mar, content, True)
+                
+        except StopIteration:
+            pass

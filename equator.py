@@ -20,16 +20,16 @@ def c_main(stdscr: 'curses._CursesWindow') -> int:
     
     # Input loop
     while True:
-        prompt = "eq > "
+        prompt = f" [{len(output)+1}] > "
         inp_row = curses.LINES - 1
         inp_col = len(prompt)
-        stdscr.addstr(inp_row, 0, prompt)
+        stdscr.addstr(inp_row, 0, prompt, curses.color_pair(colours.PROMPT))
         # Get char loop
         inp = ""
         cursor_pos = 0
         while True:
             # Display input as we type
-            display_exp.displayInput(inp_row, inp_col, stdscr, Expression(inp))
+            display_exp.displayInputExpression(inp_row, inp_col, stdscr, Expression(inp))
             
             char = stdscr.get_wch(inp_row, inp_col + cursor_pos)
             
