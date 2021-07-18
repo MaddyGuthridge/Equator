@@ -92,22 +92,30 @@ class SubExpression(EqObject):
         return out
 
     def _createToken(self, word: str) -> 'tokens.Token':
-        if self._isDecimal(word):
-            return tokens.Number(word)
-        elif word.strip(' ') in consts.OPERATORS:
-            return tokens.Operator(word)
-        else:
-            # Parse symbols and constants
-            if word.strip(' ').lower() in consts.NUMERIC_CONSTANTS:
-                return tokens.Constant(word)
+        try:
+            if self._isDecimal(word):
+                return tokens.Number(word)
+            elif word.strip(' ') in consts.OPERATORS:
+                return tokens.Operator(word)
             else:
-                # Word is a symbol
-                # Ensure there isn't any whitespace in symbol
-                if ' ' in word.strip(' '):
-                    # TODO: Make this error not bring down the entire system
-                    # when entering text
-                    raise ValueError(f"Found whitespace in word: {word}")
-                return tokens.Symbol(word)
+                # Parse symbols and constants
+                if word.strip(' ').lower() in consts.NUMERIC_CONSTANTS:
+                    return tokens.Constant(word)
+                else:
+                    # Word is a symbol
+                    # Ensure there isn't any whitespace in symbol
+                    if ' ' in word.strip(' '):
+                        # TODO: Make this error not bring down the entire system
+                        # when entering text
+                        raise ValueError(f"Found whitespace in word: {word}")
+                    # Ensure word doesn't start with non-alphabetic characters
+                    if not word.strip(' ')[0].isalpha():
+                        raise ValueError(f"Symbols cannot start with non-alphabetic characters")
+                    if not word.strip(' ').isalnum():
+                        raise ValueError(f"Symbols must be alphanumeric")
+                    return tokens.Symbol(word)
+        except ValueError as e:
+            return tokens.BadToken(word, e)
 
     def _parseExponentNotation(self, words: 'list[tokens.Token]')\
         -> 'list[tokens.Token]':
@@ -120,14 +128,26 @@ class SubExpression(EqObject):
             if self._isWordExponent(word):
                 try:
                     # If it's an exponent, then grab the next two elements
-                    word = [word] + words[i+1: i+3]
+                    t_word = [word] + words[i+1: i+3]
+                    # And join them together
+                    t_word = "".join(t_word)
+                    # If there's whitespace, skip joining them
+                    if ' ' not in t_word.strip(' '):
+                        if not self._isDecimal(t_word):
+                            # Join together anyway, and we'll get an error
+                            # tokenising which will prevent crashes
+                            #raise ValueError("Parser Error: Bad exponent notation")
+                            pass
+                        word = t_word
+                        skip = 2
+                except IndexError:
+                    # It's missing an exponent, insert the remainder
+                    # This will be picked up when creating tokens
+                    #raise ValueError("Parser Error: Expected exponent")
+                    word = words[i:]
                     # And join them together
                     word = "".join(word)
-                    if not self._isDecimal(word):
-                        raise ValueError("Parser Error: Bad exponent notation")
                     skip = 2
-                except IndexError:
-                    raise ValueError("Parser Error: Expected exponent")
             ret.append(word)
         return ret
     
@@ -146,8 +166,8 @@ class SubExpression(EqObject):
 
     def _isDecimal(self, word: str) -> bool:
         """Return true if word is a decimal"""
-        # Remove spaces
-        word = word.replace(' ', '')
+        # Remove leading and trailing spaces
+        e: word = word.strip(' ')
         try:
             Decimal(word)
             return True

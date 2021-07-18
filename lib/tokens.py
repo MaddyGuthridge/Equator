@@ -217,3 +217,14 @@ class Symbol(Token):
     """
     def evaluate(self):
         return sym.Symbol(self.getContents())
+
+class BadToken(Token):
+    """Token representing a token that parsed incorrectly.
+    Will raise an exception when evaluated.
+    """
+    def __init__(self, value: str, error: ValueError) -> None:
+        super().__init__(value)
+        self._error = error
+
+    def evaluate(self):
+        raise self._error

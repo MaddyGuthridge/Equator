@@ -20,13 +20,13 @@ def getColourPair(token: 'tokens.Token') -> int:
     """
     if isinstance(token, tokens.Constant):
         return curses.color_pair(colours.CONSTANT)
-    if isinstance(token, tokens.Number):
+    elif isinstance(token, tokens.Number):
         return curses.color_pair(colours.NUMBER)
-    if isinstance(token, tokens.Operator):
+    elif isinstance(token, tokens.Operator):
         return curses.color_pair(colours.OPERATOR)
-    if isinstance(token, tokens.Symbol):
+    elif isinstance(token, tokens.Symbol):
         return curses.color_pair(colours.SYMBOL)
-    else:
+    elif isinstance(token, tokens.BadToken):
         return curses.color_pair(colours.ERROR)
 
 def displayInput(row: int, col: int, stdscr: 'curses._CursesWindow', exp: Expression):
