@@ -104,15 +104,8 @@ class SubExpression(EqObject):
                 else:
                     # Word is a symbol
                     # Ensure there isn't any whitespace in symbol
-                    if ' ' in word.strip(' '):
-                        # TODO: Make this error not bring down the entire system
-                        # when entering text
-                        raise ValueError(f"Found whitespace in word: {word}")
-                    # Ensure word doesn't start with non-alphabetic characters
-                    if not word.strip(' ')[0].isalpha():
-                        raise ValueError(f"Symbols cannot start with non-alphabetic characters")
-                    if not word.strip(' ').isalnum():
-                        raise ValueError(f"Symbols must be alphanumeric")
+                    if not tokens.validSymbol(word):
+                        raise ValueError("Invalid symbol")
                     return tokens.Symbol(word)
         except ValueError as e:
             return tokens.BadToken(word, e)

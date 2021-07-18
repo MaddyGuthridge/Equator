@@ -1,4 +1,5 @@
 import math
+import re
 import sympy as sym
 
 from fractions import Fraction
@@ -208,6 +209,16 @@ class Constant(Number):
     
     def __str__(self) -> str:
         return self.getContents()
+
+def validSymbol(sym: str) -> bool:
+    sym = sym.strip(' ')
+    r = re.compile(r'[^a-zA-Z0-9_]')
+    regex = r.search(sym) is None
+    
+    # Ensure word doesn't start with non-alphabetic characters
+    valid_start = sym.strip(' ')[0].isalpha() or sym.strip(' ')[0] == '_'
+    
+    return regex and valid_start
 
 class Symbol(Token):
     """Token representing a symbol
