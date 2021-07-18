@@ -13,10 +13,24 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Equator: Run Interpreter",
+            "name": "Pytest",
+            "type": "python",
+            "request": "launch",
+            "module": "pytest"
+        },
+        {
+            "name": "Equator: Run Interpreter (Windows)",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}\\equator.py",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Equator: Run Interpreter (Linux)",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/equator.py",
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal"
         }

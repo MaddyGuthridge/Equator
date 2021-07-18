@@ -1,6 +1,8 @@
 # Equator
 A maths interpreter built in Python using SymPy
 
+[![Pytest](https://github.com/MiguelGuthridge/Equator/actions/workflows/python-app.yml/badge.svg)](https://github.com/MiguelGuthridge/Equator/actions/workflows/python-app.yml)
+
 # Features:
 * Solve simultaneous equations
 * Simplify expressions
