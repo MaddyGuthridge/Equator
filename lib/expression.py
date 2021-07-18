@@ -24,4 +24,7 @@ class Expression:
         return self._parsed.stringify()
 
     def getOutputList(self) -> list:
-        return self._parsed.result_set()
+        return self._parsed.resultSet()
+    
+    def getOutputTokens(self) -> list:
+        return self._parsed.resultsTokens()

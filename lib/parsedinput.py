@@ -93,7 +93,7 @@ class ParsedInput(EqObject):
         return [e.getTokens() for e in self._sub_exps],\
             self._output_formatter.stringifyOriginal()
 
-    def result_set(self) -> 'list[list[str]]':
+    def resultSet(self) -> 'list[tuple[list[str], list[str]]]':
         """Returns results of an evaluation in a format that can be parsed
         programmatically
 
@@ -130,13 +130,32 @@ class ParsedInput(EqObject):
 
         return out
 
+    def resultsTokens(self) -> 'list[tuple[list[list[tokens.Token]], list[list[tokens.Token]]]]':
+        """Generate results in tokenised form, useful for printing
+
+        Returns:
+            list: set of solutions
+        """
+        results = self.resultSet()
+        
+        out = []
+        
+        # Loop through results
+        for r in results:
+            # For each solution, create a bunch of tokens
+            eqs = [SubExpression(eq).getTokens() for eq in r[0]]
+            evs = [SubExpression(ev).getTokens() for ev in r[1]]
+            out.append((eqs, evs))
+        
+        return out
+
     def stringify(self) -> str:
         """Return evaluation as a string
 
         Returns:
             str: results
         """
-        evaluation = self.result_set()
+        evaluation = self.resultSet()
         
         out = []
         
