@@ -51,10 +51,12 @@ class ParsedInput(EqObject):
         evs = []
         eqs = []
         for e in self._sub_exps:
-            if e.isEquation():
-                eqs.append(e.evaluate())
-            else:
-                evs.append(e.evaluate())
+            a = e.evaluate()
+            if a is not None:
+                if e.isEquation():
+                    eqs.append(a)
+                else:
+                    evs.append(a)
         
         # Solve the equations
         res = sym.solve(eqs)

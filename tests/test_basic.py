@@ -26,3 +26,9 @@ def test_equation():
     """
     a = doOneSolutionEq("x - 1 = 0")
     assert a == ["x=1"]
+
+def test_semicolon_termination():
+    """Ensure that semicolons work correctly when terminating an expression"""
+    assert doOneSolutionExp("1 + 1;") == ["2"]
+    assert doOneSolutionExp("1 + 1; ") == ["2"]
+    assert doOneSolutionEq("1 + 1 = x; ") == ["x=2"]

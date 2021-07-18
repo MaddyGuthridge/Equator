@@ -215,8 +215,11 @@ def validSymbol(sym: str) -> bool:
     r = re.compile(r'[^a-zA-Z0-9_]')
     regex = r.search(sym) is None
     
-    # Ensure word doesn't start with non-alphabetic characters
-    valid_start = sym.strip(' ')[0].isalpha() or sym.strip(' ')[0] == '_'
+    try:
+        # Ensure word doesn't start with non-alphabetic characters
+        valid_start = sym.strip(' ')[0].isalpha() or sym.strip(' ')[0] == '_'
+    except IndexError:
+        return False
     
     return regex and valid_start
 

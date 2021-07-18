@@ -22,3 +22,7 @@ def test_bad_exponent_notation_space():
 def test_bad_exponent_notation_bad_exp():
     with pytest.raises(ValueError):
         equate("1e3.5")
+
+def test_bad_symbols_after_semicolon():
+    with pytest.raises(ValueError):
+        equate("1 + 1; 1r5i")

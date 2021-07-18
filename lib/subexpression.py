@@ -48,6 +48,12 @@ class SubExpression(EqObject):
         return self._segment
 
     def evaluate(self):
+        # If the subexpression is empty, return None
+        if not len(self._tokens) or\
+            (len(self._tokens) == 1\
+                and self._tokens[0].getContents() == ""):
+                return None
+        
         if self._evaluation is None:
             self._evaluation = self.getSegment().evaluate()
         return self._evaluation
