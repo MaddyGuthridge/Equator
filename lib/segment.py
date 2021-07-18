@@ -8,10 +8,12 @@ Author: Miguel Guthridge (hdsq@outlook.com.au)
 """
 
 from . import tokens
+from .eq_object import EqObject
 from . import consts
+from .output_formatter import OutputFormatter
 from . import operation
 
-class Segment(tokens.Token):
+class Segment(EqObject):
     """Hierarchy of tokens in a form that can be simplified and calculated with
     """
     def __init__(self, contents: list):
@@ -27,18 +29,16 @@ class Segment(tokens.Token):
         self._parseOperators(['+', '-'])
         self._parseOperators(['='])
     
-    def stringify(self, num_type:str=None):
+    def stringify(self, str_opts: OutputFormatter):
         """Returns a string representing the segment
         Unlike str(obj), has options to control fancy stringification
 
         Args:
-            num_type (str, optional): 
-                Option for number stringification mode. Is passed onto 
-                number-type tokens to control how they are represented.
-                Defaults to None.
+            str_opts (OutputFormatter): 
+                Formatting options for stringification.
 
         Raises:
-            ValueError: Error's with user input
+            ValueError: Error with user's input
 
         Returns:
             str: string representation of this segment
@@ -46,7 +46,7 @@ class Segment(tokens.Token):
         if len(self._contents) == 0:
             return "0"
         elif len(self._contents) == 1:
-            return self._contents[0].stringify(num_type)
+            return self._contents[0].stringify(str_opts)
         elif len(self._contents) != 3:
             raise ValueError("stringify: bad contents length")
 
@@ -54,15 +54,15 @@ class Segment(tokens.Token):
         op    = self._contents[1]
         right = self._contents[2]
         
-        l_str = left.stringify(num_type)
+        l_str = left.stringify(str_opts)
         if left.getOperatorPrecedence() <= self.getOperatorPrecedence():
             l_str = "(" + l_str + ")"
         
-        r_str = right.stringify(num_type)
+        r_str = right.stringify(str_opts)
         if right.getOperatorPrecedence() <= self.getOperatorPrecedence():
             r_str = "(" + r_str + ")"
     
-        return f"{l_str} {op.stringify(num_type)} {r_str}"
+        return f"{l_str} {op.stringify(str_opts)} {r_str}"
         
     def evaluate(self):
         """Returns the evaluation of this segment
@@ -72,7 +72,7 @@ class Segment(tokens.Token):
 
         Returns:
             Operatable: The result of the conversion: stringify for proper result
-                        in a meaninful format 
+                        in a meaningful format 
         """
         if len(self._contents) == 0:
             return 0.0
@@ -266,21 +266,21 @@ class Function(Segment):
         self._on = on
 
     def __str__(self):
-        return self.stringify(num_type=None)
+        return self.stringify(str_opts=None)
 
     def __repr__(self) -> str:
-        return f"Function({self._op}, {self._on})"
+        return f"Function({str(self._op)}, {repr(self._on)})"
 
-    def stringify(self, num_type: str):
+    def stringify(self, str_opts: OutputFormatter):
         """Returns string version of function, for presenting to the user
 
         Args:
-            num_type (str): how to represent numbers
+            str_opts (OutputFormatter): formatting options for string
 
         Returns:
             str: string representation of string and its contents
         """
-        return f"{self._op.stringify()}({self._on.stringify()})"
+        return f"{self._op.stringify(str_opts)}({self._on.stringify(str_opts)})"
 
     def evaluate(self):
         """Returns evaluation of the function
@@ -309,13 +309,13 @@ class NegateFunction(Function):
     def __str__(self):
         return self.stringify(None)
 
-    def stringify(self, num_type):
+    def stringify(self, num_mode: OutputFormatter):
         """Return string representing contents
 
         Args:
-            num_type (str): number representation mode
+            num_mode (OutputFormatter): string formatting options
 
         Returns:
             str: contents
         """
-        return f"-{self._on.stringify(num_type)}"
+        return f"-{self._on.stringify(num_mode)}"

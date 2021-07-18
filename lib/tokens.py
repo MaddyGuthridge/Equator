@@ -1,30 +1,44 @@
 import math
+import re
 import sympy as sym
 
 from fractions import Fraction
 from decimal import Decimal, Context, localcontext
 
 from . import operation
-from . import consts
+from .consts import NUMBER_FORMATTERS, NUMERIC_CONSTANTS, FRACTION_DENOM_LIMITER
+from .eq_object import EqObject
+from .output_formatter import OutputFormatter
 
-class Token:
+class Token(EqObject):
     """Token base type
     All tokens are derived from this
     """
     def __init__(self, value: str) -> None:
-        self._contents = value
+        self._original = value
+    
+    def getContents(self) -> str:
+        """Returns token contents (with spacing removed)
+
+        Returns:
+            str: contents
+        """
+        return self._original.replace(' ', '')
     
     def __str__(self) -> str:
-        return self._contents
+        return self.getContents()
     
     def __repr__(self) -> str:
-        return self._contents
+        return self.getContents()
 
-    def stringify(self, num_mode=None):
+    def stringify(self, str_options: OutputFormatter) -> str:
         return str(self)
+    
+    def stringifyOriginal(self) -> str:
+        return self._original
 
     def evaluate(self):
-        return self._contents
+        return self.getContents()
     
     def getOperatorPrecedence(self):
         return operation.NO_OPERATION_PRECEDENCE
@@ -36,7 +50,7 @@ class Operator(Token):
 
     def __eq__(self, o: object) -> bool:
         if isinstance(o, str):
-            return o == self._contents
+            return o == self.getContents()
 
 def asMultipleOf(a: Decimal, b: str):
     """Returns a in terms of b if doing so makes sense
@@ -49,7 +63,7 @@ def asMultipleOf(a: Decimal, b: str):
         str | None: a in terms of b or a normally (but None if doing so is unreasonable)
     """
     # FIXME: present as pi/3 rather than 1/3*pi
-    ret = str(Fraction(a / consts.NUM_CONSTANTS[b]).limit_denominator(consts.FRACTION_DENOM_LIMITER))
+    ret = str(Fraction(a / NUMERIC_CONSTANTS[b]).limit_denominator(FRACTION_DENOM_LIMITER))
     if ret == "0":
         return None
     if len(ret) < 10:
@@ -69,7 +83,7 @@ def asPowerOf(a: Decimal, b: str):
     Returns:
         str | None: a as a power of b or a normally (but None if doing so is unreasonable)
     """
-    ret = str(Fraction(math.log(a, consts.NUM_CONSTANTS[b])).limit_denominator(consts.FRACTION_DENOM_LIMITER))
+    ret = str(Fraction(math.log(a, NUMERIC_CONSTANTS[b])).limit_denominator(FRACTION_DENOM_LIMITER))
     # Add brackets if it's a fraction
     if "/" in ret:
         ret = f"({ret})"
@@ -105,10 +119,10 @@ class Number(Token):
     """Token representing a number
     Evaluate returns numberified version
     """
-    def evaluate(self):
-        return Decimal(self._contents)
+    def evaluate(self) -> Decimal:
+        return Decimal(self.getContents())
 
-    def str_number(self):
+    def str_number(self) -> str:
         """Stringifies to a number 
         (either standard or scientific notation)
 
@@ -117,24 +131,35 @@ class Number(Token):
         """
         return stringifyDecimal(self.evaluate())
 
-    def str_scientific(self):
+    def str_scientific(self) -> str:
         """Always stringifies to scientific notation
         """
         return strDecimal_Sci(self.evaluate())
     
-    def str_decimal(self):
+    def str_decimal(self) -> str:
         """Always stringifies to standard decimal notation
         """
         return strDecimal_Norm(self.evaluate())
 
-    def stringify(self, num_mode):
-        if num_mode is None:
+    def stringify(self, str_options: OutputFormatter) -> str:
+        """Convert number to string respecting formatting options
+
+        Args:
+            str_options (OutputFormatter): Formatting options
+
+        Raises:
+            ValueError: Unsupported formatting option
+
+        Returns:
+            str: str(number)
+        """
+        if str_options.getNumFormatting() is NUMBER_FORMATTERS.SMART:
             return str(self)
-        elif num_mode == "dec":
+        elif str_options.getNumFormatting() is NUMBER_FORMATTERS.DECIMAL:
             return self.str_decimal()
-        elif num_mode == "sci":
+        elif str_options.getNumFormatting() is NUMBER_FORMATTERS.SCIENTIFIC:
             return self.str_scientific()
-        elif num_mode == "num":
+        elif str_options.getNumFormatting() is NUMBER_FORMATTERS.NUMBER:
             return self.str_number()
         else:
             raise ValueError("Bad stringify mode")
@@ -159,7 +184,7 @@ class Number(Token):
         if in_e is not None: return in_e
         
         # Present as fraction if possible
-        fract = str(Fraction(ev).limit_denominator(consts.FRACTION_DENOM_LIMITER))
+        fract = str(Fraction(ev).limit_denominator(FRACTION_DENOM_LIMITER))
         if len(fract) < 10 and fract != "0":
             # If it's a whole number
             if '/' not in fract:
@@ -167,7 +192,7 @@ class Number(Token):
             return fract
         
         # Check for square roots
-        sqr = Fraction(ev ** 2).limit_denominator(consts.FRACTION_DENOM_LIMITER)
+        sqr = Fraction(ev ** 2).limit_denominator(FRACTION_DENOM_LIMITER)
         if len(str(sqr)) < 10 and sqr != 0:
             mul, rt = operation.reduceSqrt(sqr)
             mul = f"{mul}*" if mul != 1 else ""
@@ -180,16 +205,40 @@ class Constant(Number):
     Stringifies to the name of the constant
     """
     def evaluate(self):
-        return consts.NUM_CONSTANTS[self._contents]
+        return NUMERIC_CONSTANTS[self.getContents().lower()]
     
     def __str__(self) -> str:
-        return self._contents
+        return self.getContents()
+
+def validSymbol(sym: str) -> bool:
+    sym = sym.strip(' ')
+    r = re.compile(r'[^a-zA-Z0-9_]')
+    regex = r.search(sym) is None
+    
+    try:
+        # Ensure word doesn't start with non-alphabetic characters
+        valid_start = sym.strip(' ')[0].isalpha() or sym.strip(' ')[0] == '_'
+    except IndexError:
+        return False
+    
+    return regex and valid_start
 
 class Symbol(Token):
     """Token representing a symbol
-    Evaluate regeisters and returns a SymPy symbol
+    Evaluate registers and returns a SymPy symbol
     
     Note, depending on context, this could be a function
     """
     def evaluate(self):
-        return sym.Symbol(self._contents)
+        return sym.Symbol(self.getContents())
+
+class BadToken(Token):
+    """Token representing a token that parsed incorrectly.
+    Will raise an exception when evaluated.
+    """
+    def __init__(self, value: str, error: ValueError) -> None:
+        super().__init__(value)
+        self._error = error
+
+    def evaluate(self):
+        raise self._error

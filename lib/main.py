@@ -1,17 +1,15 @@
-import sys
+"""Contains front-facing equate function for quick result calculation
+"""
+from .expression import Expression
 
-#from pprint import pprint
-from . import segment
-from . import smart_equate
-from . import parse
+def equate(inp: str) -> 'list[list[str]]':
+    """Evaluates and returns results in form:
+    list (separate solutions) of lists (results)
 
-def splitInput(expression):
-    return expression.split(' ', 1)
-
-def runInput(expression):
-    return smart_equate.equate(expression)
-
-def formatOutput(output, num_mode:str=None):
-    output = parse.prepString(str(output).replace('**', '^'))
-    s = segment.Segment(output)
-    return s.stringify(num_mode)
+    Args:
+        inp (str): expression to evaluate
+    
+    Returns:
+        list[list[str]]: result
+    """
+    return Expression(inp).getOutputList()
