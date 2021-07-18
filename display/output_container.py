@@ -75,10 +75,14 @@ class OutputContainer:
                 
                 # Whether to do solution margins
                 long_mar = False
+                margin_s = out_mar
                 if len(out_tokens) > 1:
                     long_mar = True
-                    margin_s = out_mar
+                    # 4 extra spaces with solution margins
                     out_mar += ' '*4
+                else:
+                    # 2 without
+                    out_mar += ' '*2
                 
                 # For each solution
                 for i, s in enumerate(reversed(out_tokens)):
