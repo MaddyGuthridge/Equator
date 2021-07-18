@@ -44,6 +44,9 @@ def displayExpression(row: int, col: int, stdscr: 'curses._CursesWindow',
         # For each token
         for t in s:
             stdscr.addstr(t.stringifyOriginal(), getColourPair(t))
+    
+    if clear:
+        stdscr.clrtoeol()
 
 def displayInputExpression(row: int, col: int, stdscr: 'curses._CursesWindow', 
                  exp: Expression):
