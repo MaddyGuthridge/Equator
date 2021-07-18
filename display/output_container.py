@@ -15,6 +15,20 @@ class OutputContainer:
     def addOutput(self, expr: Expression):
         self._contents.insert(0, expr)
     
+    def getInputHistory(self, index: int) -> str:
+        """Returns input at index in history
+
+        Args:
+            index (int): index
+
+        Raises:
+            IndexError: too far back in history
+
+        Returns:
+            str: input from history
+        """
+        return self._contents[index].getInputStr()
+    
     def _drawLine(self, stdscr: 'curses._CursesWindow', 
                   row_start: int, col_start: int, row_min: int, col_max: int,
                   margin: str, exp, is_input:bool) -> int:

@@ -26,6 +26,9 @@ def c_main(stdscr: 'curses._CursesWindow') -> int:
         stdscr.addstr(inp_row, 0, prompt, curses.color_pair(colours.PROMPT))
         # Get char loop
         inp = ""
+        # Cached input for when returning to index -1
+        inp_cache = ""
+        history_pos = -1
         cursor_pos = 0
         while True:
             # Display input as we type
@@ -41,6 +44,8 @@ def c_main(stdscr: 'curses._CursesWindow') -> int:
             elif isinstance(char, str) and char.isprintable():
                 inp = inp[:cursor_pos] + char + inp[cursor_pos:]
                 cursor_pos += 1
+                # Entering text always sets to most recent index in history
+                history_pos = -1
 
             # Left arrow
             elif char == curses.KEY_LEFT or char == 452:
@@ -51,6 +56,31 @@ def c_main(stdscr: 'curses._CursesWindow') -> int:
             elif char == curses.KEY_RIGHT or char == 454:
                 if cursor_pos < len(inp):
                     cursor_pos += 1
+
+            # Up arrow
+            elif char == curses.KEY_UP or char == 450:
+                try:
+                    t = output.getInputHistory(history_pos+1)
+                except IndexError:
+                    continue
+                if history_pos == -1:
+                    inp_cache = inp
+                inp = t
+                history_pos += 1
+                # Put cursor at end of input
+                cursor_pos = len(inp)
+            
+            # Down arrow
+            elif char == curses.KEY_DOWN or char == 456:
+                if history_pos == -1:
+                    continue
+                elif history_pos == 0:
+                    inp = inp_cache
+                else:
+                    inp = output.getInputHistory(history_pos-1)
+                history_pos -= 1
+                # Put cursor at end of input
+                cursor_pos = len(inp)
 
             # Backspace
             elif char == curses.KEY_BACKSPACE or char in ['\x7f', '\x08']:
