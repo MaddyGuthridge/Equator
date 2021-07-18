@@ -2,6 +2,8 @@
 import curses
 from lib.expression import Expression
 
+from lib.tokens import BadToken
+
 from .display_exp import displayExpression, displayInputExpression
 from . import colours
 
@@ -77,25 +79,42 @@ class OutputContainer:
                 ci = len(self._contents) - ci
                 
                 # Generate margin text for output
-                out_mar = ' ' * (margin) + '|' + ' '
+                mar_short = ' ' * (margin) + '|' + ' '
+                out_mar = mar_short + ' '*2
                 
                 # Add line break between expressions
                 curr_row -= self._drawLine(stdscr, curr_row, col_start, 
-                                                row_start, cols, out_mar, 
+                                                row_start, cols, mar_short, 
                                                 None, False)
                 
-                # Get output tokens
-                out_tokens = content.getOutputTokens()
+                # Temporary function for displaying output, this saves us
+                # some effort since it can happen in two places, unless we use a
+                # really long if statement
+                def displayInput() -> int:
+                    inp_mar = f" [{str(ci).rjust(mar_just)}] > "
+                    return self._drawLine(stdscr, curr_row, col_start, 
+                                          row_start, cols, inp_mar, 
+                                          content, True)
                 
+                # Get output tokens
+                # If this causes a crash catch the error
+                try:
+                    out_tokens = content.getOutputTokens()
+                except Exception as e:
+                    # This is the hackiest of hacks for displaying error info
+                    # Fix this at some point
+                    curr_row -= self._drawLine(stdscr, curr_row, col_start, 
+                                               row_start, cols, out_mar, 
+                                               [[BadToken(str(e), e)]], False)
+                    curr_row -= displayInput()
+                    # Skip the remaining processing
+                    continue
+                    
                 # Whether to do solution margins
                 long_mar = False
-                margin_s = out_mar
                 if len(out_tokens) > 1:
                     long_mar = True
-                    # 4 extra spaces with solution margins
-                    out_mar += ' '*4
-                else:
-                    # 2 without
+                    # 2 extra spaces with solution margins
                     out_mar += ' '*2
                 
                 # For each solution
@@ -109,13 +128,12 @@ class OutputContainer:
                                                     out_mar, [e], False)
                     # If we're doing big margins, generate a solution number
                     if long_mar:
-                        sl_margin = margin_s + f" {{{i}}}:"
+                        sl_margin = mar_short + f" {{{i}}}:"
                         curr_row -= self._drawLine(stdscr, curr_row, col_start, 
                                                 row_start, cols, sl_margin, 
                                                 None, False)
                 # Finally, display the input
-                inp_mar = f" [{str(ci).rjust(mar_just)}] > "
-                curr_row -= self._drawLine(stdscr, curr_row, col_start, row_start, cols, inp_mar, content, True)
+                curr_row -= displayInput()
                 
         except StopIteration:
             pass
