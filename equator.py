@@ -89,7 +89,7 @@ def c_main(stdscr: 'curses._CursesWindow') -> int:
 
             # Backspace
             elif char == curses.KEY_BACKSPACE or char in ['\x7f', '\x08']:
-                if len(inp) == 0:
+                if cursor_pos == 0:
                     continue
                 else:
                     inp = inp[:cursor_pos-1] + inp[cursor_pos:]
