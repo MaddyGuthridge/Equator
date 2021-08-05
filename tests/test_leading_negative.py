@@ -23,3 +23,6 @@ def test_to_neg_power():
 def test_equality():
     assert doOneSolutionEq("-1 = -x") == ["x=1"]
     assert doOneSolutionEq("x = -2 * -3") == ["x=6"]
+
+def test_equation_second_parse():
+    assert doOneSolutionEq("0 = a + b + 2") == ["a=-b-2"]

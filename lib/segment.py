@@ -236,7 +236,7 @@ class Segment(EqObject):
                             and self._contents[i] == '-':
                                 out.append(self._contents[i-1])
                                 out.append(NegateFunction(self._contents[i+1]))
-                                skip += 1
+                                #skip += 1
                         # Check for leading negative
                         elif self._contents[i+1] == '-':
                             if len(self._contents) == i + 2:
