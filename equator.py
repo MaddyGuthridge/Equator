@@ -1,115 +1,16 @@
-import sys
-import curses
+"""equator.py
 
-from lib import consts
-from lib.expression import Expression
-from display.output_container import OutputContainer
-from display import display_exp, colours
+Main entry point into the CLI for Equator
 
-def c_main(stdscr: 'curses._CursesWindow') -> int:
-    
-    # Set up colour pairs
-    colours.init_colour(stdscr)
-    
-    stdscr.addstr(0, 0, f"{consts.NAME} (v{consts.VERSION})")
-    stdscr.addstr(1, 0, f"by {consts.AUTHOR}")
-    stdscr.addstr(2, 0, "Interpreter Mode")
-    stdscr.addstr(3, 0, "Press Ctrl+C to quit")
+Parses command line arguments and runs commands accordingly
 
-    output = OutputContainer()
-    
-    # Input loop
-    while True:
-        prompt = f" [{len(output)+1}] > "
-        # Coordinates of input when user is typing
-        inp_row = curses.LINES - 1
-        inp_col = len(prompt)
-        stdscr.addstr(inp_row, 0, prompt, curses.color_pair(colours.PROMPT))
-        # Get char loop
-        inp = ""
-        # Cached input for when returning to index -1
-        inp_cache = ""
-        # Position in output history (reset to -1 when changing text)
-        history_pos = -1
-        # Position of cursor in string: by default 1 char after last index
-        # ie. default = len(inp)
-        cursor_pos = 0
-        # Get characters until enter is pressed (break statement)
-        while True:
-            # Display input as we type
-            display_exp.displayInputExpression(inp_row, inp_col, stdscr, Expression(inp))
-            
-            char = stdscr.get_wch(inp_row, inp_col + cursor_pos)
-            
-            # Keyboard interrupt
-            if isinstance(char, str) and char in ['\x03']:
-                return 0
-            
-            # Insert character
-            elif isinstance(char, str) and char.isprintable():
-                inp = inp[:cursor_pos] + char + inp[cursor_pos:]
-                cursor_pos += 1
-                # Entering text always sets to most recent index in history
-                history_pos = -1
+Author: Miguel Guthridge
+"""
 
-            # Left arrow
-            elif char == curses.KEY_LEFT or char == 452:
-                if cursor_pos > 0:
-                    cursor_pos -= 1
-            
-            # Right arrow
-            elif char == curses.KEY_RIGHT or char == 454:
-                if cursor_pos < len(inp):
-                    cursor_pos += 1
-
-            # Up arrow
-            elif char == curses.KEY_UP or char == 450:
-                try:
-                    t = output.getInputHistory(history_pos+1)
-                except IndexError:
-                    continue
-                if history_pos == -1:
-                    inp_cache = inp
-                inp = t
-                history_pos += 1
-                # Put cursor at end of input
-                cursor_pos = len(inp)
-            
-            # Down arrow
-            elif char == curses.KEY_DOWN or char == 456:
-                if history_pos == -1:
-                    continue
-                elif history_pos == 0:
-                    inp = inp_cache
-                else:
-                    inp = output.getInputHistory(history_pos-1)
-                history_pos -= 1
-                # Put cursor at end of input
-                cursor_pos = len(inp)
-
-            # Backspace
-            elif char == curses.KEY_BACKSPACE or char in ['\x7f', '\x08']:
-                if cursor_pos == 0:
-                    continue
-                else:
-                    inp = inp[:cursor_pos-1] + inp[cursor_pos:]
-                cursor_pos -= 1
-            
-            elif char == '\n':
-                break
-            else:
-                stdscr.addstr(4, 0, "Ignored: " + repr(char))
-                stdscr.clrtoeol()
-        
-        # Got input
-        output.addOutput(Expression(inp))
-        output.redraw(stdscr, 4, 0, curses.LINES - 5, curses.COLS)
+from eq_curses import curses_main
 
 def main() -> int:
-    try:
-        return curses.wrapper(c_main)
-    except KeyboardInterrupt:
-        return 0
+    curses_main()
 
 if __name__ == "__main__":
     exit(main())

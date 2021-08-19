@@ -210,10 +210,11 @@ class Constant(Number):
     def __str__(self) -> str:
         return self.getContents()
 
+SYMBOL_REGEX = r = re.compile(r'[^a-zA-Z0-9_]')
+
 def validSymbol(sym: str) -> bool:
     sym = sym.strip(' ')
-    r = re.compile(r'[^a-zA-Z0-9_]')
-    regex = r.search(sym) is None
+    regex = SYMBOL_REGEX.search(sym) is None
     
     try:
         # Ensure word doesn't start with non-alphabetic characters
