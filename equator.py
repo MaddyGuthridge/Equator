@@ -7,10 +7,10 @@ Parses command line arguments and runs commands accordingly
 Author: Miguel Guthridge
 """
 
-from display import main_curses
+from eq_curses import curses_main
 
 def main() -> int:
-    main_curses.curses_main()
+    curses_main()
 
 if __name__ == "__main__":
     exit(main())
