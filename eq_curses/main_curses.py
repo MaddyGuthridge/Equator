@@ -209,6 +209,7 @@ def equator_curses(stdscr: 'curses._CursesWindow') -> int:
             output.addOutput(Expression(inp))
         
         except Exception as e:
+            stdscr.addstr(4, 0, f"{type(e)}: {e}")
             continue
 
 def curses_main():
