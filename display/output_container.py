@@ -55,7 +55,7 @@ class OutputContainer:
         # Currently, expressions can't span multiple lines
         return 1
     
-    def redraw(self, stdscr: 'curses._CursesWindow', 
+    def redraw(self, stdscr: 'curses._CursesWindow',
                row_start: int, col_start: int, rows: int, cols: int):
         """Print output history onto screen
 
