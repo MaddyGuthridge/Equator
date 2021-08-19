@@ -196,7 +196,7 @@ def equator_curses(stdscr: 'curses._CursesWindow') -> int:
                     cursor_pos -= 1
                 # Window resize
                 elif char in [curses.KEY_RESIZE]:
-                    redrawFull(stdscr, output, inp)
+                    redrawFull(stdscr, output, inp, cursor_pos)
                     inp_row = stdscr.getmaxyx()[0] - 1
                 # End line
                 elif char == '\n':
