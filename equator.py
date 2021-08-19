@@ -27,7 +27,69 @@ def drawPrompt(stdscr: 'curses._CursesWindow', output: OutputContainer) -> int:
     stdscr.addstr(stdscr.getmaxyx()[0] - 1, 0, prompt, curses.color_pair(colours.PROMPT))
     return len(prompt)
 
-def redrawFull(stdscr: 'curses._CursesWindow', output: OutputContainer, exp: str):
+def drawInput(stdscr: 'curses._CursesWindow', inp_row: int, inp_col: int,
+              exp: str, pos: int) -> int:
+    """Draw input string in a way that doesn't make the program have a hissy fit
+
+    Args:
+        stdscr (curses._CursesWindow): screen to draw to
+        inp_row (int): row to draw to
+        inp_col (int): col to start draw on
+        exp (str): expression to draw
+        pos (int): Cursor position in exp
+    
+    Returns:
+        int: relative cursor position
+    """
+    max_len = stdscr.getmaxyx()[1] - inp_col - 1
+    
+    # FIXME: Make this give some kind of error rather than just dying
+    if (max_len < 15):
+        raise KeyboardInterrupt()
+    
+    if len(exp) <= max_len:
+        display_exp.displayInputExpression(inp_row, inp_col, stdscr, Expression(exp))
+        return pos
+    else:
+        # Bounds of where we're trimming
+        trim_low = len(exp)-max_len
+        trim_hi = len(exp)
+        
+        # Whether we need to add trim ellipses on
+        is_trim_low = False
+        is_trim_hi = False
+        
+        # Adjust so that there's always a reasonable number of characters
+        # to the left of the cursor
+        # 10 chars + len("... ") = 14
+        while trim_low+14 >= pos and trim_low > 0:
+            trim_low -= 1
+            trim_hi -= 1
+        
+        pos -= trim_low
+        
+        if trim_low != 0:
+            trim_low += 4
+            is_trim_low = True
+        if trim_hi != len(exp):
+            trim_hi -= 4
+            is_trim_hi = True
+        
+        trimmed_exp = exp[trim_low:trim_hi]
+        
+        # Draw trim on left
+        if is_trim_low:
+            stdscr.addstr(inp_row, inp_col, "... ")
+            inp_col += 4
+        
+        display_exp.displayInputExpression(inp_row, inp_col, stdscr, Expression(trimmed_exp))
+        inp_col += len(trimmed_exp)
+        
+        if is_trim_hi:
+            stdscr.addstr(inp_row, inp_col, " ...")
+        return pos
+
+def redrawFull(stdscr: 'curses._CursesWindow', output: OutputContainer, exp: str, pos: int):
     """Redraw all contents on the screen (eg after window resize)
 
     Args:
@@ -38,7 +100,7 @@ def redrawFull(stdscr: 'curses._CursesWindow', output: OutputContainer, exp: str
     drawHeader(stdscr)
     output.redraw(stdscr, 4, 0, lines - 5, cols)
     col = drawPrompt(stdscr, output)
-    display_exp.displayInputExpression(lines-1, col, stdscr, Expression(exp))
+    drawInput(stdscr, lines-1, col, exp, pos)
 
 def c_main(stdscr: 'curses._CursesWindow') -> int:
     
@@ -47,7 +109,7 @@ def c_main(stdscr: 'curses._CursesWindow') -> int:
 
     output = OutputContainer()
     
-    redrawFull(stdscr, output, "")
+    redrawFull(stdscr, output, "", 0)
     
     # Input loop
     while True:
@@ -71,13 +133,13 @@ def c_main(stdscr: 'curses._CursesWindow') -> int:
             # Get characters until enter is pressed (break statement)
             while True:
                 # Display input as we type
-                display_exp.displayInputExpression(inp_row, inp_col, stdscr, Expression(inp))
+                draw_col = drawInput(stdscr, inp_row, inp_col, inp, cursor_pos)
                 
-                char = stdscr.get_wch(inp_row, inp_col + cursor_pos)
+                char = stdscr.get_wch(inp_row, inp_col + draw_col)
                 
                 # Keyboard interrupt
                 if isinstance(char, str) and char in ['\x03']:
-                    return 0
+                    raise KeyboardInterrupt()
                 
                 # Insert character
                 elif isinstance(char, str) and char.isprintable():
