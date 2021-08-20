@@ -36,6 +36,10 @@ class EqParserException(EqExternalException):
     """Exception when parsing an expression
     """
 
+class EqTokeniseException(EqExternalException):
+    """Exception when tokenising an expression
+    """
+
 class EqOperatorException(EqExternalException):
     """Exception for when a function or operation isn't
     recognised
