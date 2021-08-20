@@ -11,7 +11,7 @@ from fractions import Fraction
 
 from . import consts
 
-from .eq_except import EqOperatorException, EqFunctionException
+from .eq_except import EqOperatorException, EqFunctionException, EqInternalException
 
 FUNCTION_OPERATOR_PRECEDENCE = 10
 NO_OPERATION_PRECEDENCE = 10
@@ -79,8 +79,8 @@ def doOperation(operator: str, a, b):
         res = a - b
     elif operator == '=':
         res = sym.Eq(a, b)
-    else:
-        raise EqOperatorException("Unrecognised operation: " + operator)
+    else: # pragma: no cover
+        raise EqInternalException("Unrecognised operation: " + operator)
     return res
 
 def doFunction(func: str, a):
