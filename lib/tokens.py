@@ -242,7 +242,7 @@ class BadToken(Token):
     """Token representing a token that parsed incorrectly.
     Will raise an exception when evaluated.
     """
-    def __init__(self, value: str, error: EqParserException) -> None:
+    def __init__(self, value: str, error:EqParserException=None) -> None:
         super().__init__(value)
         self._error = error
 
