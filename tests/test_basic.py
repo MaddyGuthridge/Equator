@@ -3,7 +3,12 @@
 Author: Miguel Guthridge (hdsq@outlook.com.au)
 """
 
-from .helpers import doOneSolutionExp, doOneSolutionEq
+from .helpers import doOneSolutionExp, doOneSolutionEq, equate
+
+def test_empty():
+    """Ensure empty expression produce no output
+    """
+    assert equate("") == []
 
 def test_constant():
     """Ensure constants work

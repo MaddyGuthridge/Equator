@@ -41,6 +41,10 @@ def test_unbalanced_brackets_closing_complex():
     with pytest.raises(EqParserException):
         equate("1 + (3 - (2 - 3)))")
 
+def test_empty_brackets():
+    with pytest.raises(EqParserException):
+        equate("1 + () - 2")
+
 def test_bad_symbol_placement():
     with pytest.raises(EqParserException):
         equate("1 ** 3")

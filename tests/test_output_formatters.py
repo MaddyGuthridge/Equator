@@ -31,7 +31,7 @@ def test_output_sci():
 def test_output_bad_type():
     """Ensure that when an incorrect format type is chosen, it will default
     to smart formatting"""
-    assert doOneSolutionExp("sqrt(2) -> isuhfiushs") == ["sqrt(2)"]
+    assert doOneSolutionExp("sqrt(2) -> notAFormat") == ["sqrt(2)"]
 
 def test_equations():
     """Ensure formatting is applied to sets of equations"""
