@@ -17,6 +17,9 @@ class Token(EqObject):
     def __init__(self, value: str) -> None:
         self._original = value
     
+    def __len__(self) -> int:
+        return len(self._original)
+    
     def getContents(self) -> str:
         """Returns token contents (with spacing removed)
 
