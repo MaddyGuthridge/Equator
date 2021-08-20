@@ -130,20 +130,20 @@ def doFunction(func: str, a):
             raise EqFunctionException(f"Bad base for logarithm \"{func}\"")
         return sym.log(a, base)
 
-def getConstant(const: str):
-    """Returns the representation of a constant as a stringified decimal
-    r the original string if it isn't a constant
-
-    Args:
-        const (str): potential constant to replace
-
-    Returns:
-        str: representation of constant if applicable otherwise original str
-    """
-    if const in consts.NUMERIC_CONSTANTS:
-        return str(consts.NUMERIC_CONSTANTS[const])
-    else:
-        return const
+# def getConstant(const: str):
+#     """Returns the representation of a constant as a stringified decimal
+#     r the original string if it isn't a constant
+#
+#     Args:
+#         const (str): potential constant to replace
+#
+#     Returns:
+#         str: representation of constant if applicable otherwise original str
+#     """
+#     if const in consts.NUMERIC_CONSTANTS:
+#         return str(consts.NUMERIC_CONSTANTS[const])
+#     else:
+#         return const
 
 def _doReduceSqrt(num: int):
     # Generate a list of all perfect squares up to num
