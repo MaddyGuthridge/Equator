@@ -8,6 +8,7 @@ from . import consts
 from . import tokens
 from . import operation
 
+from .eq_except import EqTokeniseException
 from .eq_object import EqObject
 from .segment import Segment
 
@@ -111,9 +112,9 @@ class SubExpression(EqObject):
                     # Word is a symbol
                     # Ensure there isn't any whitespace in symbol
                     if not tokens.validSymbol(word):
-                        raise ValueError("Invalid symbol")
+                        raise EqTokeniseException("Invalid symbol")
                     return tokens.Symbol(word)
-        except ValueError as e:
+        except EqTokeniseException as e:
             return tokens.BadToken(word, e)
 
     def _parseExponentNotation(self, words: 'list[tokens.Token]')\
