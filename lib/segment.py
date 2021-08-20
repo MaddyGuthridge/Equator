@@ -19,9 +19,7 @@ class Segment(EqObject):
     """
     def __init__(self, contents: list):
         self._contents = contents
-        # Don't even bother trying to parse if there's nothing there
-        if len(self._contents) == 0:
-            return
+        # There is always contents here as otherwise no segments are created
         self._parseBrackets()
         self._parseFunctions()
         self._parseOperators(['^'])
@@ -44,11 +42,9 @@ class Segment(EqObject):
         Returns:
             str: string representation of this segment
         """
-        if len(self._contents) == 0:
-            return "0"
-        elif len(self._contents) == 1:
+        if len(self._contents) == 1:
             return self._contents[0].stringify(str_opts)
-        elif len(self._contents) != 3:
+        elif len(self._contents) != 3: # pragma: no cover
             raise EqInternalException("stringify: bad contents length")
 
         left  = self._contents[0]
@@ -75,9 +71,6 @@ class Segment(EqObject):
             Operatable: The result of the conversion: stringify for proper result
                         in a meaningful format 
         """
-        if len(self._contents) == 0:
-            return 0.0
-        
         if len(self._contents) == 1:
             return self._contents[0].evaluate()
             
@@ -87,7 +80,7 @@ class Segment(EqObject):
             b = self._contents[2]
             return operation.doOperation(op, a.evaluate(), b.evaluate())
 
-        else:
+        else: # pragma: no cover
             raise EqInternalException("Evaluation error: couldn't evaluate segment:\n"
                              "Bad content length\n"
                              + repr(self))
@@ -108,10 +101,10 @@ class Segment(EqObject):
         elif len(self._contents) == 3:
             if isinstance(self._contents[1], tokens.Operator):
                 return operation.operatorPrecedence(self._contents[1])
-            else:
+            else: # pragma: no cover
                 raise EqInternalException("Precedence error: failed to get operator for:\n"
                                  + repr(self))
-        else:
+        else: # pragma: no cover
             raise EqInternalException("Precedence error: Bad content length for\n"
                              + repr(self))
 
@@ -256,6 +249,8 @@ class Segment(EqObject):
                 out.append(self._contents[-2])
                 out.append(self._contents[-1])
             elif skip == 1:
+                # Haven't been able to find a case that causes this
+                # Is it already caught earlier?
                 raise EqParserException("Expected full expression after operator group")
             
             self._contents = out
