@@ -1,7 +1,7 @@
 
 import curses
 from lib.expression import Expression
-
+from lib.eq_except import EqExternalException
 from lib.tokens import Token, BadToken
 
 from .display_exp import displayExpression, displayInputExpression, splitExpression, unravelInputTokens
@@ -141,7 +141,7 @@ class OutputContainer:
                 # If this causes a crash catch the error
                 try:
                     out_tokens = content.getOutputTokens()
-                except Exception as e:
+                except EqExternalException as e:
                     # This is the hackiest of hacks for displaying error info
                     # Fix this at some point
                     curr_row -= self._drawLine(stdscr, curr_row, col_start, 
