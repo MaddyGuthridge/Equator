@@ -11,6 +11,8 @@ from fractions import Fraction
 
 from . import consts
 
+from .eq_except import EqOperatorException, EqFunctionException
+
 FUNCTION_OPERATOR_PRECEDENCE = 10
 NO_OPERATION_PRECEDENCE = 10
 
@@ -78,7 +80,7 @@ def doOperation(operator: str, a, b):
     elif operator == '=':
         res = sym.Eq(a, b)
     else:
-        raise ValueError("Unrecognised operation: " + operator)
+        raise EqOperatorException("Unrecognised operation: " + operator)
     return res
 
 def doFunction(func: str, a):
@@ -122,7 +124,10 @@ def doFunction(func: str, a):
     elif func == "ln":
         return sym.log(a)
     elif func.startswith("log_"):
-        base = Decimal(func.replace("log_", ""))
+        try:
+            base = Decimal(func.replace("log_", ""))
+        except:
+            raise EqFunctionException(f"Bad base for logarithm \"{func}\"")
         return sym.log(a, base)
 
 def getConstant(const: str):

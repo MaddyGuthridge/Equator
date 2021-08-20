@@ -9,6 +9,7 @@ from . import operation
 from .consts import NUMBER_FORMATTERS, NUMERIC_CONSTANTS, FRACTION_DENOM_LIMITER
 from .eq_object import EqObject
 from .output_formatter import OutputFormatter
+from .eq_except import EqFormatterError, EqParserException
 
 class Token(EqObject):
     """Token base type
@@ -165,7 +166,7 @@ class Number(Token):
         elif str_options.getNumFormatting() is NUMBER_FORMATTERS.NUMBER:
             return self.str_number()
         else:
-            raise ValueError("Bad stringify mode")
+            raise EqFormatterError("Bad stringify mode")
 
     def __str__(self) -> str:
         """Smart stringify: determines the best format and stringifies to that
@@ -240,7 +241,7 @@ class BadToken(Token):
     """Token representing a token that parsed incorrectly.
     Will raise an exception when evaluated.
     """
-    def __init__(self, value: str, error: ValueError) -> None:
+    def __init__(self, value: str, error: EqParserException) -> None:
         super().__init__(value)
         self._error = error
 
