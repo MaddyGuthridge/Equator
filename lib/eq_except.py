@@ -11,10 +11,10 @@ class EqException(Exception):
         super().__init__(*args)
         self.input = None
     
-    def __str__(self) -> str:
+    def __str__(self) -> str: # pragma: no cover
         return str(type(self)) + ": " + super().__str__()
     
-    def addInput(self, input: str):
+    def addInput(self, input: str): # pragma: no cover
         """Add the value that was entered into Equator in order to generate this
         exception
 
