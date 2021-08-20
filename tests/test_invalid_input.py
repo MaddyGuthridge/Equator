@@ -28,3 +28,23 @@ def test_bad_exponent_notation_bad_exp():
 def test_bad_symbols_after_semicolon():
     with pytest.raises(EqTokeniseException):
         equate("1 + 1; 1r5i")
+
+def test_unbalanced_brackets_opening():
+    with pytest.raises(EqParserException):
+        equate("1 + (3 - 2")
+
+def test_unbalanced_brackets_closing():
+    with pytest.raises(EqParserException):
+        equate("1 + 2)")
+
+def test_unbalanced_brackets_closing_complex():
+    with pytest.raises(EqParserException):
+        equate("1 + (3 - (2 - 3)))")
+
+def test_bad_symbol_placement():
+    with pytest.raises(EqParserException):
+        equate("1 ** 3")
+    with pytest.raises(EqParserException):
+        equate("1 * + 2")
+    with pytest.raises(EqParserException):
+        equate("3 ^* 3")
