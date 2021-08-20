@@ -5,11 +5,14 @@ Contains main function for json IO
     
 import json
 
-from lib import equate
+from lib import equate, EqExternalException
 
 def json_main():
     try:
         while True:
-            print(json.dumps(equate(input()), indent=None))
+            try:
+                print(json.dumps(equate(input()), indent=None))
+            except EqExternalException as e:
+                print(str(e))
     except EOFError:
         return
