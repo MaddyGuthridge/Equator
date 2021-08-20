@@ -13,7 +13,8 @@ from .eq_except import EqFormatterError, EqParserException
 
 class Token(EqObject):
     """Token base type
-    All tokens are derived from this
+    
+    All Equator tokens are derived from this
     """
     def __init__(self, value: str) -> None:
         self._original = value
