@@ -26,5 +26,5 @@ class Expression:
     def getOutputList(self) -> list:
         return self._parsed.resultSet()
     
-    def getOutputTokens(self) -> list:
+    def getOutputTokens(self) -> 'list[tuple[list[list[tokens.Token]], list[list[tokens.Token]]]]':
         return self._parsed.resultsTokens()
