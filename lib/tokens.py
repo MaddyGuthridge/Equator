@@ -19,7 +19,8 @@ class Token(EqObject):
     def __init__(self, value: str) -> None:
         self._original = value
     
-    def __len__(self) -> int:
+    def __len__(self) -> int: # pragma: no cover
+        # Used externally
         return len(self._original)
     
     def __eq__(self, o: object) -> bool:
@@ -49,7 +50,8 @@ class Token(EqObject):
     def stringifyOriginal(self) -> str:
         return self._original
 
-    def evaluate(self):
+    def evaluate(self): # pragma: no cover
+        # Should be overridden
         return self.getContents()
     
     def getOperatorPrecedence(self):
@@ -175,7 +177,7 @@ class Number(Token):
             return self.str_scientific()
         elif str_options.getNumFormatting() is NUMBER_FORMATTERS.NUMBER:
             return self.str_number()
-        else:
+        else: # pragma: no cover
             raise EqFormatterError("Bad stringify mode")
 
     def __str__(self) -> str:
