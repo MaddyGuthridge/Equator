@@ -22,6 +22,13 @@ class Token(EqObject):
     def __len__(self) -> int:
         return len(self._original)
     
+    def __eq__(self, o: object) -> bool:
+        if isinstance(o, type(self)):
+            formatter = OutputFormatter()
+            return self.stringify(formatter) == o.stringify(formatter)
+        else:
+            return False
+    
     def getContents(self) -> str:
         """Returns token contents (with spacing removed)
 
@@ -56,6 +63,8 @@ class Operator(Token):
     def __eq__(self, o: object) -> bool:
         if isinstance(o, str):
             return o == self.getContents()
+        else:
+            return super().__eq__(o)
 
 def asMultipleOf(a: Decimal, b: str):
     """Returns a in terms of b if doing so makes sense
