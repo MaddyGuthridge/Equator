@@ -6,6 +6,18 @@ simple function calls to allow for formatting in external code.
 from . import tokens
 
 from .parsedinput import ParsedInput
+from .eq_except import EqException
+
+def exceptionAddInput(func):
+    # Add exception handling to function to add input string back
+    def my_wrapper(self):
+        try:
+            return func(self)
+        except EqException as e:
+            e.input = self.getInputStr()
+            raise e
+    
+    return my_wrapper
 
 class Expression:
     def __init__(self, inp: str) -> None:
@@ -27,6 +39,7 @@ class Expression:
         """
         return self._parsed.stringifyOriginal()
     
+    @exceptionAddInput
     def getInputTokens(self) -> 'tuple[list[list[tokens.Token]], str]':
         """Return a list of tokens representing the original input
 
@@ -40,6 +53,7 @@ class Expression:
         """
         return self._parsed.getTokens()
 
+    @exceptionAddInput
     def getOutputStr(self) -> str:
         """Return the output as a string.
         
@@ -53,6 +67,7 @@ class Expression:
         """
         return self._parsed.stringify()
 
+    @exceptionAddInput
     def getOutputList(self) -> 'list[tuple[list[str], list[str]]]':
         """Return the output as a collection, using the specification below
 
@@ -65,7 +80,8 @@ class Expression:
             ]
         """
         return self._parsed.resultSet()
-    
+
+    @exceptionAddInput
     def getOutputTokens(self) -> 'list[tuple[list[list[tokens.Token]], list[list[tokens.Token]]]]':
         """Returns the same as `getOutputList()`, except each string is
         tokenised to allow for additional parsing of information on outputs
