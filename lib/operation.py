@@ -11,6 +11,8 @@ from fractions import Fraction
 
 from . import consts
 
+from .eq_except import EqOperatorException, EqFunctionException, EqInternalException
+
 FUNCTION_OPERATOR_PRECEDENCE = 10
 NO_OPERATION_PRECEDENCE = 10
 
@@ -77,8 +79,8 @@ def doOperation(operator: str, a, b):
         res = a - b
     elif operator == '=':
         res = sym.Eq(a, b)
-    else:
-        raise ValueError("Unrecognised operation: " + operator)
+    else: # pragma: no cover
+        raise EqInternalException("Unrecognised operation: " + operator)
     return res
 
 def doFunction(func: str, a):
@@ -122,23 +124,26 @@ def doFunction(func: str, a):
     elif func == "ln":
         return sym.log(a)
     elif func.startswith("log_"):
-        base = Decimal(func.replace("log_", ""))
+        try:
+            base = Decimal(func.replace("log_", ""))
+        except:
+            raise EqFunctionException(f"Bad base for logarithm \"{func}\"")
         return sym.log(a, base)
 
-def getConstant(const: str):
-    """Returns the representation of a constant as a stringified decimal
-    r the original string if it isn't a constant
-
-    Args:
-        const (str): potential constant to replace
-
-    Returns:
-        str: representation of constant if applicable otherwise original str
-    """
-    if const in consts.NUMERIC_CONSTANTS:
-        return str(consts.NUMERIC_CONSTANTS[const])
-    else:
-        return const
+# def getConstant(const: str):
+#     """Returns the representation of a constant as a stringified decimal
+#     r the original string if it isn't a constant
+#
+#     Args:
+#         const (str): potential constant to replace
+#
+#     Returns:
+#         str: representation of constant if applicable otherwise original str
+#     """
+#     if const in consts.NUMERIC_CONSTANTS:
+#         return str(consts.NUMERIC_CONSTANTS[const])
+#     else:
+#         return const
 
 def _doReduceSqrt(num: int):
     # Generate a list of all perfect squares up to num

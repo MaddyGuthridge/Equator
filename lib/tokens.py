@@ -9,13 +9,26 @@ from . import operation
 from .consts import NUMBER_FORMATTERS, NUMERIC_CONSTANTS, FRACTION_DENOM_LIMITER
 from .eq_object import EqObject
 from .output_formatter import OutputFormatter
+from .eq_except import EqFormatterError, EqParserException
 
 class Token(EqObject):
     """Token base type
-    All tokens are derived from this
+    
+    All Equator tokens are derived from this
     """
     def __init__(self, value: str) -> None:
         self._original = value
+    
+    def __len__(self) -> int: # pragma: no cover
+        # Used externally
+        return len(self._original)
+    
+    def __eq__(self, o: object) -> bool:
+        if isinstance(o, type(self)):
+            formatter = OutputFormatter()
+            return self.stringify(formatter) == o.stringify(formatter)
+        else:
+            return False
     
     def getContents(self) -> str:
         """Returns token contents (with spacing removed)
@@ -37,7 +50,8 @@ class Token(EqObject):
     def stringifyOriginal(self) -> str:
         return self._original
 
-    def evaluate(self):
+    def evaluate(self): # pragma: no cover
+        # Should be overridden
         return self.getContents()
     
     def getOperatorPrecedence(self):
@@ -51,6 +65,8 @@ class Operator(Token):
     def __eq__(self, o: object) -> bool:
         if isinstance(o, str):
             return o == self.getContents()
+        else:
+            return super().__eq__(o)
 
 def asMultipleOf(a: Decimal, b: str):
     """Returns a in terms of b if doing so makes sense
@@ -161,8 +177,8 @@ class Number(Token):
             return self.str_scientific()
         elif str_options.getNumFormatting() is NUMBER_FORMATTERS.NUMBER:
             return self.str_number()
-        else:
-            raise ValueError("Bad stringify mode")
+        else: # pragma: no cover
+            raise EqFormatterError("Bad stringify mode")
 
     def __str__(self) -> str:
         """Smart stringify: determines the best format and stringifies to that
@@ -237,7 +253,7 @@ class BadToken(Token):
     """Token representing a token that parsed incorrectly.
     Will raise an exception when evaluated.
     """
-    def __init__(self, value: str, error: ValueError) -> None:
+    def __init__(self, value: str, error:EqParserException=None) -> None:
         super().__init__(value)
         self._error = error
 

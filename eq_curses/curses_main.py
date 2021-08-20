@@ -15,6 +15,7 @@ import curses
 
 from lib import consts
 from lib import Expression
+from lib.eq_except import EqExternalException
 from .output_container import OutputContainer
 from . import display_exp, colours
 
@@ -144,6 +145,9 @@ def equator_curses(stdscr: 'curses._CursesWindow') -> int:
                 # Keyboard interrupt
                 if isinstance(char, str) and char in ['\x03']:
                     raise KeyboardInterrupt()
+                # EOF
+                if isinstance(char, str) and char in ['\x04']:
+                    raise EOFError()
                 
                 # Insert character
                 elif isinstance(char, str) and char.isprintable():
@@ -208,9 +212,19 @@ def equator_curses(stdscr: 'curses._CursesWindow') -> int:
             # Got input
             output.addOutput(Expression(inp))
         
-        except Exception as e:
-            stdscr.addstr(4, 0, f"{type(e)}: {e}")
-            continue
+        except curses.error as e:
+            # EOF
+            if e.args[0] == "no input":
+                return 0
+            # Other errors
+            else:
+                stdscr.addstr(4, 0, f"Error: {e}")
+                continue
+        except EOFError:
+            return 0
+        #except Exception as e:
+        #    stdscr.addstr(4, 0, f"{type(e)}: {e}")
+        #    continue
 
 def curses_main():
     try:

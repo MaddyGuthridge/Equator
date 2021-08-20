@@ -2,8 +2,9 @@
 
 Author: Miguel Guthridge (hdsq@outlook.com.au)
 """
-
-from .helpers import doOneSolutionExp, doOneSolutionEq
+import pytest
+from .helpers import doOneSolutionExp, doOneSolutionEq, equate
+from ..lib import EqParserException
 
 def test_starting_negative():
     assert doOneSolutionExp("-1") == ["-1"]
@@ -26,3 +27,7 @@ def test_equality():
 
 def test_equation_second_parse():
     assert doOneSolutionEq("0 = a + b + 2") == ["a=-b-2"]
+
+def test_invalid_no_following():
+    with pytest.raises(EqParserException):
+        assert equate("2 * -")

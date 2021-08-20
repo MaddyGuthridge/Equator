@@ -12,15 +12,14 @@ from .eq_object import EqObject
 from . import consts
 from .output_formatter import OutputFormatter
 from . import operation
+from .eq_except import EqInternalException, EqParserException
 
 class Segment(EqObject):
     """Hierarchy of tokens in a form that can be simplified and calculated with
     """
     def __init__(self, contents: list):
         self._contents = contents
-        # Don't even bother trying to parse if there's nothing there
-        if len(self._contents) == 0:
-            return
+        # There is always contents here as otherwise no segments are created
         self._parseBrackets()
         self._parseFunctions()
         self._parseOperators(['^'])
@@ -43,12 +42,10 @@ class Segment(EqObject):
         Returns:
             str: string representation of this segment
         """
-        if len(self._contents) == 0:
-            return "0"
-        elif len(self._contents) == 1:
+        if len(self._contents) == 1:
             return self._contents[0].stringify(str_opts)
-        elif len(self._contents) != 3:
-            raise ValueError("stringify: bad contents length")
+        elif len(self._contents) != 3: # pragma: no cover
+            raise EqInternalException("stringify: bad contents length")
 
         left  = self._contents[0]
         op    = self._contents[1]
@@ -74,9 +71,6 @@ class Segment(EqObject):
             Operatable: The result of the conversion: stringify for proper result
                         in a meaningful format 
         """
-        if len(self._contents) == 0:
-            return 0.0
-        
         if len(self._contents) == 1:
             return self._contents[0].evaluate()
             
@@ -86,8 +80,9 @@ class Segment(EqObject):
             b = self._contents[2]
             return operation.doOperation(op, a.evaluate(), b.evaluate())
 
-        else:
-            raise ValueError("Evaluation error: couldn't evaluate segment:\nBad content length\n"
+        else: # pragma: no cover
+            raise EqInternalException("Evaluation error: couldn't evaluate segment:\n"
+                             "Bad content length\n"
                              + repr(self))
 
     def getOperatorPrecedence(self):
@@ -106,11 +101,11 @@ class Segment(EqObject):
         elif len(self._contents) == 3:
             if isinstance(self._contents[1], tokens.Operator):
                 return operation.operatorPrecedence(self._contents[1])
-            else:
-                raise ValueError("Precedence error: failed to get operator for:\n"
+            else: # pragma: no cover
+                raise EqInternalException("Precedence error: failed to get operator for:\n"
                                  + repr(self))
-        else:
-            raise ValueError("Precedence error: Bad content length for\n"
+        else: # pragma: no cover
+            raise EqInternalException("Precedence error: Bad content length for\n"
                              + repr(self))
 
     def __str__(self):
@@ -138,11 +133,11 @@ class Segment(EqObject):
             elif ele == ")":
                 bracket_depth -= 1
                 if bracket_depth < 0:
-                    raise ValueError("Parse error: brackets don't match (too many closing)")
+                    raise EqParserException("Brackets don't match (too many closing)")
                 elif bracket_depth == 0:
                     # End of the bracket pair
                     if not len(gather):
-                        raise ValueError("Parse error: brackets don't contain contents")
+                        raise EqParserException("Brackets don't contain contents")
                     out.append(Segment(gather))
                     gather = []
                 else:
@@ -155,7 +150,7 @@ class Segment(EqObject):
                     out.append(ele)
         
         if bracket_depth != 0:
-            raise ValueError("Parse error: brackets don't match (too many opening)")
+            raise EqParserException("Brackets don't match (too many opening)")
 
         self._contents = out
 
@@ -212,7 +207,7 @@ class Segment(EqObject):
         # Check for starting and ending with operators
         for op in operators:
             if op in (self._contents[0], self._contents[-1]):
-                raise ValueError(f"Parse error: bad positioning of '{op}'")
+                raise EqParserException(f"Bad positioning of '{op}'")
         
         found = True
         # Continue until we don't simplify any further
@@ -240,7 +235,7 @@ class Segment(EqObject):
                         # Check for leading negative
                         elif self._contents[i+1] == '-':
                             if len(self._contents) == i + 2:
-                                raise ValueError("Parser Error: Expected value after leading negative")
+                                raise EqParserException("Expected value after leading negative")
                             neg = NegateFunction(self._contents[i+2])
                             skip += 1
                             out.append(Segment(self._contents[i-1 : i+1] + [neg]))
@@ -254,10 +249,12 @@ class Segment(EqObject):
                 out.append(self._contents[-2])
                 out.append(self._contents[-1])
             elif skip == 1:
-                raise ValueError("Parser error: expected full expression after operator group")
+                # Haven't been able to find a case that causes this
+                # Is it already caught earlier?
+                raise EqParserException("Expected full expression after operator group")
             
             self._contents = out
-  
+
 class Function(Segment):
     """Segment representing a function operation
     """

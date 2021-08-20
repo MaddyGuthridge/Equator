@@ -28,6 +28,11 @@ def test_output_sci():
     assert doOneSolutionExp("103.4 -> sci") == ["1.034e+2"]
     assert doOneSolutionExp("23/1000 -> sci") == ["2.3e-2"]
 
+def test_output_bad_type():
+    """Ensure that when an incorrect format type is chosen, it will default
+    to smart formatting"""
+    assert doOneSolutionExp("sqrt(2) -> notAFormat") == ["sqrt(2)"]
+
 def test_equations():
     """Ensure formatting is applied to sets of equations"""
     assert doOneSolutionEq("x*4 = 2 -> num") == ["x=0.5"]

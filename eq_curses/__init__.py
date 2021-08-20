@@ -5,4 +5,4 @@ Contains code used to run the curses-based CLI for Equator
 Author: Miguel Guthridge
 """
 
-from .main_curses import curses_main
+from .curses_main import curses_main
