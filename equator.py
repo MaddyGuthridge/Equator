@@ -12,6 +12,7 @@ from eq_curses import curses_main
 from eq_json import json_main
 from lib import consts
 from lib import Expression
+from lib import EqInternalException
 
 def usage():
     print("\n".join([
@@ -34,21 +35,30 @@ def quick_equate(eq: list):
     print(Expression(eq).getOutputStr())
 
 def main(argv) -> int:
-    if len(argv) == 0:
-        curses_main()
-    else:
-        if argv[0] == "int":
+    try:
+        if len(argv) == 0:
             curses_main()
-        elif argv[0] == "json":
-            json_main()
-        elif argv[0] == "ev":
-            quick_equate(argv[1:])
-        elif argv[0] == "help":
-            usage()
         else:
-            print(f"{argv[0]}: unrecognised command")
-            usage()
-    return 0
+            if argv[0] == "int":
+                curses_main()
+            elif argv[0] == "json":
+                json_main()
+            elif argv[0] == "ev":
+                quick_equate(argv[1:])
+            elif argv[0] == "help":
+                usage()
+            else:
+                print(f"{argv[0]}: unrecognised command")
+                usage()
+        return 0
+    except EqInternalException as e:
+        print(f"Unfortunately, an error occurred, and Equator had to close")
+        print(f"Type: {str(type(e))}")
+        print(f"Details: {e.args}")
+        print(f"Please create an issue on the project's GitHub page, including")
+        print(f"your Equator version ({consts.VERSION}) and your input (if "
+              "possible):")
+        if e.input is not None: print(e.input)
 
 if __name__ == "__main__":
     exit(main(sys.argv[1:]))
