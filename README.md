@@ -1,7 +1,10 @@
 # Equator
 A maths interpreter built in Python using SymPy
 
+[![PyPi Version](https://img.shields.io/pypi/v/equatorpy.svg)](https://pypi.org/project/equatorpy/)
 [![Pytest](https://github.com/MiguelGuthridge/Equator/actions/workflows/python-app.yml/badge.svg)](https://github.com/MiguelGuthridge/Equator/actions/workflows/python-app.yml)
+
+[View on PyPi
 
 # Features:
 * Solve simultaneous equations
