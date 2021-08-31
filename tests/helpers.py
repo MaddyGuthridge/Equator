@@ -3,8 +3,8 @@
 Author: Miguel Guthridge (hdsq@outlook.com.au)
 """
 
-from ..lib import equate
-from ..lib import Expression
+from equator import equate
+from equator import Expression
 
 def removeSpacing(s: str) -> str:
     """Remove spaces from a string"""

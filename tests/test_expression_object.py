@@ -1,9 +1,8 @@
 """Ensure that expressions have full code coverage
 """
 
-from ..lib import Expression
-from ..lib.tokens import Number, Constant, Symbol, Operator
-from .helpers import doOneSolutionEq, doManySolutionEq, equate
+from equator import Number, Constant, Symbol, Operator
+from .helpers import doOneSolutionEq, doManySolutionEq, equate, Expression
 
 def test_stringify():
     e = Expression("20 + 22")

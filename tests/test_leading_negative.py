@@ -4,7 +4,7 @@ Author: Miguel Guthridge (hdsq@outlook.com.au)
 """
 import pytest
 from .helpers import doOneSolutionExp, doOneSolutionEq, equate
-from ..lib import EqParserException
+from equator import EqParserException
 
 def test_starting_negative():
     assert doOneSolutionExp("-1") == ["-1"]

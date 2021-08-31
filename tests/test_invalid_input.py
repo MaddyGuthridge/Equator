@@ -3,7 +3,7 @@
 
 import pytest
 
-from ..lib.eq_except import *
+from equator import *
 
 from .helpers import equate
 
