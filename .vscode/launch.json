@@ -19,18 +19,10 @@
             "module": "pytest"
         },
         {
-            "name": "Equator: Run Interpreter (Windows)",
+            "name": "Equator: Run Interpreter",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}\\equator.py",
-            "cwd": "${workspaceFolder}",
-            "console": "integratedTerminal"
-        },
-        {
-            "name": "Equator: Run Interpreter (Linux)",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceFolder}/equator.py",
+            "module": "equator",
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal"
         }
