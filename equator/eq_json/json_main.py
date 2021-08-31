@@ -5,7 +5,7 @@ Contains main function for json IO
     
 import json
 
-from lib import equate, EqExternalException
+from equator import equate, EqExternalException
 
 def json_main():
     try:

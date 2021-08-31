@@ -8,11 +8,11 @@ Author: Miguel Guthridge
 """
 import sys
 
-from eq_curses import curses_main
-from eq_json import json_main
-from lib import consts
-from lib import Expression
-from lib import EqExternalException, EqInternalException
+from .eq_curses import curses_main
+from .eq_json import json_main
+from .lib import consts
+from .lib import Expression
+from .lib import EqExternalException, EqInternalException
 
 def usage():
     print("\n".join([

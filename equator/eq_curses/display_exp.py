@@ -3,10 +3,8 @@
 
 import curses
 
-from lib import tokens
-
-from lib.tokens import Token
-from lib.expression import Expression
+from equator.lib import tokens
+from equator import Expression
 
 from . import colours
 
@@ -34,7 +32,7 @@ def getColourPair(token: 'tokens.Token') -> int:
         return curses.color_pair(colours.PROMPT)
 
 def displayExpression(row: int, col: int, stdscr: 'curses._CursesWindow', 
-                 exp: 'list[Token]', clear:bool=True):
+                 exp: 'list[tokens.Token]', clear:bool=True):
     # Set to starting row/col
     stdscr.addstr(row, col, "")
     
@@ -46,12 +44,12 @@ def displayExpression(row: int, col: int, stdscr: 'curses._CursesWindow',
     if clear:
         stdscr.clrtoeol()
 
-def unravelInputTokens(tokens: 'list[list[Token]]') -> 'list[Token]':
+def unravelInputTokens(tokens: 'list[list[tokens.Token]]') -> 'list[tokens.Token]':
     ret = []
     add_semi = False
     for t in tokens[0]:
         if add_semi:
-            ret.append(Token(";"))
+            ret.append(tokens.Token(";"))
         else:
             add_semi = True
         ret.extend(t)
@@ -80,7 +78,7 @@ def displayInputExpression(row: int, col: int, stdscr: 'curses._CursesWindow',
     # Clear to end of line
     stdscr.clrtoeol()
 
-def splitExpression(max_line_len: int, exp: 'list[Token]') -> 'list[list[Token]]':
+def splitExpression(max_line_len: int, exp: 'list[tokens.Token]') -> 'list[list[tokens.Token]]':
     """Split expression so that lines don't go past the end of input
     """
     max_line_len -= 1
