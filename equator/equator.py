@@ -37,7 +37,8 @@ def quick_equate(eq: list):
     except EqExternalException as e:
         print(str(e))    
 
-def main(argv) -> int:
+def main() -> int:
+    argv = sys.argv[1:]
     try:
         if len(argv) == 0:
             curses_main()

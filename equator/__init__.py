@@ -10,3 +10,5 @@ Author: Miguel Guthridge
 from .lib import equate, Expression
 from .lib.tokens import Token, Operator, Number, Constant, Symbol, BadToken
 from .lib.eq_except import *
+
+from .equator import main
