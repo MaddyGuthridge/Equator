@@ -1,7 +1,7 @@
 # .coveragerc to control coverage.py
 [run]
 branch = True
-source = lib
+source = equator/lib
 
 [report]
 # Regexes for lines to exclude from consideration
