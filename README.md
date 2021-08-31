@@ -22,3 +22,24 @@ Run the file `equator.py` in the top-level directory. For example, `python3 equa
 * Functional notation is used for unary operators:
     * `|A|` should be written as `abs(A)`
 * Equations or expressions are seperated by semicolons
+
+# Setup
+
+## Installation
+
+## Devlopment
+
+When working with Equator, it is recommended to work with a virtual environment
+
+After `git clone`ing the repository, set up a virtual environment using [these
+instructions](https://docs.python.org/3/library/venv.html), then install the
+required dependencies using the command
+```
+pip3 install -r requirements.txt
+```
+or if you're on Windows
+```
+pip install -r requirements_windows.txt
+```
+
+You should then be able to debug or develop the interpreter normally.
