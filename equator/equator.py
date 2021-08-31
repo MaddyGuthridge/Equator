@@ -63,5 +63,3 @@ def main(argv) -> int:
               "possible):")
         if e.input is not None: print(e.input)
 
-if __name__ == "__main__":
-    exit(main(sys.argv[1:]))
