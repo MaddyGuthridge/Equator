@@ -13,8 +13,8 @@ Author: Miguel Guthridge
 
 import curses
 
-from lib import consts
-from lib import Expression
+from equator.lib import consts
+from equator import Expression
 from .output_container import OutputContainer
 from . import display_exp, colours
 

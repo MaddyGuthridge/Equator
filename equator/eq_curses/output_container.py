@@ -1,8 +1,9 @@
 
 import curses
-from lib.expression import Expression
-from lib.eq_except import EqExternalException
-from lib.tokens import Token, BadToken
+
+from equator import Expression
+from equator import EqExternalException
+from equator import Token, BadToken
 
 from .display_exp import displayExpression, displayInputExpression, splitExpression, unravelInputTokens
 from . import colours

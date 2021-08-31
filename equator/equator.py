@@ -8,11 +8,11 @@ Author: Miguel Guthridge
 """
 import sys
 
-from eq_curses import curses_main
-from eq_json import json_main
-from lib import consts
-from lib import Expression
-from lib import EqExternalException, EqInternalException
+from .eq_curses import curses_main
+from .eq_json import json_main
+from .lib import consts
+from .lib import Expression
+from .lib import EqExternalException, EqInternalException
 
 def usage():
     print("\n".join([
@@ -37,7 +37,8 @@ def quick_equate(eq: list):
     except EqExternalException as e:
         print(str(e))    
 
-def main(argv) -> int:
+def main() -> int:
+    argv = sys.argv[1:]
     try:
         if len(argv) == 0:
             curses_main()
@@ -63,5 +64,3 @@ def main(argv) -> int:
               "possible):")
         if e.input is not None: print(e.input)
 
-if __name__ == "__main__":
-    exit(main(sys.argv[1:]))
