@@ -15,7 +15,6 @@ import curses
 
 from lib import consts
 from lib import Expression
-from lib.eq_except import EqExternalException
 from .output_container import OutputContainer
 from . import display_exp, colours
 
@@ -222,9 +221,10 @@ def equator_curses(stdscr: 'curses._CursesWindow') -> int:
                 continue
         except EOFError:
             return 0
-        #except Exception as e:
-        #    stdscr.addstr(4, 0, f"{type(e)}: {e}")
-        #    continue
+        except Exception as e:
+            stdscr.addstr(4, 0, f"{type(e)}: {e}")
+            raise e
+            continue
 
 def curses_main():
     try:
