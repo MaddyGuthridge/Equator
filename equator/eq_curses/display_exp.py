@@ -44,16 +44,16 @@ def displayExpression(row: int, col: int, stdscr: 'curses._CursesWindow',
     if clear:
         stdscr.clrtoeol()
 
-def unravelInputTokens(tokens: 'list[list[tokens.Token]]') -> 'list[tokens.Token]':
+def unravelInputTokens(token_list: 'list[list[tokens.Token]]') -> 'list[tokens.Token]':
     ret = []
     add_semi = False
-    for t in tokens[0]:
+    for t in token_list[0]:
         if add_semi:
             ret.append(tokens.Token(";"))
         else:
             add_semi = True
         ret.extend(t)
-    return ret, tokens[1]
+    return ret, token_list[1]
 
 def displayInputExpression(row: int, col: int, stdscr: 'curses._CursesWindow', 
                  exp: Expression):
