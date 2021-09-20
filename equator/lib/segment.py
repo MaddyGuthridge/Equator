@@ -13,6 +13,7 @@ from . import consts
 from .output_formatter import OutputFormatter
 from . import operation
 from .eq_except import EqInternalException, EqParserException
+from .argset import ArgSet
 
 class Segment(EqObject):
     """Hierarchy of tokens in a form that can be simplified and calculated with
@@ -21,12 +22,16 @@ class Segment(EqObject):
         self._contents = contents
         # There is always contents here as otherwise no segments are created
         self._parseBrackets()
+        self._parseArgSets()
         self._parseFunctions()
         self._parseOperators(['^'])
         self._parseOperators(['*', '/'])
         self._parseLeadingNegative()
         self._parseOperators(['+', '-'])
         self._parseOperators(['='])
+    
+    def __getitem__(self, index):
+        return self._contents[index]
     
     def stringify(self, str_opts: OutputFormatter):
         """Returns a string representing the segment
@@ -154,6 +159,43 @@ class Segment(EqObject):
 
         self._contents = out
 
+    def _parseArgSets(self):
+        if len(self._contents) < 2:
+            return
+        
+        args_list = []
+        curr_tokens = []
+        
+        # Loop through each token
+        for t in self._contents:
+            # If it's a comma
+            if isinstance(t, tokens.Operator) and t == ",":
+                # Empty curr_tokens means syntax error
+                if len(curr_tokens) == 0:
+                    raise EqParserException("Expected value before token ','")
+                # Current set of tokens is a single argument
+                # Add it to the list
+                args_list.append(curr_tokens)
+                curr_tokens = []
+            # Otherwise, just add it to the current list of tokens
+            else:
+                curr_tokens.append(t)
+        
+        # If there are items in args_list, we've got some comma-separated values
+        if len(args_list):
+            # Add on remaining tokens, make sure there are some, otherwise
+            # Raise a parser error
+            if not len(curr_tokens):
+                raise EqParserException("Expected value after token ','")
+            args_list.append(curr_tokens)
+            
+            # Now create a segment for each argument
+            arg_segs = [Segment(items) for items in args_list]
+            
+            # Then make an ArgSet object and set that to the segment's contents
+            self._contents = ArgSet(arg_segs)
+        # Otherwise, there weren't any commas, so do nothing
+        
     def _parseFunctions(self):
         if len(self._contents) < 2:
             return
