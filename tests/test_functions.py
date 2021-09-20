@@ -3,7 +3,23 @@
 Author: Miguel Guthridge (hdsq@outlook.com.au)
 """
 
-from .helpers import doOneSolutionExp
+import pytest
+
+from .helpers import doOneSolutionExp, equate
+
+from equator import EqFunctionException
+
+################################################################################
+
+def test_too_few_arguments():
+    with pytest.raises(EqFunctionException):
+        equate("gcd(1)")
+    with pytest.raises(EqFunctionException):
+        equate("lcm(1)")
+
+def test_too_many_arguments():
+    with pytest.raises(EqFunctionException):
+        equate("sqrt(4, 9)")
 
 ################################################################################
 
