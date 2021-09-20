@@ -40,12 +40,16 @@ class EqTokeniseException(EqExternalException):
     """Exception when tokenising an expression
     """
 
-class EqOperatorException(EqExternalException):
+class EqEvaluateException(EqExternalException):
+    """Exception when evaluating an expression
+    """
+
+class EqOperatorException(EqEvaluateException):
     """Exception for when a function or operation isn't
     recognised
     """
 
-class EqFunctionException(EqExternalException):
+class EqFunctionException(EqEvaluateException):
     """Exception for when a function cannot complete due
     to an error with its structure or input
     """
@@ -54,6 +58,6 @@ class EqFormatterError(EqExternalException):
     """Exception for when an output formatter is invalid
     """
 
-class EqCommaError(EqExternalException):
+class EqCommaError(EqEvaluateException):
     """Exception for when commas are used outside of a function
     """
