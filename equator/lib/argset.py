@@ -2,26 +2,25 @@
 """
 
 from .eq_object import EqObject
+from .segment import Segment
 
 from .eq_except import EqCommaError
 
 class ArgSet(EqObject):
     """Represents a set of comma-separated arguments
     """
-    def __init__(self) -> None:
-        super().__init__()
-        self._contents = []
-    
-    def __len__(self) -> int:
-        return len(self._contents)
-    
-    def add(self, content: EqObject) -> None:
-        """Add an item to the arg set
+    def __init__(self, elements: 'list[Segment]') -> None:
+        """Create an ArgSet object, representing comma-separated objects
 
         Args:
-            content (`EqObject`): object to add
+            elements (`list[Segment]`): list of elements in the set, where each
+            is a segment
         """
-        self._contents.append(content)
+        super().__init__()
+        self._contents = elements
+
+    def __len__(self) -> int:
+        return len(self._contents)
         
     def stringify(self, num_behaviour="num") -> str:
         return ', '.join([c.stringify(num_behaviour) for c in self._contents])
