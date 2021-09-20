@@ -49,6 +49,11 @@ class EqFunctionException(EqExternalException):
     """Exception for when a function cannot complete due
     to an error with its structure or input
     """
+
 class EqFormatterError(EqExternalException):
     """Exception for when an output formatter is invalid
+    """
+
+class EqCommaError(EqExternalException):
+    """Exception for when commas are used outside of a function
     """
