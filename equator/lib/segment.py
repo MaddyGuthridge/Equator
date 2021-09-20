@@ -13,7 +13,6 @@ from . import consts
 from .output_formatter import OutputFormatter
 from . import operation
 from .eq_except import EqInternalException, EqParserException
-from .argset import ArgSet
 
 class Segment(EqObject):
     """Hierarchy of tokens in a form that can be simplified and calculated with
@@ -358,3 +357,5 @@ class NegateFunction(Function):
             str: contents
         """
         return f"-{self._on.stringify(num_mode)}"
+
+from .argset import ArgSet

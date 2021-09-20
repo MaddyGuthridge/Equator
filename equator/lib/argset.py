@@ -2,7 +2,6 @@
 """
 
 from .eq_object import EqObject
-from .segment import Segment
 
 from .eq_except import EqCommaError
 
@@ -38,3 +37,5 @@ class ArgSet(EqObject):
         """
         raise EqCommaError("Comma-separated values should only be used in the "
                            "context of function calls")
+
+from .segment import Segment
