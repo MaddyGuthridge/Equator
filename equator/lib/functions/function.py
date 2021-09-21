@@ -4,6 +4,10 @@
 from ..segment import Segment
 from .. import tokens
 
+from ..output_formatter import OutputFormatter
+
+from .. import operation
+
 class Function(Segment):
     """Segment representing a function operation
     """
