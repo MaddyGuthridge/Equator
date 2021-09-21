@@ -86,8 +86,8 @@ class GcdFunction(Function):
                                               "integers)")
         
         
-    def evaluate():
-        args = on[0]
+    def evaluate(self):
+        args = self._on[0]
         a = int(args[0].evaluate())
         b = int(args[1].evaluate())
         
@@ -128,8 +128,8 @@ class LcmFunction(Function):
                                               "integers)")
         
         
-    def evaluate():
-        args = on[0]
+    def evaluate(self):
+        args = self._on[0]
         a = int(args[0].evaluate())
         b = int(args[1].evaluate())
         
