@@ -9,6 +9,24 @@ from ..eq_except import EqFunctionNameException, EqFunctionException
 from .function import Function
 from .basic_functions import *
 from .negate_function import NegateFunction
+from .rad_deg_functions import *
+
+EQUATOR_FUNCTIONS = {
+    "neg": NegateFunction,
+    "sqrt": SqrtFunction,
+    "sin": SinFunction,
+    "cos": CosFunction,
+    "tan": TanFunction,
+    "asin": AsinFunction,
+    "acos": AcosFunction,
+    "atan": AtanFunction,
+    "abs": AbsFunction,
+    "deg": DegFunction,
+    "rad": RadFunction,
+    "exp": ExpFunction,
+    "ln": LnFunction,
+    "log": LogFunction,
+}
 
 def detectFunction(func: tokens.Symbol, args: Segment) -> Function:
     """Detects what function is required, and returns a Function object of that
@@ -19,30 +37,13 @@ def detectFunction(func: tokens.Symbol, args: Segment) -> Function:
         args (Segment): function arguments
     """
     
-    simple_funcs = {
-        "neg": NegateFunction,
-        "sqrt": SqrtFunction,
-        "sin": SinFunction,
-        "cos": CosFunction,
-        "tan": TanFunction,
-        "asin": AsinFunction,
-        "acos": AcosFunction,
-        "atan": AtanFunction,
-        "abs": AbsFunction,
-        "deg": DegFunction,
-        "rad": RadFunction,
-        "exp": ExpFunction,
-        "ln": LnFunction,
-        "log": LogFunction,
-    }
-    
     # HACK: We need a better way to compare a token to a string
     # in a list
     func_str = func.stringify(None)
     
     # Check for a simple function
-    if func_str in simple_funcs:
-        return simple_funcs[func_str](args)
+    if func_str in EQUATOR_FUNCTIONS:
+        return EQUATOR_FUNCTIONS[func_str](args)
 
     # Otherwise, check for a more complex type (eg log_base)
     if func_str.startswith("log_"):

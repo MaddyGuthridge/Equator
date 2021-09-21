@@ -57,16 +57,6 @@ class AbsFunction(UnaryFunction):
     def __init__(self, on: Segment):
         super().__init__(tokens.Symbol("abs"), on, sympy.Abs)
 
-class DegFunction(UnaryFunction):
-    """Degrees function"""
-    def __init__(self, on: Segment):
-        super().__init__(tokens.Symbol("deg"), on, sympy.deg)
-
-class RadFunction(UnaryFunction):
-    """Radians function"""
-    def __init__(self, on: Segment):
-        super().__init__(tokens.Symbol("rad"), on, sympy.rad)
-
 class ExpFunction(UnaryFunction):
     """Exponent function"""
     def __init__(self, on: Segment):
@@ -80,7 +70,7 @@ class LnFunction(UnaryFunction):
 class LogFunction(UnaryFunction):
     """Base 10 logarithm function"""
     def __init__(self, on: Segment):
-        super().__init__(tokens.Symbol("log"), on, sympy.log, 10)
+        super().__init__(tokens.Symbol("log"), on, sympy.log, 10.0)
 
 class LogBaseFunction(UnaryFunction):
     """Logarithm function of any base"""
