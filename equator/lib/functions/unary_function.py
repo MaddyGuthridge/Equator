@@ -8,7 +8,7 @@ from . import Function
 
 from ..segment import Segment
 from ..argset import ArgSet
-from ..eq_except import EqFunctionException
+from ..eq_except import EqFunctionArgumentException
 from .. import tokens
 
 class UnaryFunction(Function):
@@ -31,9 +31,10 @@ class UnaryFunction(Function):
         super().__init__(func_name, on)
         
         if (len(on) == 1 and isinstance(on[0], ArgSet)):
-            raise EqFunctionException(f"Too many arguments for function "
-                                      f"{func_name} (expected 1, got "
-                                      f"{len(on[0])})")
+            raise EqFunctionArgumentException(f"Too many arguments for "
+                                              f"function {func_name} (expected "
+                                              f"1, got {len(on[0])})"
+                                              )
 
     def evaluate(self):
         return self._py_function(self._on.evaluate(), *self._args)

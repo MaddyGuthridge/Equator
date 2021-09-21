@@ -54,6 +54,15 @@ class EqFunctionException(EqEvaluateException):
     to an error with its structure or input
     """
 
+class EqFunctionNameException(EqFunctionException):
+    """Exception for when a function name doesn't exist
+    """
+
+class EqFunctionArgumentException(EqFunctionException):
+    """Exception for when a function is given the wrong type or number of
+    arguments
+    """
+
 class EqFormatterError(EqExternalException):
     """Exception for when an output formatter is invalid
     """
