@@ -21,6 +21,10 @@ def test_too_many_arguments():
     with pytest.raises(EqFunctionException):
         equate("sqrt(4, 9)")
 
+def test_bad_function_name():
+    with pytest.raises(EqFunctionException):
+        equate("nonexistentfunction(1)")
+
 ################################################################################
 
 # Simple functions

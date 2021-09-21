@@ -52,4 +52,4 @@ def detectFunction(func: tokens.Symbol, args: Segment) -> Function:
         return LogBaseFunction(args, base)
 
     # If we reach here, we didn't recognise the function, so raise an exception
-    raise EqFunctionException("Unrecognised function name: " + func)
+    raise EqFunctionException(f"Unrecognised function name: {func}")
