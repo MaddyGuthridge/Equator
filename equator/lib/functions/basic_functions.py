@@ -8,38 +8,46 @@ from .unary_function import UnaryFunction
 
 from .. import tokens
 from ..segment import Segment
+from ..operation import zeroRound
 
 class SqrtFunction(UnaryFunction):
     """Square root function"""
     def __init__(self, on: Segment):
         super().__init__(tokens.Symbol("sqrt"), on, sympy.sqrt)
 
-class SinFunction(UnaryFunction):
+class TrigFunction(UnaryFunction):
+    """Generic trigenometry function, providing zero-rounding for trig
+    function calls
+    """
+    def evaluate(self):
+        return zeroRound(super().evaluate())
+
+class SinFunction(TrigFunction):
     """Sine function"""
     def __init__(self, on: Segment):
         super().__init__(tokens.Symbol("sin"), on, sympy.sin)
 
-class CosFunction(UnaryFunction):
+class CosFunction(TrigFunction):
     """Cosine function"""
     def __init__(self, on: Segment):
         super().__init__(tokens.Symbol("cos"), on, sympy.cos)
 
-class TanFunction(UnaryFunction):
+class TanFunction(TrigFunction):
     """Tan function"""
     def __init__(self, on: Segment):
         super().__init__(tokens.Symbol("tan"), on, sympy.tan)
 
-class AsinFunction(UnaryFunction):
+class AsinFunction(TrigFunction):
     """Inverse sine function"""
     def __init__(self, on: Segment):
         super().__init__(tokens.Symbol("asin"), on, sympy.asin)
 
-class AcosFunction(UnaryFunction):
+class AcosFunction(TrigFunction):
     """Inverse cosine function"""
     def __init__(self, on: Segment):
         super().__init__(tokens.Symbol("acos"), on, sympy.acos)
 
-class AtanFunction(UnaryFunction):
+class AtanFunction(TrigFunction):
     """Inverse tan function"""
     def __init__(self, on: Segment):
         super().__init__(tokens.Symbol("atan"), on, sympy.atan)

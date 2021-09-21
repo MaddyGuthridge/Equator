@@ -4,7 +4,7 @@ instance of that
 
 from .. import tokens
 from ..segment import Segment
-from ..eq_except import EqFunctionNameException
+from ..eq_except import EqFunctionNameException, EqFunctionException
 
 from .function import Function
 from .basic_functions import *
