@@ -54,8 +54,8 @@ def lcmAlgorithm(a: int, b: int) -> int:
 class GcdFunction(Function):
     """Greatest common demononator of 2 integers
     """
-    def __init__(self, func_name: tokens.Symbol, on: Segment):
-        super().__init__(func_name, on)
+    def __init__(self, on: Segment):
+        super().__init__(tokens.Symbol("gcd"), on)
         
         # Ensure correct number of args
         # TODO: Make this a helper function
@@ -95,8 +95,8 @@ class GcdFunction(Function):
         return gcdAlgorithm(a, b)
 
 class LcmFunction(Function):
-    def __init__(self, func_name: tokens.Symbol, on: Segment):
-        super().__init__(func_name, on)
+    def __init__(self, on: Segment):
+        super().__init__(tokens.Symbol("lcm"), on)
         
         # Ensure correct number of args
         # TODO: Make this a helper function

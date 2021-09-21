@@ -12,6 +12,7 @@ from .function import Function
 from .basic_functions import *
 from .negate_function import NegateFunction
 from .rad_deg_functions import *
+from .lcm_gcd_functions import LcmFunction, GcdFunction
 
 EQUATOR_FUNCTIONS = {
     "neg": NegateFunction,
@@ -28,6 +29,8 @@ EQUATOR_FUNCTIONS = {
     "exp": ExpFunction,
     "ln": LnFunction,
     "log": LogFunction,
+    "lcm": LcmFunction,
+    "gcd": GcdFunction,
 }
 
 def detectFunction(func: tokens.Symbol, args: Segment) -> Function:
