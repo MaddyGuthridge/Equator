@@ -35,7 +35,9 @@ def detectFunction(func: tokens.Symbol, args: Segment) -> Function:
         "log": LogFunction,
     }
     
-    func_str = func.stringify()
+    # HACK: We need a better way to compare a token to a string
+    # in a list
+    func_str = func.stringify(None)
     
     # Check for a simple function
     if func_str in simple_funcs:

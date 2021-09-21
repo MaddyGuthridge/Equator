@@ -208,7 +208,7 @@ class Segment(EqObject):
             if isinstance(self._contents[i + 1], Segment)\
                 and isinstance(self._contents[i], tokens.Symbol):
                     skip = 1
-                    out.append(Function(self._contents[i], self._contents[i+1]))
+                    out.append(detectFunction(self._contents[i], self._contents[i+1]))
             else:
                 out.append(self._contents[i])
         
@@ -217,7 +217,7 @@ class Segment(EqObject):
         self._contents = out
 
     def _parseLeadingNegative(self):
-        # Expands '-x' to '(0 - x)'
+        # Expands '-x' to 'neg(x)' to fix issues with unary operators
         if len(self._contents) < 2:
             return
         
@@ -297,4 +297,4 @@ class Segment(EqObject):
             self._contents = out
 
 from .argset import ArgSet
-from .functions import *
+from .functions import NegateFunction, detectFunction
