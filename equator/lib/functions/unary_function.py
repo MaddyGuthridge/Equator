@@ -7,6 +7,8 @@ the correct number of arguments
 from . import Function
 
 from ..segment import Segment
+from ..argset import ArgSet
+from ..eq_except import EqFunctionException
 from .. import tokens
 
 class UnaryFunction(Function):
@@ -28,8 +30,10 @@ class UnaryFunction(Function):
         self._args = args
         super().__init__(func_name, on)
         
-        # TODO: Ensure that there are the correct number of segment (ie, not an
-        # ArgSet)
+        if (len(on) == 1 and isinstance(on[0], ArgSet)):
+            raise EqFunctionException(f"Too many arguments for function "
+                                      f"{func_name} (expected 1, got "
+                                      f"{len(on[0])})")
 
     def evaluate(self):
         return self._py_function(self._on.evaluate(), *self._args)

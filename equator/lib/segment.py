@@ -29,8 +29,11 @@ class Segment(EqObject):
         self._parseOperators(['+', '-'])
         self._parseOperators(['='])
     
-    def __getitem__(self, index):
+    def __getitem__(self, index) -> EqObject:
         return self._contents[index]
+    
+    def __len__(self) -> int:
+        return len(self._contents)
     
     def stringify(self, str_opts: OutputFormatter):
         """Returns a string representing the segment
