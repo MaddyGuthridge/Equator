@@ -20,6 +20,7 @@ def detectFunction(func: tokens.Symbol, args: Segment) -> Function:
     """
     
     simple_funcs = {
+        "neg": NegateFunction,
         "sqrt": SqrtFunction,
         "sin": SinFunction,
         "cos": CosFunction,
