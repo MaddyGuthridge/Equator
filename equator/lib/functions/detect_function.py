@@ -2,6 +2,8 @@
 instance of that
 """
 
+from decimal import Decimal, InvalidOperation
+
 from .. import tokens
 from ..segment import Segment
 from ..eq_except import EqFunctionNameException, EqFunctionException
@@ -48,8 +50,8 @@ def detectFunction(func: tokens.Symbol, args: Segment) -> Function:
     # Otherwise, check for a more complex type (eg log_base)
     if func_str.startswith("log_"):
         try:
-            base = Decimal(func.replace("log_", ""))
-        except:
+            base = Decimal(func_str.replace("log_", ""))
+        except InvalidOperation:
             raise EqFunctionException(f"Bad base for logarithm \"{func}\"")
         return LogBaseFunction(args, base)
 
