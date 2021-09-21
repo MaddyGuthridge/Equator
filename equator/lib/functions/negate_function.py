@@ -30,4 +30,4 @@ class NegateFunction(Function):
         return f"-{self._on.stringify(num_mode)}"
 
     def evaluate(self):
-        return -self._on
+        return -self._on.evaluate()
