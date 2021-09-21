@@ -192,7 +192,7 @@ class Segment(EqObject):
             arg_segs = [Segment(items) for items in args_list]
             
             # Then make an ArgSet object and set that to the segment's contents
-            self._contents = ArgSet(arg_segs)
+            self._contents = [ArgSet(arg_segs)]
         # Otherwise, there weren't any commas, so do nothing
         
     def _parseFunctions(self):
@@ -296,66 +296,5 @@ class Segment(EqObject):
             
             self._contents = out
 
-class Function(Segment):
-    """Segment representing a function operation
-    """
-    def __init__(self, type: tokens.Symbol, on: Segment):
-        self._op = type
-        self._on = on
-
-    def __str__(self):
-        return self.stringify(str_opts=None)
-
-    def __repr__(self) -> str:
-        return f"Function({str(self._op)}, {repr(self._on)})"
-
-    def stringify(self, str_opts: OutputFormatter):
-        """Returns string version of function, for presenting to the user
-
-        Args:
-            str_opts (OutputFormatter): formatting options for string
-
-        Returns:
-            str: string representation of string and its contents
-        """
-        return f"{self._op.stringify(str_opts)}({self._on.stringify(str_opts)})"
-
-    def evaluate(self):
-        """Returns evaluation of the function
-
-        Returns:
-            Operatable: result of function
-        """
-        e = self._on.evaluate()
-        return operation.doFunction(str(self._op), e)
-
-    def getOperatorPrecedence(self):
-        """Returns operator precedence of function
-
-        Returns:
-            int: precedence
-        """
-        return operation.FUNCTION_OPERATOR_PRECEDENCE
-
-class NegateFunction(Function):
-    """Special function for representing leading negatives
-    """
-    def __init__(self, on: Segment):
-        self._op = consts.NEGATE
-        self._on = on
-    
-    def __str__(self):
-        return self.stringify(None)
-
-    def stringify(self, num_mode: OutputFormatter):
-        """Return string representing contents
-
-        Args:
-            num_mode (OutputFormatter): string formatting options
-
-        Returns:
-            str: contents
-        """
-        return f"-{self._on.stringify(num_mode)}"
-
 from .argset import ArgSet
+from .functions import *
