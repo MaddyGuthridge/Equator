@@ -16,7 +16,7 @@ class UnaryFunction(Function):
     """
     
     def __init__(self, func_name: tokens.Symbol, on: Segment, 
-                 py_function: 'function', *args):
+                 py_function, *args):
         """Create unary functions
 
         Args:
