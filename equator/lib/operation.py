@@ -83,68 +83,6 @@ def doOperation(operator: str, a, b):
         raise EqInternalException("Unrecognised operation: " + operator)
     return res
 
-def doFunction(func: str, a):
-    """Function for handling logic of evaluating functions.
-    In the future this may be moved into subclasses for each function, in the
-    hope of tidying things up
-
-    Args:
-        func (str): function to do
-        a (Operatable): thing to operate on
-
-    Returns:
-        Operatable: result
-    """
-    if func == "sqrt":
-        return sym.sqrt(a)
-    elif func == "sin":
-        return zeroRound(sym.sin(a))
-    elif func == "cos":
-        return zeroRound(sym.cos(a))
-    elif func == "tan":
-        return zeroRound(sym.tan(a))
-    elif func == "asin":
-        return zeroRound(sym.asin(a))
-    elif func == "acos":
-        return zeroRound(sym.acos(a))
-    elif func == "atan":
-        return zeroRound(sym.atan(a))
-    elif func == "abs":
-        return sym.Abs(a)
-    elif func == "deg":
-        return a * 180 / consts.NUMERIC_CONSTANTS["pi"]
-    elif func == "rad":
-        return a / 180 * consts.NUMERIC_CONSTANTS["pi"]
-    elif func == consts.NEGATE:
-        return -a
-    elif func == "exp":
-        return sym.exp(a)
-    elif func == "log":
-        return sym.log(a, 10.0)
-    elif func == "ln":
-        return sym.log(a)
-    elif func.startswith("log_"):
-        try:
-            base = Decimal(func.replace("log_", ""))
-        except:
-            raise EqFunctionException(f"Bad base for logarithm \"{func}\"")
-        return sym.log(a, base)
-
-# def getConstant(const: str):
-#     """Returns the representation of a constant as a stringified decimal
-#     r the original string if it isn't a constant
-#
-#     Args:
-#         const (str): potential constant to replace
-#
-#     Returns:
-#         str: representation of constant if applicable otherwise original str
-#     """
-#     if const in consts.NUMERIC_CONSTANTS:
-#         return str(consts.NUMERIC_CONSTANTS[const])
-#     else:
-#         return const
-
 def _doReduceSqrt(num: int):
     # Generate a list of all perfect squares up to num
     iterator = range(2, int(math.sqrt(num)) + 1)
