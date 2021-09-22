@@ -6,14 +6,12 @@ class EqObject: # pragma: no cover
     """Base object for most Equator types.
     Helps keep consistency in implementation
     """
-    def stringify(self, num_behaviour="num") -> str:
+    def stringify(self, formatting=None) -> str: # pragma: no cover
         """Convert object to string
 
         Args:
-            num_behaviour (str, optional): behaviour for number stringification.
-                                           Should be propogated through
-                                           subsequent stringify calls.
-                                           Defaults to "num".
+            formatting (OutputFormatter, optional): formatting options for
+            output
 
         Returns:
             str: string representation

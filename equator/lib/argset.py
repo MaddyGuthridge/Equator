@@ -31,6 +31,9 @@ class ArgSet(EqObject):
         return ', '.join([c.stringifyOriginal(num_behaviour)
                           for c in self._contents])
 
+    def __repr__(self) -> str:
+        return self.stringify(None)
+
     def evaluate(self):
         """Evaluate an ArgSet
         
