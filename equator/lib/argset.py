@@ -20,11 +20,14 @@ class ArgSet(EqObject):
 
     def __len__(self) -> int:
         return len(self._contents)
+
+    def __getitem__(self, index) -> 'Segment':
+        return self._contents[index]
         
     def stringify(self, num_behaviour="num") -> str:
         return ', '.join([c.stringify(num_behaviour) for c in self._contents])
 
-    def stringify(self, num_behaviour="num") -> str:
+    def stringifyOriginal(self, num_behaviour="num") -> str:
         return ', '.join([c.stringifyOriginal(num_behaviour)
                           for c in self._contents])
 
