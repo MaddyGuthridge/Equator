@@ -6,7 +6,7 @@ from decimal import Decimal, InvalidOperation
 
 from .. import tokens
 from ..segment import Segment
-from ..eq_except import EqFunctionNameException, EqFunctionException
+from ..eq_except import EqFunctionNameException, EqFunctionException, EqInternalException
 
 from .function import Function
 from .basic_functions import *
@@ -54,8 +54,8 @@ def detectFunction(func: tokens.Symbol, args: Segment) -> Function:
     if func_str.startswith("log_"):
         try:
             base = Decimal(func_str.replace("log_", ""))
-        except InvalidOperation:
-            raise EqFunctionException(f"Bad base for logarithm \"{func}\"")
+        except InvalidOperation: # pragma: no cover
+            raise EqInternalException(f"Bad base for logarithm \"{func_str}\"")
         return LogBaseFunction(args, base)
 
     # If we reach here, we didn't recognise the function, so raise an exception

@@ -1,6 +1,10 @@
 """Check exponent and logarithm functions work correctly
 """
 
+import pytest
+
+from equator import EqFunctionException
+
 from ..helpers import doOneSolutionExp
 
 def test_exp():
@@ -23,5 +27,7 @@ def test_log_n():
     assert doOneSolutionExp("log_2(4)") == ["2"]
     assert doOneSolutionExp("log_10(1000)") == ["3"]
     assert doOneSolutionExp("log_3(3)") == ["1"]
-    #assert doOneSolutionExp("log_0.5(2)") == ["-1"]
 
+# def test_log_bad_base():
+#     with pytest.raises(EqFunctionException):
+#         doOneSolutionExp("log_0.5(2)")
