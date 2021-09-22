@@ -1,17 +1,19 @@
 """Negate function: used to help with leading negatives
 """
 
-from .function import Function
+from .unary_function import UnaryFunction
 
+from .. import tokens
 from ..segment import Segment
 from .. import consts
 from ..output_formatter import OutputFormatter
 
 
-class NegateFunction(Function):
+class NegateFunction(UnaryFunction):
     """Special function for representing leading negatives
     """
     def __init__(self, on: Segment):
+        super().__init__(tokens.Symbol(consts.NEGATE), on, lambda x: -x)
         self._op = consts.NEGATE
         self._on = on
     
@@ -28,6 +30,3 @@ class NegateFunction(Function):
             str: contents
         """
         return f"-{self._on.stringify(num_mode)}"
-
-    def evaluate(self):
-        return -self._on.evaluate()

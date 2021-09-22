@@ -18,7 +18,7 @@ class Segment(EqObject):
     """Hierarchy of tokens in a form that can be simplified and calculated with
     """
     def __init__(self, contents: list):
-        self._contents = contents
+        self._contents: list[EqObject] = contents
         # There is always contents here as otherwise no segments are created
         self._parseBrackets()
         self._parseArgSets()
@@ -211,6 +211,11 @@ class Segment(EqObject):
             if isinstance(self._contents[i + 1], Segment)\
                 and isinstance(self._contents[i], tokens.Symbol):
                     skip = 1
+                    # If the segment doesn't contain an argset (ie 1 argument), 
+                    # make its contents into one to simplify argument types for
+                    # functions
+                    if not isinstance(self._contents[i+1][0], ArgSet):
+                        self._contents[i+1] = ArgSet([self._contents[i+1]])
                     out.append(detectFunction(self._contents[i], self._contents[i+1]))
             else:
                 out.append(self._contents[i])

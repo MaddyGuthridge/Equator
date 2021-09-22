@@ -4,6 +4,8 @@
 from ..segment import Segment
 from .. import tokens
 
+from ..argset import ArgSet
+
 from ..output_formatter import OutputFormatter
 
 from .. import operation
@@ -11,7 +13,7 @@ from .. import operation
 class Function(Segment):
     """Segment representing a function operation
     """
-    def __init__(self, func_name: tokens.Symbol, on: Segment):
+    def __init__(self, func_name: tokens.Symbol, on: ArgSet):
         self._op = func_name
         self._on = on
 

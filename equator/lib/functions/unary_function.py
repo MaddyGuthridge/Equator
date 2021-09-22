@@ -11,17 +11,19 @@ from ..argset import ArgSet
 from ..eq_except import EqFunctionArgumentException
 from .. import tokens
 
+from .function_helpers import checkArgCount
+
 class UnaryFunction(Function):
     """A function that only takes one argument
     """
     
-    def __init__(self, func_name: tokens.Symbol, on: Segment, 
+    def __init__(self, func_name: tokens.Symbol, on: ArgSet, 
                  py_function, *args):
         """Create unary functions
 
         Args:
             func_name (tokens.Symbol): function name (for stringification)
-            on (Segment): segment to operate on
+            on (ArgSet): ArgSet to operate on
             py_function (function): function to do
             args: any extra arguments sent to the function required to ensure
                   correct behaviour
@@ -30,11 +32,7 @@ class UnaryFunction(Function):
         self._args = args
         super().__init__(func_name, on)
         
-        if (len(on) == 1 and isinstance(on[0], ArgSet)):
-            raise EqFunctionArgumentException(f"Too many arguments for "
-                                              f"function {func_name} (expected "
-                                              f"1, got {len(on[0])})"
-                                              )
+        checkArgCount(func_name.stringify(None), 1, on)
 
     def evaluate(self):
-        return self._py_function(self._on.evaluate(), *self._args)
+        return self._py_function(self._on[0].evaluate(), *self._args)
