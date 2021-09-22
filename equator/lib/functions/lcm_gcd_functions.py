@@ -10,6 +10,8 @@ from ..argset import ArgSet
 from ..eq_except import EqFunctionArgumentException
 from ..segment import Segment
 
+from .function_helpers import checkArgCount
+
 def gcdAlgorithm(a: int, b: int) -> int:
     """An implementation of the Euclidean Algorithm for the greatest common
     divisor. Refer to: 
@@ -57,37 +59,21 @@ class GcdFunction(Function):
     def __init__(self, on: Segment):
         super().__init__(tokens.Symbol("gcd"), on)
         
-        # Ensure correct number of args
-        # TODO: Make this a helper function
-        if isinstance(on[0], ArgSet):
-            args = on[0]
-            if len(args) != 2:
-                raise EqFunctionArgumentException("Wrong number of arguments "
-                                                  "function gcd (expect 2, got"
-                                                  f"{len(args)}"
-                                                  )
-        else:
-            raise EqFunctionArgumentException("Not enough arguments for "
-                                              "function gcd (expected "
-                                              "2, got 1)"
-                                              )
-        
-        # Ensure correct token type of arguments (Number, integer)
-        args = on[0]
+        checkArgCount("gcd", 2, on)
         
         try:
-            a = Decimal(args[0].evaluate())
-            b = Decimal(args[1].evaluate())
+            a = Decimal(on[0].evaluate())
+            b = Decimal(on[1].evaluate())
         
             assert int(a) == a and int(b) == b
-        except:
+        except Exception as e:
             raise EqFunctionArgumentException("Incorrect argument types for"
                                               "function gcd (expected " 
                                               "integers)")
         
         
     def evaluate(self):
-        args = self._on[0]
+        args = self._on
         a = int(args[0].evaluate())
         b = int(args[1].evaluate())
         
@@ -99,37 +85,21 @@ class LcmFunction(Function):
     def __init__(self, on: Segment):
         super().__init__(tokens.Symbol("lcm"), on)
         
-        # Ensure correct number of args
-        # TODO: Make this a helper function
-        if isinstance(on[0], ArgSet):
-            args = on[0]
-            if len(args) != 2:
-                raise EqFunctionArgumentException("Wrong number of arguments "
-                                                  "function lcm (expect 2, got"
-                                                  f"{len(args)}"
-                                                  )
-        else:
-            raise EqFunctionArgumentException("Not enough arguments for "
-                                              "function lcm (expected "
-                                              "2, got 1)"
-                                              )
-        
-        # Ensure correct token type of arguments (Number, integer)
-        args = on[0]
+        checkArgCount("lcm", 2, on)
         
         try:
-            a = Decimal(args[0].evaluate())
-            b = Decimal(args[1].evaluate())
+            a = Decimal(on[0].evaluate())
+            b = Decimal(on[1].evaluate())
         
             assert int(a) == a and int(b) == b
-        except:
+        except Exception as e:
             raise EqFunctionArgumentException("Incorrect argument types for"
                                               "function lcm (expected " 
                                               "integers)")
         
         
     def evaluate(self):
-        args = self._on[0]
+        args = self._on
         a = int(args[0].evaluate())
         b = int(args[1].evaluate())
         
