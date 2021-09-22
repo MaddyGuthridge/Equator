@@ -216,6 +216,8 @@ class Segment(EqObject):
                     # functions
                     if not isinstance(self._contents[i+1][0], ArgSet):
                         self._contents[i+1] = ArgSet([self._contents[i+1]])
+                    else:
+                        self._contents[i+1] = self._contents[i+1][0]
                     out.append(detectFunction(self._contents[i], self._contents[i+1]))
             else:
                 out.append(self._contents[i])
@@ -231,7 +233,7 @@ class Segment(EqObject):
         
         if self._contents[0] == "-":
             assert len(self._contents) >= 2
-            self._contents = [NegateFunction(self._contents[1])] + self._contents[2:]
+            self._contents = [NegateFunction( ArgSet([self._contents[1]]) )] + self._contents[2:]
         
         """out = [self.contents[0]]
         skip = 0
@@ -279,13 +281,13 @@ class Segment(EqObject):
                         if isinstance(self._contents[i-1], tokens.Operator) \
                             and self._contents[i] == '-':
                                 out.append(self._contents[i-1])
-                                out.append(NegateFunction(self._contents[i+1]))
+                                out.append(NegateFunction(ArgSet([self._contents[i+1]])))
                                 #skip += 1
                         # Check for leading negative
                         elif self._contents[i+1] == '-':
                             if len(self._contents) == i + 2:
                                 raise EqParserException("Expected value after leading negative")
-                            neg = NegateFunction(self._contents[i+2])
+                            neg = NegateFunction(ArgSet([self._contents[i+2]]))
                             skip += 1
                             out.append(Segment(self._contents[i-1 : i+1] + [neg]))
                         else:
