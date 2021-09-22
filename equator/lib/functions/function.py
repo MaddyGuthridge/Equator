@@ -34,7 +34,7 @@ class Function(Segment):
         """
         return f"{self._op.stringify(str_opts)}({self._on.stringify(str_opts)})"
 
-    def evaluate(self):
+    def evaluate(self): # pragma: no cover
         """Returns evaluation of the function
 
         Returns:

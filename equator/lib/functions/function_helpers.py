@@ -25,7 +25,7 @@ def checkArgCount(name: str, expected: int, args: ArgSet, at_least:bool=False):
     # If the first element is an ArgSet, we know it will be the only element
     if isinstance(args, ArgSet):
         count = len(args)
-    else:
+    else: # pragma: no cover
         raise EqInternalException("Function arguments not in ArgSet type")
     
     if at_least:
