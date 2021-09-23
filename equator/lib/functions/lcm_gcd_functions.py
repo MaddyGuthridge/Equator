@@ -10,7 +10,7 @@ from ..argset import ArgSet
 from ..eq_except import EqFunctionArgumentException
 from ..segment import Segment
 
-from .function_helpers import assertArgCount
+from .function_helpers import assertArgCount, isTokenInteger
 
 def gcdAlgorithm(a: int, b: int) -> int:
     """An implementation of the Euclidean Algorithm for the greatest common
@@ -61,12 +61,7 @@ class GcdFunction(Function):
         
         assertArgCount("gcd", 2, on)
         
-        try:
-            a = Decimal(on[0].evaluate())
-            b = Decimal(on[1].evaluate())
-        
-            assert int(a) == a and int(b) == b
-        except Exception as e:
+        if not (isTokenInteger(on[0]) and isTokenInteger(on[1])):
             raise EqFunctionArgumentException("Incorrect argument types for"
                                               "function gcd (expected " 
                                               "integers)")
@@ -87,13 +82,8 @@ class LcmFunction(Function):
         
         assertArgCount("lcm", 2, on)
         
-        try:
-            a = Decimal(on[0].evaluate())
-            b = Decimal(on[1].evaluate())
-        
-            assert int(a) == a and int(b) == b
-        except Exception as e:
-            raise EqFunctionArgumentException("Incorrect argument types for "
+        if not (isTokenInteger(on[0]) and isTokenInteger(on[1])):
+            raise EqFunctionArgumentException("Incorrect argument types for"
                                               "function lcm (expected " 
                                               "integers)")
         

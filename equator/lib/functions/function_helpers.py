@@ -1,7 +1,9 @@
 """Contains helper functions for Equator functions, such as ensuring valid argument types
 """
 
-from ..segment import Segment
+from decimal import Decimal
+
+from ..eq_object import EqObject
 from ..argset import ArgSet
 
 from ..eq_except import EqFunctionArgumentException, EqInternalException
@@ -54,3 +56,19 @@ def checkArgCount(expected: int, args: ArgSet, at_least:bool=False) -> bool:
         return count >= expected
     else:
         return count == expected
+
+def isTokenInteger(value: EqObject) -> bool:
+    """Returns whether the contents of an EqObject evaluates to an integer
+
+    Args:
+        value (EqObject): value to check
+
+    Returns:
+        bool: whether value is an integer
+    """
+    try:
+        dec = Decimal(value.evaluate())
+
+        return dec == int(dec)
+    except Exception as e:
+        return False
