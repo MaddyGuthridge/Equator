@@ -50,9 +50,15 @@ class SeriesFunction(Function):
         
         # Store for evaluation
         self._var = on[0][0]
-        self._start = on[0][2]
-        self._end = on[1]
+        self._start = on[0][2].evaluate()
+        self._end = on[1].evaluate()
         self._expression = on[2]
+        
+        if self._start > self._end:
+            raise EqFunctionArgumentException(
+                f"Bad arguments for {func_name}. Start value must be less than "
+                f"end value."
+                )
 
     def evaluate(self, operation):
         """Evaluate the function's result
@@ -66,7 +72,7 @@ class SeriesFunction(Function):
         expr = self._expression.evaluate()
         var = self._var.evaluate()
 
-        for i in range(int(self._start.evaluate()), int(self._end.evaluate()) + 1):
+        for i in range(int(self._start), int(self._end) + 1):
             
             # If expression is doesn't contain variable to substitute
             # Workaround for https://github.com/sympy/sympy/issues/22142
