@@ -10,7 +10,7 @@ from ..argset import ArgSet
 from ..eq_except import EqFunctionArgumentException
 from ..segment import Segment
 
-from .function_helpers import checkArgCount
+from .function_helpers import assertArgCount
 
 def gcdAlgorithm(a: int, b: int) -> int:
     """An implementation of the Euclidean Algorithm for the greatest common
@@ -59,7 +59,7 @@ class GcdFunction(Function):
     def __init__(self, on: ArgSet):
         super().__init__(tokens.Symbol("gcd"), on)
         
-        checkArgCount("gcd", 2, on)
+        assertArgCount("gcd", 2, on)
         
         try:
             a = Decimal(on[0].evaluate())
@@ -85,7 +85,7 @@ class LcmFunction(Function):
     def __init__(self, on: ArgSet):
         super().__init__(tokens.Symbol("lcm"), on)
         
-        checkArgCount("lcm", 2, on)
+        assertArgCount("lcm", 2, on)
         
         try:
             a = Decimal(on[0].evaluate())

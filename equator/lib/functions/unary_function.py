@@ -11,7 +11,7 @@ from ..argset import ArgSet
 from ..eq_except import EqFunctionArgumentException
 from .. import tokens
 
-from .function_helpers import checkArgCount
+from .function_helpers import assertArgCount
 
 class UnaryFunction(Function):
     """A function that only takes one argument
@@ -32,7 +32,7 @@ class UnaryFunction(Function):
         self._args = args
         super().__init__(func_name, on)
         
-        checkArgCount(func_name.stringify(None), 1, on)
+        assertArgCount(func_name.stringify(None), 1, on)
 
     def evaluate(self):
         return self._py_function(self._on[0].evaluate(), *self._args)
