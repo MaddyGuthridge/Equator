@@ -24,7 +24,7 @@ class UnaryFunction(Function):
         Args:
             func_name (tokens.Symbol): function name (for stringification)
             on (ArgSet): ArgSet to operate on
-            py_function (function): function to do
+            py_function (lambda function): function to do
             args: any extra arguments sent to the function required to ensure
                   correct behaviour
         """
