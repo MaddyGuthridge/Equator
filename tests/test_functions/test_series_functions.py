@@ -38,5 +38,7 @@ def test_mul_complex():
 def test_series_invalid_range():
     with pytest.raises(EqFunctionArgumentException):
         doOneSolutionExp("sum(n = 5, 1, n)")
+
+def test_series_non_int_range():
     with pytest.raises(EqFunctionArgumentException):
-        doOneSolutionExp("mul(n = 62, 37, n + 1)")
+        doOneSolutionExp("sum(n = 1.5, 2, n)")
