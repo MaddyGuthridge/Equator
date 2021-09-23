@@ -67,8 +67,13 @@ class SeriesFunction(Function):
 
         for i in range(int(self._start.evaluate()), int(self._end.evaluate()) + 1):
             
-            # Substitute value of n
-            val = sym.Subs(expr, self._var.evaluate(), i)
+            # If expression is constant, just use it directly
+            # Workaround for https://github.com/sympy/sympy/issues/22142
+            if isinstance(expr, Decimal):
+                val = expr
+            # Otherwise, substitute value of n
+            else:
+                val = sym.Subs(expr, self._var.evaluate(), i)
             
             if total is None:
                 total = val
