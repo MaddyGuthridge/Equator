@@ -68,7 +68,7 @@ class SeriesFunction(Function):
         for i in range(int(self._start.evaluate()), int(self._end.evaluate()) + 1):
             
             # Substitute value of n
-            val = sym.Subs(expr, self._var, i)
+            val = sym.Subs(expr, self._var.evaluate(), i)
             
             if total is None:
                 total = val
