@@ -64,16 +64,22 @@ class SeriesFunction(Function):
         total = None
 
         expr = self._expression.evaluate()
+        var = self._var.evaluate()
 
         for i in range(int(self._start.evaluate()), int(self._end.evaluate()) + 1):
             
-            # If expression is constant, just use it directly
+            # If expression is doesn't contain variable to substitute
             # Workaround for https://github.com/sympy/sympy/issues/22142
+            # Expression is constant
             if isinstance(expr, Decimal):
+                val = expr
+            # Expression contains variables
+            # Credit: https://stackoverflow.com/a/31050711/6335363
+            elif isinstance(expr, sym.Basic) and var not in expr.free_symbols:
                 val = expr
             # Otherwise, substitute value of n
             else:
-                val = sym.Subs(expr, self._var.evaluate(), i)
+                val = sym.Subs(expr, var, i)
             
             if total is None:
                 total = val
