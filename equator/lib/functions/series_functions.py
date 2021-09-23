@@ -35,17 +35,23 @@ class SeriesFunction(Function):
         
         # Check validity of arguments
         if (
-            # First arg
             len(on[0]) != 3
          or not isinstance(on[0][0], tokens.Symbol) # var
          or not (on[0][1] == "=")                   # =
-         or not isTokenInteger(on[0][2])            # start
-            # Second arg
-         or not isTokenInteger(on[1])               # end
         ):
             raise EqFunctionArgumentException(
                 f"Incorrect argument types for {func_name}. Expected "
                 f"{func_name}(var = start, end, expression)"
+                )
+        
+        # Start and end values
+        if (
+            not isTokenInteger(on[0][2])            # start
+         or not isTokenInteger(on[1])               # end
+        ):
+            raise EqFunctionArgumentException(
+                f"Incorrect argument types for {func_name}. Expected "
+                f"integers for start and end values"
                 )
         
         # Store for evaluation
