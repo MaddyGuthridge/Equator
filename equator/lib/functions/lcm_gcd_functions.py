@@ -56,7 +56,7 @@ def lcmAlgorithm(a: int, b: int) -> int:
 class GcdFunction(Function):
     """Greatest common demononator of 2 integers
     """
-    def __init__(self, on: Segment):
+    def __init__(self, on: ArgSet):
         super().__init__(tokens.Symbol("gcd"), on)
         
         checkArgCount("gcd", 2, on)
@@ -82,7 +82,7 @@ class GcdFunction(Function):
         return gcdAlgorithm(a, b)
 
 class LcmFunction(Function):
-    def __init__(self, on: Segment):
+    def __init__(self, on: ArgSet):
         super().__init__(tokens.Symbol("lcm"), on)
         
         checkArgCount("lcm", 2, on)
@@ -93,7 +93,7 @@ class LcmFunction(Function):
         
             assert int(a) == a and int(b) == b
         except Exception as e:
-            raise EqFunctionArgumentException("Incorrect argument types for"
+            raise EqFunctionArgumentException("Incorrect argument types for "
                                               "function lcm (expected " 
                                               "integers)")
         
