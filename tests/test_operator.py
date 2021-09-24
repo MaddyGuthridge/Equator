@@ -9,6 +9,10 @@ from .helpers import equate
 
 from equator import EqCommaError, EqParserException
 
+#
+# Comma operator
+################################################################################
+
 def testCollect():
     """Collect comma-separated items. Raise exception because must be sent to
     a function
@@ -39,3 +43,9 @@ def testMissingMiddle():
     """
     with pytest.raises(EqParserException):
         equate("max(2, 3, 4, , 6)")
+
+#
+# Range operator
+################################################################################
+
+
