@@ -71,6 +71,6 @@ class EqCommaError(EqEvaluateException):
     """Exception for when commas are used outside of a function
     """
 
-class EqRangeError(EqEvaluateException):
+class EqRangeError(EqOperatorException):
     """Exception for when a range operator is used outside of a function
     """

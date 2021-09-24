@@ -26,6 +26,7 @@ OPERATORS = [
     "-",
     "=",
     ",",
+    "..",
     ]
 
 NEGATE = "neg"

@@ -11,7 +11,8 @@ from fractions import Fraction
 
 from . import consts
 
-from .eq_except import EqOperatorException, EqFunctionException, EqInternalException
+from .eq_except import EqRangeError, EqInternalException
+from .tokens import Operator
 
 FUNCTION_OPERATOR_PRECEDENCE = 10
 NO_OPERATION_PRECEDENCE = 10
@@ -25,7 +26,8 @@ def operatorPrecedence(op: str) -> int:
     Returns:
         int: precedence
     """
-    if   op in ['^']: return 3
+    if   op in ['..']: return 4
+    elif op in ['^']: return 3
     elif op in ['*', '/']: return 2
     elif op in ['+', '-']: return 1
     elif op in ['=']: return 0
@@ -51,13 +53,13 @@ def zeroRound(num):
         pass
     return num
 
-def doOperation(operator: str, a, b):
+def doOperation(operator: Operator, a, b):
     """Function for handling the logic of an operation
     In the future we may move to a method where operation token types implement
     their own operate function, to remove nasty things like this
 
     Args:
-        operator (str): operation to do
+        operator (Operator Token): operation to do
         a (Operatable): left
         b (Operatable): right
 
@@ -79,6 +81,9 @@ def doOperation(operator: str, a, b):
         res = a - b
     elif operator == '=':
         res = sym.Eq(a, b)
+    elif operator == "..":
+        raise EqRangeError("Range operator must be used in the context of a "
+                           "function")
     else: # pragma: no cover
         raise EqInternalException("Unrecognised operation: " + operator)
     return res

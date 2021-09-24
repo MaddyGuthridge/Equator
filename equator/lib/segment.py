@@ -23,6 +23,7 @@ class Segment(EqObject):
         self._parseBrackets()
         self._parseArgSets()
         self._parseFunctions()
+        self._parseOperators([".."])
         self._parseOperators(['^'])
         self._parseOperators(['*', '/'])
         self._parseLeadingNegative()
