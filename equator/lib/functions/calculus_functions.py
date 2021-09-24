@@ -29,7 +29,7 @@ class DifferentiateFunction(Function):
         self._wrt = on[1]
         
     def evaluate(self):
-        return sympy.diff(self._expr.evaluate(), self._wrt.evaluate())
+        return sympy.diff(self._expr.evaluate(), self._wrt.evaluate()).doit()
 
 class IntegrateFunction(Function):
     """Function that integrates its arguments
@@ -50,4 +50,9 @@ class IntegrateFunction(Function):
         self._wrt = on[1]
         
     def evaluate(self):
-        return sympy.integrate(self._expr.evaluate(), self._wrt.evaluate())
+        exp = self._expr.evaluate()
+        wrt = self._wrt.evaluate()
+        ret = sympy.integrate(exp, wrt).doit()
+        if isinstance(ret, sympy.Integral):
+            raise EqFunctionArgumentException("Unable to evaluate integral")
+        return ret

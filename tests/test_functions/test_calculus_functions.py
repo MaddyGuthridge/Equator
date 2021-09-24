@@ -32,7 +32,11 @@ def test_integrate_simple():
     assert doOneSolutionExp("int(2 * x - 5, x)") == ["x*(1*x-5)"]
 
 def test_integrate_complex():
-    assert doOneSolutionExp("int(sin(x) - cos(x)^2 + 2*ln(2 * x), x)") == ["?"]
+    assert doOneSolutionExp("int(sin(x) - cos(x) + 2*ln(2 * x), x)")\
+        == ["((2*x)*log(x)-0.613705638880109*x)-(1*sqrt(2))*sin(x+pi/4)"]
+
+def test_integrate_square_of_trig():
+    assert doOneSolutionExp("int(cos(x)^2, x)") == ["x/2+sin(x)*cos(x)/2"]
 
 def test_integrate_other_symbols():
     assert doOneSolutionExp("int(6 * x + a, x)") == ["x*(1*a+3*x)"]
