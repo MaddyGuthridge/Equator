@@ -23,11 +23,11 @@ class Segment(EqObject):
         self._parseBrackets()
         self._parseArgSets()
         self._parseFunctions()
-        self._parseOperators([".."])
         self._parseOperators(['^'])
         self._parseOperators(['*', '/'])
         self._parseLeadingNegative()
         self._parseOperators(['+', '-'])
+        self._parseOperators([".."])
         self._parseOperators(['='])
     
     def __getitem__(self, index) -> EqObject:
