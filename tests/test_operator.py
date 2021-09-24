@@ -56,5 +56,3 @@ def test_range_operator_bad_args():
     # TODO: Is this a good exception type to use?
     with pytest.raises(EqRangeError):
         equate("1..5..5")
-    with pytest.raises(EqRangeError):
-        equate("x..(1, 2, 3)")

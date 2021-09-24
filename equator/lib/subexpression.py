@@ -85,12 +85,14 @@ class SubExpression(EqObject):
                 word = ""
                 post_op = False
             # HACK: Detect `..` operator
+            # Yuck please fix this future me
             if c == '.' and inp[i+1] == '.':
                 if len(word.strip(' ')):
                     words.append(word)
                     word = ""
                 post_op = True
                 skip = 1
+                word += c # Awful hack to append both dots
             # If we found an operator
             if c in consts.OPERATORS:
                 if len(word.strip(' ')):
