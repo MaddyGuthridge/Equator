@@ -92,13 +92,23 @@ class Segment(EqObject):
                              "Bad content length\n"
                              + repr(self))
 
+    def getOperator(self) -> 'tokens.Operator':
+        """Returns the token of the operator for the segment, or None if there
+        is no operation to be performed
+
+        Returns:
+            Operator token: operation for this segment
+        """
+        if len(self._contents) in [0, 1]:
+            return None
+        elif len(self._contents) == 3:
+            return self._contents[1]
+        else: # pragma: no cover
+            raise EqInternalException("Get operator exception")
+
     def getOperatorPrecedence(self):
         """Returns the precedence of the top operator of this segment, as per
         operationPrecedence function in operator.py
-
-        Raises:
-            ValueError: Middle contents isn't an operator
-            ValueError: Contents are bad length - this shouldn't happen
 
         Returns:
             int: operator precedence
