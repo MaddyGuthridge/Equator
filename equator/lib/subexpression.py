@@ -75,18 +75,29 @@ class SubExpression(EqObject):
         # Loop through characters and split by operators
         
         post_op = False # Whether we're adding whitespace after an operator
-        for i in inp:
-            if post_op and i != ' ':
+        skip = 0
+        for i, c in enumerate(inp):
+            if skip:
+                skip -= 1
+                continue
+            if post_op and c != ' ':
                 words.append(word)
                 word = ""
                 post_op = False
-            # If we found an operator
-            if i in consts.OPERATORS:
+            # HACK: Detect `..` operator
+            if c == '.' and inp[i+1] == '.':
                 if len(word.strip(' ')):
                     words.append(word)
                     word = ""
                 post_op = True
-            word += i
+                skip = 1
+            # If we found an operator
+            if c in consts.OPERATORS:
+                if len(word.strip(' ')):
+                    words.append(word)
+                    word = ""
+                post_op = True
+            word += c
         
         if len(word):
             words.append(word)
