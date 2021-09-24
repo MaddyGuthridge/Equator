@@ -42,3 +42,9 @@ def test_series_invalid_range():
 def test_series_non_int_range():
     with pytest.raises(EqFunctionArgumentException):
         doOneSolutionExp("sum(n = 1.5, 2, n)")
+
+def test_series_invalid_start():
+    with pytest.raises(EqFunctionArgumentException):
+        doOneSolutionExp("sum(n, 2, n)")
+    with pytest.raises(EqFunctionArgumentException):
+        doOneSolutionExp("sum(1 = x, 2, n)")

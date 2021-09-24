@@ -19,3 +19,8 @@ def test_e():
     assert doOneSolutionExp("exp(1)") == ["e"]
     assert doOneSolutionExp("exp(10)") == ["e^10"]
     assert doOneSolutionExp("exp(-5)") == ["e^-5"]
+
+def test_bracketing():
+    """Ensure that brackets are added around results when stringifying"""
+    assert doOneSolutionExp("((a + z) * (x + y)) / b")\
+        == ["((a+z)*(x+y))/b"]
