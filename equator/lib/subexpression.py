@@ -86,7 +86,7 @@ class SubExpression(EqObject):
                 post_op = False
             # HACK: Detect `..` operator
             # Yuck please fix this future me
-            if c == '.' and inp[i+1] == '.':
+            if c == '.' and i+1 < len(inp) and inp[i+1] == '.':
                 if len(word.strip(' ')):
                     words.append(word)
                     word = ""
