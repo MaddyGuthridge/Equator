@@ -12,7 +12,6 @@ from fractions import Fraction
 from . import consts
 
 from .eq_except import EqRangeError, EqInternalException
-from .tokens import Operator
 
 FUNCTION_OPERATOR_PRECEDENCE = 10
 NO_OPERATION_PRECEDENCE = 10
@@ -53,7 +52,7 @@ def zeroRound(num):
         pass
     return num
 
-def doOperation(operator: Operator, a, b):
+def doOperation(operator: 'tokens.Operator', a, b):
     """Function for handling the logic of an operation
     In the future we may move to a method where operation token types implement
     their own operate function, to remove nasty things like this
@@ -117,3 +116,5 @@ def reduceSqrt(sq: Fraction):
     den_a, den_b = _doReduceSqrt(denominator)
     
     return Fraction(num_a, den_a), Fraction(num_b, den_b)
+
+from . import tokens
