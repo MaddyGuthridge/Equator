@@ -14,6 +14,7 @@ from .negate_function import NegateFunction
 from .rad_deg_functions import *
 from .lcm_gcd_functions import LcmFunction, GcdFunction
 from .series_functions import SumFunction, MulFunction
+from .calculus_functions import DifferentiateFunction, IntegrateFunction
 
 EQUATOR_FUNCTIONS = {
     "neg": NegateFunction,
@@ -34,6 +35,8 @@ EQUATOR_FUNCTIONS = {
     "gcd": GcdFunction,
     "sum": SumFunction,
     "mul": MulFunction,
+    "diff": DifferentiateFunction,
+    "int": IntegrateFunction,
 }
 
 def detectFunction(func: tokens.Symbol, args: Segment) -> Function:
