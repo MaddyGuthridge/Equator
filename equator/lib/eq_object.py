@@ -6,6 +6,9 @@ class EqObject: # pragma: no cover
     """Base object for most Equator types.
     Helps keep consistency in implementation
     """
+    def __str__(self) -> str: # pragma: no cover
+        return self.stringify(formatting=None)
+    
     def stringify(self, formatting=None) -> str: # pragma: no cover
         """Convert object to string
 

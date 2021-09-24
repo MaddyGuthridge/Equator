@@ -17,9 +17,6 @@ class NegateFunction(UnaryFunction):
         super().__init__(tokens.Symbol(consts.NEGATE), on, lambda x: -x)
         self._op = consts.NEGATE
         self._on = on
-    
-    def __str__(self):
-        return self.stringify(None)
 
     def stringify(self, num_mode: OutputFormatter):
         """Return string representing contents
