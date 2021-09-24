@@ -31,23 +31,25 @@ class SeriesFunction(Function):
         """
         super().__init__(tokens.Symbol(func_name), on)
         
-        assertArgCount(func_name, 3, on)
+        assertArgCount(func_name, 2, on)
         
         # Check validity of arguments
         if (
             len(on[0]) != 3
          or not isinstance(on[0][0], tokens.Symbol) # var
          or not (on[0][1] == "=")                   # =
+         or not isinstance(on[0][2], Segment)       # start..end
+         or not (on[0][2].getOperator() == "..")
         ):
             raise EqFunctionArgumentException(
                 f"Incorrect argument types for {func_name}. Expected "
-                f"{func_name}(var = start, end, expression)"
+                f"{func_name}(var = start..end, expression)"
                 )
         
         # Start and end values
         if (
-            not isTokenInteger(on[0][2])            # start
-         or not isTokenInteger(on[1])               # end
+            not isTokenInteger(on[0][2][0]) # start
+         or not isTokenInteger(on[0][2][2]) # end
         ):
             raise EqFunctionArgumentException(
                 f"Incorrect argument types for {func_name}. Expected "
@@ -55,10 +57,10 @@ class SeriesFunction(Function):
                 )
         
         # Store for evaluation
-        self._var = on[0][0]
-        self._start = on[0][2].evaluate()
-        self._end = on[1].evaluate()
-        self._expression = on[2]
+        self._var        = on[0][0]
+        self._start      = on[0][2][0].evaluate()
+        self._end        = on[0][2][2].evaluate()
+        self._expression = on[1]
         
         if self._start > self._end:
             raise EqFunctionArgumentException(
