@@ -48,7 +48,7 @@ class IntegrateFunction(Function):
         
         # With respect to symbol
         self._wrt = on[1]
-        
+
     def evaluate(self):
         exp = self._expr.evaluate()
         wrt = self._wrt.evaluate()
