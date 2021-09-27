@@ -11,6 +11,7 @@ from . import operation
 from .eq_except import EqTokeniseException
 from .eq_object import EqObject
 from .segment import Segment
+from .eval_options import EvalOptions
 
 class SubExpression(EqObject):
     """Singular expression or equation, evaluated as a set with other 
@@ -48,7 +49,7 @@ class SubExpression(EqObject):
             self._segment = Segment(self._tokens)
         return self._segment
 
-    def evaluate(self):
+    def evaluate(self, options:EvalOptions=None):
         # If the subexpression is empty, return None
         if not len(self._tokens) or\
             (len(self._tokens) == 1\
@@ -56,7 +57,7 @@ class SubExpression(EqObject):
                 return None
         
         if self._evaluation is None:
-            self._evaluation = self.getSegment().evaluate()
+            self._evaluation = self.getSegment().evaluate(options)
         return self._evaluation
 
     def isEquation(self) -> bool:

@@ -5,7 +5,7 @@ from .unary_function import UnaryFunction
 
 from .. import tokens
 from ..segment import Segment
-
+from ..eval_options import EvalOptions
 from .. import consts
 
 class DegFunction(UnaryFunction):

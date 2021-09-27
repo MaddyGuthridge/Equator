@@ -10,6 +10,7 @@ from ..segment import Segment
 from ..argset import ArgSet
 from ..eq_except import EqFunctionArgumentException
 from .. import tokens
+from ..eval_options import EvalOptions
 
 from .function_helpers import assertArgCount
 
@@ -34,5 +35,5 @@ class UnaryFunction(Function):
         
         assertArgCount(func_name.stringify(None), 1, on)
 
-    def evaluate(self):
-        return self._py_function(self._on[0].evaluate(), *self._args)
+    def evaluate(self, options:EvalOptions=None):
+        return self._py_function(self._on[0].evaluate(options), *self._args)

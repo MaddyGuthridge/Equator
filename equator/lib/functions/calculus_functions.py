@@ -9,6 +9,7 @@ from .function_helpers import assertArgCount
 from .. import tokens
 from ..argset import ArgSet
 from ..eq_except import EqFunctionArgumentException
+from ..eval_options import EvalOptions
 
 class DifferentiateFunction(Function):
     """Function that differentiates its arguments
@@ -28,8 +29,8 @@ class DifferentiateFunction(Function):
         # With respect to symbol
         self._wrt = on[1]
         
-    def evaluate(self):
-        return sympy.diff(self._expr.evaluate(), self._wrt.evaluate()).doit()
+    def evaluate(self, options:EvalOptions=None):
+        return sympy.diff(self._expr.evaluate(options), self._wrt.evaluate(options)).doit()
 
 class IntegrateFunction(Function):
     """Function that integrates its arguments
@@ -49,9 +50,9 @@ class IntegrateFunction(Function):
         # With respect to symbol
         self._wrt = on[1]
         
-    def evaluate(self):
-        exp = self._expr.evaluate()
-        wrt = self._wrt.evaluate()
+    def evaluate(self, options:EvalOptions=None):
+        exp = self._expr.evaluate(options)
+        wrt = self._wrt.evaluate(options)
         ret = sympy.integrate(exp, wrt).doit()
         if isinstance(ret, sympy.Integral):
             raise EqFunctionArgumentException("Unable to evaluate integral")

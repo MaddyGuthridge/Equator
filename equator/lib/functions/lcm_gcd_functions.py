@@ -9,6 +9,7 @@ from .function import Function
 from ..argset import ArgSet
 from ..eq_except import EqFunctionArgumentException
 from ..segment import Segment
+from ..eval_options import EvalOptions
 
 from .function_helpers import assertArgCount, isTokenInteger
 
@@ -68,12 +69,11 @@ class GcdFunction(Function):
             raise EqFunctionArgumentException("Incorrect argument types for"
                                               "function gcd (expected " 
                                               "integers)")
-        
-        
-    def evaluate(self):
+
+    def evaluate(self, options:EvalOptions=None):
         args = self._on
-        a = int(args[0].evaluate())
-        b = int(args[1].evaluate())
+        a = int(args[0].evaluate(options))
+        b = int(args[1].evaluate(options))
         
         if a > b: a, b = b, a
 
@@ -91,10 +91,10 @@ class LcmFunction(Function):
                                               "integers)")
         
         
-    def evaluate(self):
+    def evaluate(self, options:EvalOptions=None):
         args = self._on
-        a = int(args[0].evaluate())
-        b = int(args[1].evaluate())
+        a = int(args[0].evaluate(options))
+        b = int(args[1].evaluate(options))
         
         if a > b: a, b = b, a
 

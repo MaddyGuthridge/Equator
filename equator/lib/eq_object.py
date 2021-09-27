@@ -2,6 +2,8 @@
 with methods required by all types used in the equator hierarchy
 """
 
+from .eval_options import EvalOptions
+
 class EqObject: # pragma: no cover
     """Base object for most Equator types.
     Helps keep consistency in implementation
@@ -29,7 +31,7 @@ class EqObject: # pragma: no cover
         """
         return self.stringify()
 
-    def evaluate(self):
+    def evaluate(self, options:'EvalOptions'=None):
         """Return evaluation of object
         """
         return NotImplemented

@@ -7,6 +7,7 @@ from . import tokens
 
 from .parsedinput import ParsedInput
 from .eq_except import EqException
+from .eval_options import EvalOptions
 
 def exceptionAddInput(func):
     # Add exception handling to function to add input string back

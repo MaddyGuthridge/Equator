@@ -3,7 +3,7 @@
 
 from ..segment import Segment
 from .. import tokens
-
+from ..eval_options import EvalOptions
 from ..argset import ArgSet
 
 from ..output_formatter import OutputFormatter
@@ -34,7 +34,7 @@ class Function(Segment):
         """
         return f"{self._op.stringify(str_opts)}({self._on.stringify(str_opts)})"
 
-    def evaluate(self): # pragma: no cover
+    def evaluate(self, options:EvalOptions=None): # pragma: no cover
         """Returns evaluation of the function
 
         Returns:

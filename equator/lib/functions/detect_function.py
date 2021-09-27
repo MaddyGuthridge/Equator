@@ -7,6 +7,7 @@ from decimal import Decimal, InvalidOperation
 from .. import tokens
 from ..segment import Segment
 from ..eq_except import EqFunctionNameException, EqFunctionException, EqInternalException
+from ..eval_options import EvalOptions
 
 from .function import Function
 from .basic_functions import *

@@ -9,6 +9,7 @@ from .unary_function import UnaryFunction
 from .. import tokens
 from ..segment import Segment
 from ..operation import zeroRound
+from ..eval_options import EvalOptions
 
 class SqrtFunction(UnaryFunction):
     """Square root function"""
@@ -19,8 +20,8 @@ class TrigFunction(UnaryFunction):
     """Generic trigenometry function, providing zero-rounding for trig
     function calls
     """
-    def evaluate(self):
-        return zeroRound(super().evaluate())
+    def evaluate(self, options:EvalOptions=None):
+        return zeroRound(super().evaluate(options))
 
 class SinFunction(TrigFunction):
     """Sine function"""

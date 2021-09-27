@@ -13,6 +13,7 @@ from . import consts
 from .output_formatter import OutputFormatter
 from . import operation
 from .eq_except import EqInternalException, EqParserException
+from .eval_options import EvalOptions
 
 class Segment(EqObject):
     """Hierarchy of tokens in a form that can be simplified and calculated with
@@ -69,8 +70,11 @@ class Segment(EqObject):
     
         return f"{l_str} {op.stringify(str_opts)} {r_str}"
         
-    def evaluate(self):
+    def evaluate(self, options:EvalOptions=None):
         """Returns the evaluation of this segment
+        
+        Args:
+            options (EvalOptions, optional): Options for evaluations
 
         Raises:
             ValueError: Error when evaluating
@@ -80,13 +84,13 @@ class Segment(EqObject):
                         in a meaningful format 
         """
         if len(self._contents) == 1:
-            return self._contents[0].evaluate()
+            return self._contents[0].evaluate(options)
             
         elif len(self._contents) == 3:
             op = self._contents[1]
             a = self._contents[0]
             b = self._contents[2]
-            return operation.doOperation(op, a.evaluate(), b.evaluate())
+            return operation.doOperation(op, a.evaluate(options), b.evaluate(options))
 
         else: # pragma: no cover
             raise EqInternalException("Evaluation error: couldn't evaluate segment:\n"

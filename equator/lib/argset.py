@@ -2,7 +2,7 @@
 """
 
 from .eq_object import EqObject
-
+from .eval_options import EvalOptions
 from .eq_except import EqCommaError
 
 class ArgSet(EqObject):
@@ -34,7 +34,7 @@ class ArgSet(EqObject):
     def __repr__(self) -> str:
         return self.stringify(None)
 
-    def evaluate(self):
+    def evaluate(self, options:EvalOptions=None):
         """Evaluate an ArgSet
         
         WARNING: since evaluation is impossible, this will raise an EqCommaError

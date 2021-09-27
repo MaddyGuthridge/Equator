@@ -6,12 +6,12 @@ from decimal import Decimal
 import sympy as sym
 
 from .. import tokens
-
-from .function import Function
+from ..eval_options import EvalOptions
 from ..argset import ArgSet
 from ..eq_except import EqFunctionArgumentException
 from ..segment import Segment
 
+from .function import Function
 from .function_helpers import assertArgCount, isTokenInteger
 
 class SeriesFunction(Function):
@@ -68,7 +68,7 @@ class SeriesFunction(Function):
                 f"end value."
                 )
 
-    def evaluate(self, operation):
+    def evaluate(self, operation, options:EvalOptions=None):
         """Evaluate the function's result
 
         Args:
@@ -77,8 +77,8 @@ class SeriesFunction(Function):
         
         total = None
 
-        expr = self._expression.evaluate()
-        var = self._var.evaluate()
+        expr = self._expression.evaluate(options)
+        var = self._var.evaluate(options)
 
         for i in range(int(self._start), int(self._end) + 1):
             
@@ -108,8 +108,8 @@ class SumFunction(SeriesFunction):
     def __init__(self, on: ArgSet):
         super().__init__("sum", on)
 
-    def evaluate(self):
-        return super().evaluate(lambda x, y: x + y)
+    def evaluate(self, options:EvalOptions=None):
+        return super().evaluate(lambda x, y: x + y, options)
 
 class MulFunction(SeriesFunction):
     """Represents a sigma notation sum expression
@@ -117,5 +117,5 @@ class MulFunction(SeriesFunction):
     def __init__(self, on: ArgSet):
         super().__init__("mul", on)
 
-    def evaluate(self):
-        return super().evaluate(lambda x, y: x * y)
+    def evaluate(self, options:EvalOptions=None):
+        return super().evaluate(lambda x, y: x * y, options)
