@@ -137,6 +137,8 @@ class Number(Token):
     Evaluate returns numberified version
     """
     def evaluate(self, options:EvalOptions=None) -> Decimal:
+        if options is not None and options.number_as_rational:
+            return sym.Rational(self.getContents())
         return Decimal(self.getContents())
 
     def str_number(self) -> str:
