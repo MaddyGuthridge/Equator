@@ -24,12 +24,15 @@ def gcdAlgorithm(a: int, b: int) -> int:
     Returns:
         int: greatest common divisor
     """
+    
+    if a == 0:
+        return b
 
     # Set b to it'smodulus with a
     b %= a
 
     # If that's zero, a is the GCD
-    if b == 0: return a
+    #if b == 0: return a
 
     # Otherwise, recurse, swapping values around to maintain a < b condition
     return gcdAlgorithm(b, a)

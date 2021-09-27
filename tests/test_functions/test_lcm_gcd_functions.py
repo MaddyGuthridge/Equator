@@ -37,3 +37,6 @@ def test_gcd_symbol():
 def test_gcd_decimal():
     with pytest.raises(EqFunctionArgumentException):
         doOneSolutionExp("gcd(1.5, 2)")
+
+def test_gcd_zero():
+    assert doOneSolutionExp("gcd(183, 0)") == ["183"]
