@@ -51,6 +51,7 @@ class IntegrateFunction(Function):
         self._wrt = on[1]
         
     def evaluate(self, options:EvalOptions=None):
+        options = EvalOptions(options, number_as_rational=True)
         exp = self._expr.evaluate(options)
         wrt = self._wrt.evaluate(options)
         ret = sympy.integrate(exp, wrt).doit()
