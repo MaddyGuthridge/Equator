@@ -11,13 +11,13 @@ def test_differentiate_contant():
     assert doOneSolutionExp("diff(42, x)") == ["0"]
 
 def test_differentiate_simple():
-    assert doOneSolutionExp("diff(2 * x^2 - 5 * x + 4, x)") == ["4*x^1-5"]
+    assert doOneSolutionExp("diff(2 * x^2 - 5 * x + 4, x)") == ["4*x-5"]
 
 def test_differentiate_complex():
-    assert doOneSolutionExp("diff(sin(x) - cos(x)^2 + 2*ln(2 * x), x)") == ["((2*sin(x))*cos(x)^1+cos(x))+2/x"]
+    assert doOneSolutionExp("diff(sin(x) - cos(x)^2 + 2*ln(2 * x), x)") == ["(sin(2*x)+cos(x))+2/x"]
 
 def test_differentiate_other_symbols():
-    assert doOneSolutionExp("diff(2 * x^2 - 5 * x + a, x)") == ["4*x^1-5"]
+    assert doOneSolutionExp("diff(2 * x^2 - 5 * x + a, x)") == ["4*x-5"]
 
 def test_differentiate_invalid_symbol():
     with pytest.raises(EqFunctionArgumentException):
