@@ -45,9 +45,12 @@ def test_integrate_invalid_symbol():
     with pytest.raises(EqFunctionArgumentException):
         doOneSolutionExp("int(2 * x, 1)")
 
-# def test_integrate_range():
-#     assert doOneSolutionExp("int(42, x = 1, 5)") == ["210"] # ?
+def test_integrate_range():
+    assert doOneSolutionExp("int(42, x = 1..5)") == ["168"] # ?
 
-def test_integrate_invalid_range():
-    # Is this even possible?
-    ...
+def test_integrate_reverse_range():
+    assert doOneSolutionExp("int(42, x = 5..1)") == ["-168"]
+
+#def test_integrate_invalid_range():
+#    # Is this even possible?
+#    ...
