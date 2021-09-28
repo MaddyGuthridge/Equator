@@ -1,3 +1,14 @@
+"""Tokens module
+
+Provides definitions for token types used by Equator, including
+* Token (generic abstract type)
+* Operator
+* Number
+* Constant
+* Symbol
+* BadToken (used when a token wasn't valid for any of the above types)
+"""
+
 import math
 import re
 import sympy as sym
@@ -246,9 +257,12 @@ def validSymbol(sym: str) -> bool:
 
 class Symbol(Token):
     """Token representing a symbol
-    Evaluate registers and returns a SymPy symbol
+    
+    Registers and returns a SymPy symbol on evaluation
     
     Note, depending on context, this could be a function
+    
+    TODO: Make a distinct type for functions
     """
     def evaluate(self, options:EvalOptions=None):
         return sym.Symbol(self.getContents())
