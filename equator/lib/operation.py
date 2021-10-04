@@ -77,6 +77,13 @@ def doOperation(operator: 'tokens.Operator', a, b):
     elif operator == '%':
         # TODO: Add checks for symbols
         res = a % b
+        # Fix badness with negatives
+        if (a < 0 and b < 0):
+            pass
+        elif (a < 0):
+            res += b
+        elif (b < 0):
+            res *= -1
     elif operator == '+':
         res = a + b
     elif operator == '-':

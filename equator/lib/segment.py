@@ -27,6 +27,7 @@ class Segment(EqObject):
         self._parseOperators(['^'])
         self._parseOperators(['*', '/'])
         self._parseLeadingNegative()
+        self._parseOperators(['%'])
         self._parseOperators(['+', '-'])
         self._parseOperators([".."])
         self._parseOperators(['='])
