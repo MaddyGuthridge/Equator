@@ -1,0 +1,59 @@
+[
+    {"api_version": "1.3","argument": "2*x = 3 -> num","request": "tokenise"},
+    {
+        "api_version": "1.3",
+        "success": true,
+        "response": {
+            "expressions":
+            [
+                [
+                    {
+                        "value": "2",
+                        "repr": "2",
+                        "type": "number",
+                        "comments": []
+                    },
+                    {
+                        "value": "*",
+                        "repr": "*",
+                        "type": "operator",
+                        "comments": []
+                    },
+                    {
+                        "value": "x",
+                        "repr": "x ",
+                        "type": "symbol",
+                        "comments": []
+                    },
+                    {
+                        "value": "=",
+                        "repr": "= ",
+                        "type": "operator",
+                        "comments": []
+                    },
+                    {
+                        "value": "3",
+                        "repr": "3",
+                        "type": "number",
+                        "comments": []
+                    }
+                ]
+            ],
+            "formatters": [
+                "num"
+            ]
+        }
+    },
+
+    {
+        "api_version": "1.3",
+        "request": "solve"
+    },
+    {
+        "api_version": "1.3",
+        "success": false,
+        "response": {
+            "error_msg": "missing required request arguments"
+        }
+    }
+]

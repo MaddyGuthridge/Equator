@@ -25,6 +25,15 @@
             "module": "equator",
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal"
+        },
+        {
+            "name": "Equator: Run JSON Interface",
+            "type": "python",
+            "request": "launch",
+            "module": "equator",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "args": ["json"]
         }
     ]
 }
