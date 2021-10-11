@@ -57,8 +57,8 @@ class IntegrateFunction(Function):
             ):
             self._has_range = True
             self._wrt = on[1][0]
-            self._start = on[1][2][0]
-            self._end = on[1][2][2]
+            self._start = on[1][2][0].evaluate()
+            self._end = on[1][2][2].evaluate()
         else:
             raise EqFunctionArgumentException("Expected a symbol and optional "
                                               "range for 2nd argument")
