@@ -8,6 +8,7 @@
         "tests"
     ],
     "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true,
     "python.analysis.typeCheckingMode": "off"
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.pytestEnabled": true
 }
