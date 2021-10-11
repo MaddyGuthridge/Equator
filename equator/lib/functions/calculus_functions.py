@@ -31,7 +31,7 @@ class DifferentiateFunction(Function):
         
     def evaluate(self, options:EvalOptions=None):
         options = EvalOptions(options, number_as_rational=True)
-        return sympy.diff(self._expr.evaluate(options), self._wrt.evaluate(options)).doit()
+        return sympy.diff(self._expr.evaluate(options), self._wrt.evaluate(options))
 
 class IntegrateFunction(Function):
     """Function that integrates its arguments

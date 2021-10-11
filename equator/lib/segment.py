@@ -19,7 +19,7 @@ class Segment(EqObject):
     """Hierarchy of tokens in a form that can be simplified and calculated with
     """
     def __init__(self, contents: list):
-        self._contents: list[EqObject] = contents
+        self._contents: list['Segment | EqObject'] = contents
         # There is always contents here as otherwise no segments are created
         self._parseBrackets()
         self._parseArgSets()
@@ -89,6 +89,7 @@ class Segment(EqObject):
             
         elif len(self._contents) == 3:
             op = self._contents[1]
+            assert isinstance(op, tokens.Operator)
             a = self._contents[0]
             b = self._contents[2]
             return operation.doOperation(op, a.evaluate(options), b.evaluate(options))
@@ -98,7 +99,7 @@ class Segment(EqObject):
                              "Bad content length\n"
                              + repr(self))
 
-    def getOperator(self) -> 'tokens.Operator':
+    def getOperator(self) -> 'tokens.Operator | None':
         """Returns the token of the operator for the segment, or None if there
         is no operation to be performed
 
@@ -108,6 +109,7 @@ class Segment(EqObject):
         if len(self._contents) in [0, 1]:
             return None
         elif len(self._contents) == 3:
+            assert isinstance(self._contents[1], tokens.Operator)
             return self._contents[1]
         else: # pragma: no cover
             raise EqInternalException("Get operator exception")
