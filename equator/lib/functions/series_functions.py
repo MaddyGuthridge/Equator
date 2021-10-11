@@ -1,0 +1,121 @@
+"""Functions for performing bulk operations on a set of numbers
+"""
+
+from decimal import Decimal
+
+import sympy as sym
+
+from .. import tokens
+from ..eval_options import EvalOptions
+from ..argset import ArgSet
+from ..eq_except import EqFunctionArgumentException
+from ..segment import Segment
+
+from .function import Function
+from .function_helpers import assertArgCount, isTokenInteger
+
+class SeriesFunction(Function):
+    """An abstract function used to imitate the functionality of series 
+    operations such as sigma notation sums
+    
+    Syntax: `operation(var = start, end, expression)`
+    Starts at 1 and steps up to and including end, substituting var into 
+    expression, running operation for each result to get a cumulative total
+    """
+    def __init__(self, func_name: str, on: ArgSet):
+        """Create a series operation function
+
+        Args:
+            func_name (str): name of function (eg sum or mul)
+            on (ArgSet): function arguments
+        """
+        super().__init__(tokens.Symbol(func_name), on)
+        
+        assertArgCount(func_name, 2, on)
+        
+        # Check validity of arguments
+        if (
+            len(on[0]) != 3
+         or not isinstance(on[0][0], tokens.Symbol) # var
+         or not (on[0][1] == "=")                   # =
+         or not isinstance(on[0][2], Segment)       # start..end
+         or not (on[0][2].getOperator() == "..")
+        ):
+            raise EqFunctionArgumentException(
+                f"Incorrect argument types for {func_name}. Expected "
+                f"{func_name}(var = start..end, expression)"
+                )
+        
+        # Start and end values
+        if (
+            not isTokenInteger(on[0][2][0]) # start
+         or not isTokenInteger(on[0][2][2]) # end
+        ):
+            raise EqFunctionArgumentException(
+                f"Incorrect argument types for {func_name}. Expected "
+                f"integers for start and end values"
+                )
+        
+        # Store for evaluation
+        self._var        = on[0][0]
+        self._start      = on[0][2][0].evaluate()
+        self._end        = on[0][2][2].evaluate()
+        self._expression = on[1]
+        
+        if self._start > self._end:
+            raise EqFunctionArgumentException(
+                f"Bad arguments for {func_name}. Start value must be less than "
+                f"end value."
+                )
+
+    def evaluate(self, operation, options:EvalOptions=None):
+        """Evaluate the function's result
+
+        Args:
+            operation (lambda function): operation to perform to join values
+        """
+        
+        total = None
+
+        expr = self._expression.evaluate(options)
+        var = self._var.evaluate(options)
+
+        for i in range(int(self._start), int(self._end) + 1):
+            
+            # If expression is doesn't contain variable to substitute
+            # Workaround for https://github.com/sympy/sympy/issues/22142
+            # Expression is constant
+            if isinstance(expr, Decimal):
+                val = expr
+            # Expression contains variables
+            # Credit: https://stackoverflow.com/a/31050711/6335363
+            elif isinstance(expr, sym.Basic) and var not in expr.free_symbols:
+                val = expr
+            # Otherwise, substitute value of n
+            else:
+                val = sym.Subs(expr, var, i)
+            
+            if total is None:
+                total = val
+            else:
+                total = operation(total, val)
+        
+        return total
+
+class SumFunction(SeriesFunction):
+    """Represents a sigma notation sum expression
+    """
+    def __init__(self, on: ArgSet):
+        super().__init__("sum", on)
+
+    def evaluate(self, options:EvalOptions=None):
+        return super().evaluate(lambda x, y: x + y, options)
+
+class MulFunction(SeriesFunction):
+    """Represents a sigma notation sum expression
+    """
+    def __init__(self, on: ArgSet):
+        super().__init__("mul", on)
+
+    def evaluate(self, options:EvalOptions=None):
+        return super().evaluate(lambda x, y: x * y, options)

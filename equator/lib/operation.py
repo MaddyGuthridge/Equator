@@ -11,7 +11,7 @@ from fractions import Fraction
 
 from . import consts
 
-from .eq_except import EqOperatorException, EqFunctionException, EqInternalException
+from .eq_except import EqRangeError, EqInternalException
 
 FUNCTION_OPERATOR_PRECEDENCE = 10
 NO_OPERATION_PRECEDENCE = 10
@@ -25,7 +25,8 @@ def operatorPrecedence(op: str) -> int:
     Returns:
         int: precedence
     """
-    if   op in ['^']: return 3
+    if   op in ['..']: return 4
+    elif op in ['^']: return 3
     elif op in ['*', '/']: return 2
     elif op in ['+', '-']: return 1
     elif op in ['=']: return 0
@@ -51,13 +52,13 @@ def zeroRound(num):
         pass
     return num
 
-def doOperation(operator: str, a, b):
+def doOperation(operator: 'tokens.Operator', a, b):
     """Function for handling the logic of an operation
     In the future we may move to a method where operation token types implement
     their own operate function, to remove nasty things like this
 
     Args:
-        operator (str): operation to do
+        operator (Operator Token): operation to do
         a (Operatable): left
         b (Operatable): right
 
@@ -73,77 +74,28 @@ def doOperation(operator: str, a, b):
         res = a * b
     elif operator == '/':
         res = a / b
+    elif operator == '%':
+        # TODO: Add checks for symbols
+        res = a % b
+        # Fix badness with negatives
+        if (a < 0 and b < 0):
+            pass
+        elif (a < 0):
+            res += b
+        elif (b < 0):
+            res *= -1
     elif operator == '+':
         res = a + b
     elif operator == '-':
         res = a - b
     elif operator == '=':
         res = sym.Eq(a, b)
+    elif operator == "..":
+        raise EqRangeError("Range operator must be used in the context of a "
+                           "function")
     else: # pragma: no cover
         raise EqInternalException("Unrecognised operation: " + operator)
     return res
-
-def doFunction(func: str, a):
-    """Function for handling logic of evaluating functions.
-    In the future this may be moved into subclasses for each function, in the
-    hope of tidying things up
-
-    Args:
-        func (str): function to do
-        a (Operatable): thing to operate on
-
-    Returns:
-        Operatable: result
-    """
-    if func == "sqrt":
-        return sym.sqrt(a)
-    elif func == "sin":
-        return zeroRound(sym.sin(a))
-    elif func == "cos":
-        return zeroRound(sym.cos(a))
-    elif func == "tan":
-        return zeroRound(sym.tan(a))
-    elif func == "asin":
-        return zeroRound(sym.asin(a))
-    elif func == "acos":
-        return zeroRound(sym.acos(a))
-    elif func == "atan":
-        return zeroRound(sym.atan(a))
-    elif func == "abs":
-        return sym.Abs(a)
-    elif func == "deg":
-        return a * 180 / consts.NUMERIC_CONSTANTS["pi"]
-    elif func == "rad":
-        return a / 180 * consts.NUMERIC_CONSTANTS["pi"]
-    elif func == consts.NEGATE:
-        return -a
-    elif func == "exp":
-        return sym.exp(a)
-    elif func == "log":
-        return sym.log(a, 10.0)
-    elif func == "ln":
-        return sym.log(a)
-    elif func.startswith("log_"):
-        try:
-            base = Decimal(func.replace("log_", ""))
-        except:
-            raise EqFunctionException(f"Bad base for logarithm \"{func}\"")
-        return sym.log(a, base)
-
-# def getConstant(const: str):
-#     """Returns the representation of a constant as a stringified decimal
-#     r the original string if it isn't a constant
-#
-#     Args:
-#         const (str): potential constant to replace
-#
-#     Returns:
-#         str: representation of constant if applicable otherwise original str
-#     """
-#     if const in consts.NUMERIC_CONSTANTS:
-#         return str(consts.NUMERIC_CONSTANTS[const])
-#     else:
-#         return const
 
 def _doReduceSqrt(num: int):
     # Generate a list of all perfect squares up to num
@@ -174,3 +126,5 @@ def reduceSqrt(sq: Fraction):
     den_a, den_b = _doReduceSqrt(denominator)
     
     return Fraction(num_a, den_a), Fraction(num_b, den_b)
+
+from . import tokens

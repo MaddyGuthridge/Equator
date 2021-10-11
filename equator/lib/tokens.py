@@ -1,3 +1,14 @@
+"""Tokens module
+
+Provides definitions for token types used by Equator, including
+* Token (generic abstract type)
+* Operator
+* Number
+* Constant
+* Symbol
+* BadToken (used when a token wasn't valid for any of the above types)
+"""
+
 import math
 import re
 import sympy as sym
@@ -10,6 +21,7 @@ from .consts import NUMBER_FORMATTERS, NUMERIC_CONSTANTS, FRACTION_DENOM_LIMITER
 from .eq_object import EqObject
 from .output_formatter import OutputFormatter
 from .eq_except import EqFormatterError, EqParserException
+from .eval_options import EvalOptions
 
 class Token(EqObject):
     """Token base type
@@ -50,7 +62,7 @@ class Token(EqObject):
     def stringifyOriginal(self) -> str:
         return self._original
 
-    def evaluate(self): # pragma: no cover
+    def evaluate(self, options:EvalOptions=None): # pragma: no cover
         # Should be overridden
         return self.getContents()
     
@@ -135,7 +147,9 @@ class Number(Token):
     """Token representing a number
     Evaluate returns numberified version
     """
-    def evaluate(self) -> Decimal:
+    def evaluate(self, options:EvalOptions=None) -> Decimal:
+        if options is not None and options.number_as_rational:
+            return sym.Rational(self.getContents())
         return Decimal(self.getContents())
 
     def str_number(self) -> str:
@@ -169,8 +183,9 @@ class Number(Token):
         Returns:
             str: str(number)
         """
-        if str_options.getNumFormatting() is NUMBER_FORMATTERS.SMART:
-            return str(self)
+        if str_options is None\
+            or str_options.getNumFormatting() is NUMBER_FORMATTERS.SMART:
+                return str(self)
         elif str_options.getNumFormatting() is NUMBER_FORMATTERS.DECIMAL:
             return self.str_decimal()
         elif str_options.getNumFormatting() is NUMBER_FORMATTERS.SCIENTIFIC:
@@ -220,9 +235,9 @@ class Constant(Number):
     """Token representing a constant such as pi. 
     Stringifies to the name of the constant
     """
-    def evaluate(self):
+    def evaluate(self, options:EvalOptions=None):
         return NUMERIC_CONSTANTS[self.getContents().lower()]
-    
+
     def __str__(self) -> str:
         return self.getContents()
 
@@ -242,11 +257,14 @@ def validSymbol(sym: str) -> bool:
 
 class Symbol(Token):
     """Token representing a symbol
-    Evaluate registers and returns a SymPy symbol
+    
+    Registers and returns a SymPy symbol on evaluation
     
     Note, depending on context, this could be a function
+    
+    TODO: Make a distinct type for functions
     """
-    def evaluate(self):
+    def evaluate(self, options:EvalOptions=None):
         return sym.Symbol(self.getContents())
 
 class BadToken(Token):
@@ -257,5 +275,5 @@ class BadToken(Token):
         super().__init__(value)
         self._error = error
 
-    def evaluate(self):
+    def evaluate(self, options:EvalOptions=None):
         raise self._error

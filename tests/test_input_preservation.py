@@ -41,3 +41,10 @@ def test_output_formatting():
     """Ensure that output formatting is also preserved
     """
     assertPreservation("pi * 3 -> num")
+
+def test_functions():
+    """Ensure that functions are preserved for functions
+    """
+    assertPreservation("sqrt(4)")
+    assertPreservation("lcm(5, 6)")
+    assertPreservation("gcd(18 , 12)")

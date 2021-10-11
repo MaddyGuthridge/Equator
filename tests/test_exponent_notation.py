@@ -28,7 +28,7 @@ def test_decimal_presentation_num():
     assert doOneSolutionExp("1E8") == ["100000000"]
     assert doOneSolutionExp("1E-8") == ["0.00000001"]
     
-def test_deciaml_presentation_exp():
+def test_decimal_presentation_exp():
     assert doOneSolutionExp("1E9") == ["1e+9"]
     assert doOneSolutionExp("1E-9") == ["1e-9"]
 

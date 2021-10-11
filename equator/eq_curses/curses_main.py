@@ -203,7 +203,9 @@ def equator_curses(stdscr: 'curses._CursesWindow') -> int:
                     inp_row = stdscr.getmaxyx()[0] - 1
                 # End line
                 elif char == '\n':
-                    break
+                    # Check that we actually have input
+                    if len(inp):
+                        break
                 else:
                     stdscr.addstr(4, 0, "Ignored: " + repr(char))
                     stdscr.clrtoeol()

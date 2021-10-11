@@ -13,20 +13,30 @@ from . import consts
 from .output_formatter import OutputFormatter
 from . import operation
 from .eq_except import EqInternalException, EqParserException
+from .eval_options import EvalOptions
 
 class Segment(EqObject):
     """Hierarchy of tokens in a form that can be simplified and calculated with
     """
     def __init__(self, contents: list):
-        self._contents = contents
+        self._contents: list['Segment | EqObject'] = contents
         # There is always contents here as otherwise no segments are created
         self._parseBrackets()
+        self._parseArgSets()
         self._parseFunctions()
         self._parseOperators(['^'])
         self._parseOperators(['*', '/'])
         self._parseLeadingNegative()
+        self._parseOperators(['%'])
         self._parseOperators(['+', '-'])
+        self._parseOperators([".."])
         self._parseOperators(['='])
+    
+    def __getitem__(self, index) -> EqObject:
+        return self._contents[index]
+    
+    def __len__(self) -> int:
+        return len(self._contents)
     
     def stringify(self, str_opts: OutputFormatter):
         """Returns a string representing the segment
@@ -61,8 +71,11 @@ class Segment(EqObject):
     
         return f"{l_str} {op.stringify(str_opts)} {r_str}"
         
-    def evaluate(self):
+    def evaluate(self, options:EvalOptions=None):
         """Returns the evaluation of this segment
+        
+        Args:
+            options (EvalOptions, optional): Options for evaluations
 
         Raises:
             ValueError: Error when evaluating
@@ -72,26 +85,38 @@ class Segment(EqObject):
                         in a meaningful format 
         """
         if len(self._contents) == 1:
-            return self._contents[0].evaluate()
+            return self._contents[0].evaluate(options)
             
         elif len(self._contents) == 3:
             op = self._contents[1]
+            assert isinstance(op, tokens.Operator)
             a = self._contents[0]
             b = self._contents[2]
-            return operation.doOperation(op, a.evaluate(), b.evaluate())
+            return operation.doOperation(op, a.evaluate(options), b.evaluate(options))
 
         else: # pragma: no cover
             raise EqInternalException("Evaluation error: couldn't evaluate segment:\n"
                              "Bad content length\n"
                              + repr(self))
 
+    def getOperator(self) -> 'tokens.Operator | None':
+        """Returns the token of the operator for the segment, or None if there
+        is no operation to be performed
+
+        Returns:
+            Operator token: operation for this segment
+        """
+        if len(self._contents) in [0, 1]:
+            return None
+        elif len(self._contents) == 3:
+            assert isinstance(self._contents[1], tokens.Operator)
+            return self._contents[1]
+        else: # pragma: no cover
+            raise EqInternalException("Get operator exception")
+
     def getOperatorPrecedence(self):
         """Returns the precedence of the top operator of this segment, as per
         operationPrecedence function in operator.py
-
-        Raises:
-            ValueError: Middle contents isn't an operator
-            ValueError: Contents are bad length - this shouldn't happen
 
         Returns:
             int: operator precedence
@@ -154,6 +179,43 @@ class Segment(EqObject):
 
         self._contents = out
 
+    def _parseArgSets(self):
+        if len(self._contents) < 2:
+            return
+        
+        args_list = []
+        curr_tokens = []
+        
+        # Loop through each token
+        for t in self._contents:
+            # If it's a comma
+            if isinstance(t, tokens.Operator) and t == ",":
+                # Empty curr_tokens means syntax error
+                if len(curr_tokens) == 0:
+                    raise EqParserException("Expected value before token ','")
+                # Current set of tokens is a single argument
+                # Add it to the list
+                args_list.append(curr_tokens)
+                curr_tokens = []
+            # Otherwise, just add it to the current list of tokens
+            else:
+                curr_tokens.append(t)
+        
+        # If there are items in args_list, we've got some comma-separated values
+        if len(args_list):
+            # Add on remaining tokens, make sure there are some, otherwise
+            # Raise a parser error
+            if not len(curr_tokens):
+                raise EqParserException("Expected value after token ','")
+            args_list.append(curr_tokens)
+            
+            # Now create a segment for each argument
+            arg_segs = [Segment(items) for items in args_list]
+            
+            # Then make an ArgSet object and set that to the segment's contents
+            self._contents = [ArgSet(arg_segs)]
+        # Otherwise, there weren't any commas, so do nothing
+        
     def _parseFunctions(self):
         if len(self._contents) < 2:
             return
@@ -167,7 +229,14 @@ class Segment(EqObject):
             if isinstance(self._contents[i + 1], Segment)\
                 and isinstance(self._contents[i], tokens.Symbol):
                     skip = 1
-                    out.append(Function(self._contents[i], self._contents[i+1]))
+                    # If the segment doesn't contain an argset (ie 1 argument), 
+                    # make its contents into one to simplify argument types for
+                    # functions
+                    if not isinstance(self._contents[i+1][0], ArgSet):
+                        self._contents[i+1] = ArgSet([self._contents[i+1]])
+                    else:
+                        self._contents[i+1] = self._contents[i+1][0]
+                    out.append(detectFunction(self._contents[i], self._contents[i+1]))
             else:
                 out.append(self._contents[i])
         
@@ -176,13 +245,13 @@ class Segment(EqObject):
         self._contents = out
 
     def _parseLeadingNegative(self):
-        # Expands '-x' to '(0 - x)'
+        # Expands '-x' to 'neg(x)' to fix issues with unary operators
         if len(self._contents) < 2:
             return
         
         if self._contents[0] == "-":
             assert len(self._contents) >= 2
-            self._contents = [NegateFunction(self._contents[1])] + self._contents[2:]
+            self._contents = [NegateFunction( ArgSet([self._contents[1]]) )] + self._contents[2:]
         
         """out = [self.contents[0]]
         skip = 0
@@ -230,13 +299,13 @@ class Segment(EqObject):
                         if isinstance(self._contents[i-1], tokens.Operator) \
                             and self._contents[i] == '-':
                                 out.append(self._contents[i-1])
-                                out.append(NegateFunction(self._contents[i+1]))
+                                out.append(NegateFunction(ArgSet([self._contents[i+1]])))
                                 #skip += 1
                         # Check for leading negative
                         elif self._contents[i+1] == '-':
                             if len(self._contents) == i + 2:
                                 raise EqParserException("Expected value after leading negative")
-                            neg = NegateFunction(self._contents[i+2])
+                            neg = NegateFunction(ArgSet([self._contents[i+2]]))
                             skip += 1
                             out.append(Segment(self._contents[i-1 : i+1] + [neg]))
                         else:
@@ -255,64 +324,5 @@ class Segment(EqObject):
             
             self._contents = out
 
-class Function(Segment):
-    """Segment representing a function operation
-    """
-    def __init__(self, type: tokens.Symbol, on: Segment):
-        self._op = type
-        self._on = on
-
-    def __str__(self):
-        return self.stringify(str_opts=None)
-
-    def __repr__(self) -> str:
-        return f"Function({str(self._op)}, {repr(self._on)})"
-
-    def stringify(self, str_opts: OutputFormatter):
-        """Returns string version of function, for presenting to the user
-
-        Args:
-            str_opts (OutputFormatter): formatting options for string
-
-        Returns:
-            str: string representation of string and its contents
-        """
-        return f"{self._op.stringify(str_opts)}({self._on.stringify(str_opts)})"
-
-    def evaluate(self):
-        """Returns evaluation of the function
-
-        Returns:
-            Operatable: result of function
-        """
-        e = self._on.evaluate()
-        return operation.doFunction(str(self._op), e)
-
-    def getOperatorPrecedence(self):
-        """Returns operator precedence of function
-
-        Returns:
-            int: precedence
-        """
-        return operation.FUNCTION_OPERATOR_PRECEDENCE
-
-class NegateFunction(Function):
-    """Special function for representing leading negatives
-    """
-    def __init__(self, on: Segment):
-        self._op = consts.NEGATE
-        self._on = on
-    
-    def __str__(self):
-        return self.stringify(None)
-
-    def stringify(self, num_mode: OutputFormatter):
-        """Return string representing contents
-
-        Args:
-            num_mode (OutputFormatter): string formatting options
-
-        Returns:
-            str: contents
-        """
-        return f"-{self._on.stringify(num_mode)}"
+from .argset import ArgSet
+from .functions import NegateFunction, detectFunction

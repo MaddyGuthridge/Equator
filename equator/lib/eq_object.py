@@ -2,18 +2,21 @@
 with methods required by all types used in the equator hierarchy
 """
 
+from .eval_options import EvalOptions
+
 class EqObject: # pragma: no cover
     """Base object for most Equator types.
     Helps keep consistency in implementation
     """
-    def stringify(self, num_behaviour="num") -> str:
+    def __str__(self) -> str: # pragma: no cover
+        return self.stringify(formatting=None)
+    
+    def stringify(self, formatting=None) -> str: # pragma: no cover
         """Convert object to string
 
         Args:
-            num_behaviour (str, optional): behaviour for number stringification.
-                                           Should be propogated through
-                                           subsequent stringify calls.
-                                           Defaults to "num".
+            formatting (OutputFormatter, optional): formatting options for
+            output
 
         Returns:
             str: string representation
@@ -28,7 +31,7 @@ class EqObject: # pragma: no cover
         """
         return self.stringify()
 
-    def evaluate(self):
+    def evaluate(self, options:'EvalOptions'=None):
         """Return evaluation of object
         """
         return NotImplemented

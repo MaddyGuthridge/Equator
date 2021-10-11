@@ -11,6 +11,7 @@ from . import operation
 from .eq_except import EqTokeniseException
 from .eq_object import EqObject
 from .segment import Segment
+from .eval_options import EvalOptions
 
 class SubExpression(EqObject):
     """Singular expression or equation, evaluated as a set with other 
@@ -48,7 +49,7 @@ class SubExpression(EqObject):
             self._segment = Segment(self._tokens)
         return self._segment
 
-    def evaluate(self):
+    def evaluate(self, options:EvalOptions=None):
         # If the subexpression is empty, return None
         if not len(self._tokens) or\
             (len(self._tokens) == 1\
@@ -56,7 +57,7 @@ class SubExpression(EqObject):
                 return None
         
         if self._evaluation is None:
-            self._evaluation = self.getSegment().evaluate()
+            self._evaluation = self.getSegment().evaluate(options)
         return self._evaluation
 
     def isEquation(self) -> bool:
@@ -75,18 +76,31 @@ class SubExpression(EqObject):
         # Loop through characters and split by operators
         
         post_op = False # Whether we're adding whitespace after an operator
-        for i in inp:
-            if post_op and i != ' ':
+        skip = 0
+        for i, c in enumerate(inp):
+            if skip:
+                skip -= 1
+                continue
+            if post_op and c != ' ':
                 words.append(word)
                 word = ""
                 post_op = False
-            # If we found an operator
-            if i in consts.OPERATORS:
+            # HACK: Detect `..` operator
+            # Yuck please fix this future me
+            if c == '.' and i+1 < len(inp) and inp[i+1] == '.':
                 if len(word.strip(' ')):
                     words.append(word)
                     word = ""
                 post_op = True
-            word += i
+                skip = 1
+                word += c # Awful hack to append both dots
+            # If we found an operator
+            if c in consts.OPERATORS:
+                if len(word.strip(' ')):
+                    words.append(word)
+                    word = ""
+                post_op = True
+            word += c
         
         if len(word):
             words.append(word)

@@ -10,6 +10,7 @@ from . import tokens
 from .eq_object import EqObject
 from .output_formatter import OutputFormatter
 from .subexpression import SubExpression
+from .eval_options import EvalOptions
 
 class ParsedInput(EqObject):
     """Contains parsed information about an input
@@ -35,7 +36,7 @@ class ParsedInput(EqObject):
     def __repr__(self) -> str:
         return repr(self._sub_exps) + " -> " + repr(self._output_formatter)
     
-    def evaluate(self) -> tuple:
+    def evaluate(self, options:EvalOptions=None) -> tuple:
         """Evaluate the input and return results
 
         Returns:
@@ -51,7 +52,7 @@ class ParsedInput(EqObject):
         evs = []
         eqs = []
         for e in self._sub_exps:
-            a = e.evaluate()
+            a = e.evaluate(options)
             if a is not None:
                 if e.isEquation():
                     eqs.append(a)
