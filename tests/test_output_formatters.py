@@ -1,6 +1,6 @@
 """Ensure that output formatters format output correctly
 
-Author: Miguel Guthridge (hdsq@outlook.com.au)
+Author: Maddy Guthridge (hdsq@outlook.com.au)
 """
 
 from .helpers import doOneSolutionExp, doOneSolutionEq

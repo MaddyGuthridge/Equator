@@ -2,7 +2,7 @@
 
 Contains code for doing io in JSON format
 
-Author: Miguel Guthridge
+Author: Maddy Guthridge
 """
 
 from .json_main import json_main

@@ -1,6 +1,6 @@
 """Contains helper functions for testing output
 
-Author: Miguel Guthridge (hdsq@outlook.com.au)
+Author: Maddy Guthridge (hdsq@outlook.com.au)
 """
 
 from equator import equate
@@ -20,7 +20,7 @@ def simplifyResults(results: 'list[tuple[list[str], list[str]]]')\
     Returns:
         list[list[str]]: parsed output from equate function
     """
-    out = [] 
+    out = []
     for r in results:
         eqs = [removeSpacing(s) for s in r[0]]
         evs = [removeSpacing(s) for s in r[1]]
@@ -43,7 +43,7 @@ def oneSolutionExp(results: 'list[tuple[list[str], list[str]]]') -> 'list[str]':
 
     Args:
         results (list[list[str]]): results from equate function
-    
+
     Returns:
         list[str]: List of expressions
     """

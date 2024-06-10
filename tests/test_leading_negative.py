@@ -1,6 +1,6 @@
 """Test for ensuring that leading negatives are interpreted correctly
 
-Author: Miguel Guthridge (hdsq@outlook.com.au)
+Author: Maddy Guthridge (hdsq@outlook.com.au)
 """
 import pytest
 from .helpers import doOneSolutionExp, doOneSolutionEq, equate

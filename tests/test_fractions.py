@@ -1,6 +1,6 @@
 """Ensure that results are presented as fractions where possible
 
-Author: Miguel Guthridge (hdsq@outlook.com.au)
+Author: Maddy Guthridge (hdsq@outlook.com.au)
 """
 
 from .helpers import doOneSolutionExp

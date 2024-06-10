@@ -4,7 +4,7 @@ An advanced symbolic calculator built using SymPy
 
 This project is licensed under the GNU General Public License v3.0
 
-Author: Miguel Guthridge
+Author: Maddy Guthridge
 """
 
 from .lib import equate, Expression

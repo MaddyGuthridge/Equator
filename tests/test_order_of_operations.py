@@ -1,6 +1,6 @@
 """Ensure that order of operations are interpreted correctly
 
-Author: Miguel Guthridge (hdsq@outlook.com.au)
+Author: Maddy Guthridge (hdsq@outlook.com.au)
 """
 
 from .helpers import doOneSolutionExp

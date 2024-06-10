@@ -2,7 +2,7 @@
 A maths interpreter built in Python using SymPy
 
 [![PyPi Version](https://img.shields.io/pypi/v/equatorpy.svg)](https://pypi.org/project/equatorpy/)
-[![Pytest](https://github.com/MiguelGuthridge/Equator/actions/workflows/python-app.yml/badge.svg)](https://github.com/MiguelGuthridge/Equator/actions/workflows/python-app.yml)
+[![Pytest](https://github.com/MaddyGuthridge/Equator/actions/workflows/python-app.yml/badge.svg)](https://github.com/MaddyGuthridge/Equator/actions/workflows/python-app.yml)
 
 # Features:
 * Solve simultaneous equations
@@ -29,7 +29,7 @@ equator
 ```
 The program has been tested on Windows and Linux (Ubuntu), but not MacOS. It might work, but it might not.
 * If no arguments are provided, the program launches into a full interpreter, built using the Curses library.
-* If it is started with the argument `json`, then its output will be in a JSON format, where each line of input is treated as one set of equations and expressions. Each input will have one line of respective output, in [JSON format](https://github.com/MiguelGuthridge/Equator/wiki/JSON-Format-Specification).
+* If it is started with the argument `json`, then its output will be in a JSON format, where each line of input is treated as one set of equations and expressions. Each input will have one line of respective output, in [JSON format](https://github.com/MaddyGuthridge/Equator/wiki/JSON-Format-Specification).
 * If it is started with the argument `ev`, then it will run a quick evaluation on the following argument. For example `equator ev "1 + 1"` would print `2`.
 
 ## Syntax:

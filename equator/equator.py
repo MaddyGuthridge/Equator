@@ -4,7 +4,7 @@ Main entry point into the CLI for Equator
 
 Parses command line arguments and runs commands accordingly
 
-Author: Miguel Guthridge
+Author: Maddy Guthridge
 """
 import sys
 
@@ -35,7 +35,7 @@ def quick_equate(eq: list):
     try:
         print(Expression(eq).getOutputStr())
     except EqExternalException as e:
-        print(str(e))    
+        print(str(e))
 
 def main() -> int:
     argv = sys.argv[1:]
